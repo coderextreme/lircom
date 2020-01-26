@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0" 
+      codebase="http://schizophrenics.net/yottzumm/chat3d"
+      href="chat3d.jnlp">
+  <information>
+    <title>LirCom Chat</title>
+    <vendor>Schizophrenics.NET</vendor>
+    <homepage href="http://schizophrenics.net/yottzumm/chat3d"/>
+    <description>Language Independent Relay Communications</description>
+    <description kind="short">Peer to Peer 3D Chat</description>
+    <offline-allowed/>
+  </information>
+  <security>
+        <all-permissions/>
+  </security>
+    <resources>
+      <j2se href="http://java.sun.com/products/autodl/j2se" version="1.6+"/>
+        <jar href="chat3d.jar" main="true"/>
+	<jar href="httpunit.jar"/>
+	<jar href="jsapi.jar"/>
+	<jar href="freetts.jar"/>
+	<jar href="en_us.jar"/>
+	<jar href="cmutimelex.jar"/>
+	<jar href="cmu_time_awb.jar"/>
+	<jar href="cmu_us_kal.jar"/>
+	<jar href="cmudict04.jar"/>
+	<jar href="cmulex.jar"/>
+        <jar href="solitaire.jar"/>
+	<jar href="jogl-demos-util.jar"/>
+	<jar href="jogl-demos.jar"/>
+	<jar href="jogl-demos-data.jar"/>
+        <extension name="jogl" href="https://jogl.dev.java.net/webstart/jogl.jnlp" />
+	<property name="sun.java2d.opengl" value="True"/>
+  	<property name="freetts.voices" value="com.sun.speech.freetts.en.us.cmu_us_kal.KevinVoiceDirectory"/>
+    </resources>
+  <application-desc main-class="lircom.MainWindow">
+	<argument>lircom.Chat</argument>
+  </application-desc>
+</jnlp>
+</jnlp>

@@ -1,0 +1,21 @@
+Why Martyr?
+
+The name 'jirc' (pronounced jerk) was suggested, and I quite liked
+that name, but it was taken by a Perl IRC Bot.
+
+A search of the patron saint list found St. Justin Martyr, patron
+saint of speakers.  It is also appropriate because the IRC protocol is
+pretty ugly.
+
+http://www.catholic-forum.com/saints/saintj29.htm
+
+Package:
+
+I have chosen the 'f00f.net.irc.martyr' package.  
+
+f00f - f00f networks.  Using the TLD is ugly, so I don't.
+net - network-related projects
+irc - irc-related projects
+martyr - the martyr project.
+
+

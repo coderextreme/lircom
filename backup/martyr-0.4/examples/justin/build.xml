@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+
+<!-- ======================================================================= -->
+<!-- Justin build file                                                       -->
+<!-- For Ant: http://jakarta.apache.org/ant/manual/index.html                -->
+<!-- Designed to work with Ant 1.5                                           -->
+<!-- ======================================================================= -->
+
+<project name="Justin" default="main" basedir=".">
+	
+	<property name="justinjar" value="justin.jar" />
+	<property name="martyrjar" value="../../martyr.jar" />
+	<property name="log4j.jar" value="../../lib/log4j-1.2.14.jar" />
+
+	<property name="dest" value="classes" />
+	<property name="source" value="src" />
+	<property name="javadocs" value="javadocs" />
+
+	<!-- Command line to pass to Justin when running it -->
+	<property name="server" value="irc.freenode.net" />
+	<property name="channel" value="#bytesex" />
+	<property name="justin.cmd.line" value="${server} ${channel}" />
+
+	<path id="project.class.path">
+		<pathelement path="${martyrjar}"/>
+		<pathelement path="${justinjar}"/>
+		<pathelement path="${log4j.jar}"/>
+		<pathelement path="${java.class.path}/"/>
+	</path>
+
+	<!-- Dist options -->
+	<property name="dist" value="dist" />
+	<property name="dist.version" value="0.3.4" />
+	<property name="dist.projectname" value="justin" />
+	<property name="dist.basedir" value="dist" />
+	<property name="dist.name" value="${dist.projectname}-${dist.version}" />
+	<property name="dist.dir" value="${dist}/${dist.name}" />
+	<property name="dist.tar" value="${dist.dir}.tar" />
+
+	<target name="init">
+		<!-- Used to be more stuff in here. -->
+	</target>
+
+	<target name="compile" depends="init">
+		<mkdir dir="${dest}" />
+		<javac srcdir="${source}" destdir="${dest}" deprecation="on" >
+			<classpath refid="project.class.path"/>
+		</javac>
+	</target>
+
+	<target name="jar" depends="compile">
+		<jar jarfile="${justinjar}" basedir="${dest}" />
+	</target>
+
+	<target name="main" depends="jar">
+	</target>
+
+	<target name="clean" depends="init">
+		<delete dir="${dest}" />
+	</target>
+	
+	<target name="run" depends="main">
+		<java classname="dammfine.justin.Justin" fork="yes">
+			<classpath refid="project.class.path"/>
+			<arg line="${justin.cmd.line}" />
+		</java>
+	</target>
+	
+	<target name="cleandist" >
+		<delete dir="${dist.dir}" />
+	</target>
+
+	<target name="dist" depends="main,cleandist">
+		<mkdir dir="${dist.dir}" />
+		<copy todir="${dist.dir}/">
+			<fileset dir="." >
+				<exclude name="${dist}/" />
+				<exclude name="${dest}/" />
+				<exclude name="${martyrjar}" />
+				<exclude name="${justinjar}" />
+			</fileset>
+		</copy>
+		<tar destfile="${dist.tar}" basedir="${dist}" >
+			<tarfileset dir="${dist}" prefix="${dist.name}/">
+				<exclude name="*" />
+				<include name="${dist.dir}"/>
+			</tarfileset>
+		</tar>
+		<gzip zipfile="${dist.tar}.gz" src="${dist.tar}" />
+	</target>
+</project>
+

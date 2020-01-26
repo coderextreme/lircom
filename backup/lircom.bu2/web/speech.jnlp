@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp spec="1.0+" codebase="http://schizophrenics.net/yottzumm/lircom/">
+<information>
+  <title>Text to Speech JNLP File</title>
+  <vendor>Schizophrenics.NET</vendor>
+  <homepage href="http://schizophrenics.net" />
+  <description>Schizophrenics.NET</description>
+</information>
+<offline-allowed/>
+<security>
+  <all-permissions/>
+</security>
+<resources>
+  <j2se version="1.4+" />
+  <jar href="lircom.jar" main="true"/>
+  <jar href="jsapi.jar"/>
+  <jar href="freetts.jar"/>
+  <jar href="en_us.jar"/>
+  <jar href="cmutimelex.jar"/>
+  <jar href="cmu_time_awb.jar"/>
+  <jar href="cmu_us_kal.jar"/>
+  <jar href="cmudict04.jar"/>
+  <jar href="cmulex.jar"/>
+  <property name="freetts.voices"
+            value="com.sun.speech.freetts.en.us.cmu_us_kal.KevinVoiceDirectory"/>
+</resources>
+<application-desc main-class="lircom.Synth" />
+</jnlp>

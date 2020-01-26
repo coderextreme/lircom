@@ -1,0 +1,20 @@
+
+Compiling:
+  Justin will pull its libs from martyr's lib dir.  Must build martyr
+  first, or have martyr.jar file in the martyr base dir.
+
+  ant clean main 
+
+  For more information on using Ant, see the build.xml file.
+
+Running:
+  ant run
+
+or the usual, put martyr.jar & justin.jar in your classpath and
+execute dammfine.justin.Justin <server> <channel>
+
+Note: unix users, don't forget that # is a comment symbol in many
+shells, so 'wrap' your channel name.
+
+You can get ant from:
+http://jakarta.apache.org/ant/

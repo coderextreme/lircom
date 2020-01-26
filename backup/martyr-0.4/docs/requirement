@@ -1,0 +1,108 @@
+From bdamm@f00f.net Mon Oct  9 00:58:20 2000
+Date: Sun, 8 Oct 2000 01:08:54 -0700 (PDT)
+From: Ben Damm <bdamm@f00f.net>
+To: Paul C. Bryan <pbryan@intouch.ca>, Conan <woodsc@f00f.net>,
+     Derek Lewis <lewisd@intouch.ca>
+Subject: Java IRC API
+
+
+I've whipped up some notes regarding my thoughts on the Java IRC
+API.  Lets start a discussion on what each of us would like to see be a
+part of the API.
+
+Name for the framework?
+Package: I propose the api fall into the net.f00f.irc.xxxx package.
+
+Purpose: 
+ - To provide a medium-level interface into the IRC protocol, for use by any
+   kind of IRC program including clients and bots.
+ - The framework does NOT enforce channel ownership or take any other active
+   interest in what is happening on the IRC network.
+
+Terms:
+ - Framework = This API.
+ - Application = The application using this API.
+ - Client = Both the framework and the application, the view from the
+   server.
+
+The framework should:
+
+ - make sending and receiving IRC commands as painless as possible by providing
+   Java objects to manipulate the commands.
+ - Maintain information regarding the state of the client.  This includes:
+ 	- Information for each channel that the client is in (mode, users, topic)
+	- The client's nick
+	- The client's registration/connection status
+	- The client's mode
+	- misc. statistics
+ - Change the client's state as a result of commands from the server.  The
+   client's state does not change as a result of commands sent by the
+   application.
+ - Make automatic responses to some commands, such as PING.  The command
+   should still be passed to the application, but should be marked as
+   processed.
+
+Command Framework
+
+The vast majority (if not all, we can verify this later) of commands can be
+verified because they result in a returned copy of the command if successful,
+or an error, at some time after the command is issued.  An exception to this
+rule is when commands are issued that do not cause a change in state.  The
+RFC is rather unclear about this, however this is the behaviour I have
+observed from three seperate networks, each with their own ircd setups.
+
+FYI:
+	f00f   (stack.f00f.net)
+	efnet  (irc-w.frontiernet.net)
+	dalnet (irc.dal.net)
+
+This includes the NICK command, which I mistakenly thought does not return a
+result if successful.  This is only true the first time the NICK command is
+issued, on login or when the NICK command does not change the NICK.
+
+Because not all commands return information (redundant commands) and because
+not all commands can be determined to be redundant, any active error checking
+method is defeated.
+
+
+Commands are the critical link between the application and the framework.
+Commands enter into the framework and are consumed in two ways:
+
+1)
+	A command is created by the application and passed off to the framework for
+	sending.  The framework will ask the command for a string representation and
+	discard the command.
+
+2)
+	A command is received by the framework from the server.  It must be parsed
+	into an object, and then processed by the framework and passed on to the
+	application.
+
+If a command is to be the same object for sending and receiving, then it must
+have two methods of creation, a public constructor for sending, and a public
+factory method for parsing.
+
+Possible implementation notes:
+
+Receiving a command:
+	When a command is received, a parse engine must take the string and return
+	a command.  The parse engine can rely on each type of command having a
+	factory method that returns a new ready copy of the command, null if the
+	command is of the wrong type, and throws an exception if the command is
+	badly formed.
+
+	The command is then processed by the framework.  Commands that
+	require an automatic response are responded to.  Commands that can
+	cause a change of state are inspected by the framework and the
+	framework changes its own state.  The command is then passed off
+	to the application.
+
+	Error commands will probably be passed directly to the application, since
+	they cannot change the state.  The application should do something
+	intelligent with the error, probably issuing another command.
+	
+
+
+
+
+

@@ -1,0 +1,193 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.event.*;
+import java.util.*;
+
+class StackBottom extends JLabel implements MouseListener {
+	Stack stack;
+	Game game;
+	public StackBottom(Stack stack, Game game) {
+		super();
+		this.stack = stack;
+		this.game = game;
+		String str = CardItem.cardset+"back102.gif";
+		ImageIcon ii = new ImageIcon(str);
+		setIcon(ii);
+		setSize(ii.getIconWidth(), ii.getIconHeight());
+		addMouseListener(this);
+	}
+	public void 	mouseClicked(MouseEvent e) {
+		game.mouseClicked(e);
+	}
+	public void 	mouseEntered(MouseEvent e) {
+	}
+	public void 	mouseExited(MouseEvent e) {
+	}
+	public void 	mousePressed(MouseEvent e) {
+	}
+	public void 	mouseReleased(MouseEvent e)  {
+	}
+}
+
+public class Stack extends Vector implements ActionListener, ChangeListener {
+	static CardItem[][] cards;
+	String x;
+	String y;
+	JPanel gui = null;
+	int stack_no;
+	static int totstack = 0;
+	JTextField offsetjtf = null;
+	JCheckBox directcb = null;
+	JFrame jw = null;
+	JWindow jf = null;
+	Game game = null;
+
+	static {
+		init();
+	}
+	static public void init() {
+		cards = new CardItem[CardItem.King][CardItem.Clubs+1];
+		for (int isuit = CardItem.Hearts; isuit <= CardItem.Clubs; isuit++) {
+			for (int irank = CardItem.Ace; irank <= CardItem.King; irank++) {
+				Stack.cards[irank-1][isuit] = new CardItem(
+					isuit,
+					irank,
+					false,
+					0,
+					13*(int)isuit+(int)(irank-1));
+			}
+		}
+	}
+	public Stack(int x, int y, int off, char direction, JWindow jf, Game game) {
+		gui = new JPanel();
+		stack_no = totstack;
+		totstack++;
+		this.game = game;
+		GameMiner.processLine("NEWSTACK|"+stack_no+"|"+x+"|"+y, game.psvs);
+		gui.setLayout(new StackLayout(off, direction));
+		gui.setLocation(x, y);
+		gui.setLayout(new StackLayout(off, direction));
+		JLabel stackBottom = new StackBottom(this, game);
+		gui.add(stackBottom);
+		gui.setSize(gui.getLayout().preferredLayoutSize(gui));
+		gui.setVisible(true);
+		jw = new JFrame("Stack Layout");
+		jw.getContentPane().setLayout(new FlowLayout());
+
+		JLabel sn = new JLabel("Stack Number "+stack_no);
+		jw.getContentPane().add(sn);
+		
+		JLabel directjl = new JLabel("Direction");
+		jw.getContentPane().add(directjl);
+		directcb = new JCheckBox(""+direction);
+		directcb.addChangeListener(this);
+		jw.getContentPane().add(directcb);
+
+		JLabel offsetjl = new JLabel("Offset");
+		jw.getContentPane().add(offsetjl);
+		offsetjtf = new JTextField(""+off);
+		jw.getContentPane().add(offsetjtf);
+		offsetjtf.addActionListener(this);
+
+		jw.pack();
+		jw.setLocation(0,600);
+		jw.setVisible(true);
+		this.jf = jf;
+	}
+	public void actionPerformed(ActionEvent ae) {
+		if (ae.getSource() == offsetjtf) {
+			gui.setLayout(new StackLayout(Integer.parseInt(offsetjtf.getText()), directcb.getText().charAt(0)));
+			gui.setSize(gui.getLayout().preferredLayoutSize(gui));
+			jf.invalidate();
+			jf.validate();
+			gui.invalidate();
+			gui.validate();
+			gui.repaint();
+			jf.repaint();
+			jw.setVisible(false);
+		}
+	}
+	public void stateChanged(ChangeEvent e) {
+		if (directcb.getText().charAt(0) == StackLayout.X) {
+			directcb.setText(""+StackLayout.Y);
+		} else {
+			directcb.setText(""+StackLayout.X);
+		}
+		gui.setLayout(new StackLayout(Integer.parseInt(offsetjtf.getText()), directcb.getText().charAt(0)));
+		gui.setSize(gui.getLayout().preferredLayoutSize(gui));
+		jf.invalidate();
+		jf.validate();
+		gui.invalidate();
+		gui.validate();
+		gui.repaint();
+		jf.repaint();
+	}
+	public Object remove(int i) {
+		CardItem icim = (CardItem)super.remove(i);
+		for (int isuit = CardItem.Hearts; isuit <= CardItem.Clubs; isuit++) {
+			for (int irank = CardItem.Ace; irank <= CardItem.King; irank++) {
+				CardItem cim = cards[irank-1][isuit];
+				if(cim.stack == stack_no) {
+					if (cim.position > i) {
+						cim.position--;
+					}
+				}
+			}
+		}
+		gui.remove(icim);
+		gui.setSize(gui.getLayout().preferredLayoutSize(gui));
+		GameMiner.processLine("PICK|"+stack_no+"|"+i+"|"+icim.toString(), game.psvs);
+		icim.stack = -1;
+		return icim;
+	}
+	public void insertElementAt(CardItem icim, int pos) {
+		super.insertElementAt(icim, pos);
+		for (int isuit = CardItem.Hearts; isuit <= CardItem.Clubs; isuit++) {
+			for (int irank = CardItem.Ace; irank <= CardItem.King; irank++) {
+				CardItem cim = cards[irank-1][isuit];
+				if(cim.stack == stack_no) {
+					if (cim.position >= pos) {
+						cim.position++;
+					}
+				}
+			}
+		}
+		icim.stack = stack_no;
+		icim.position = pos;
+
+		gui.add(icim, pos);
+		gui.setSize(gui.getLayout().preferredLayoutSize(gui));
+		GameMiner.processLine("PLAY|"+stack_no+"|"+pos+"|"+icim.toString(), game.psvs);
+		icim.stack = stack_no;
+	}
+	public boolean add(Object obj) {
+		insertElementAt(obj, 0);
+		return true;
+	}
+	public CardItem getTopCard() {
+		for (int isuit = CardItem.Hearts; isuit <= CardItem.Clubs; isuit++) {
+			for (int irank = CardItem.Ace; irank <= CardItem.King; irank++) {
+				CardItem cim = cards[irank-1][isuit];
+				if(cim.stack == stack_no && cim.position == 0) {
+					return cim;
+				}
+			}
+		}
+		return null;
+	}
+	public CardItem getSecondCard() {
+		for (int isuit = CardItem.Hearts; isuit <= CardItem.Clubs; isuit++) {
+			for (int irank = CardItem.Ace; irank <= CardItem.King; irank++) {
+				CardItem cim = cards[irank-1][isuit];
+				if(cim.stack == stack_no && cim.position == 1) {
+					return cim;
+				}
+			}
+		}
+		return null;
+	}
+	public int indexOf(CardItem cim) {
+		return cim.position;
+	}
+}

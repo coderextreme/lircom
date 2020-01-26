@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- JNLP File for Impact 3D Simulator -->
+<jnlp
+  spec="1.0+"
+  codebase="http://coderextreme.net/lircom/"
+  href="malvok.jnlp">
+  <information>
+    <title>Impact 3D Simulator</title>
+    <vendor>DSC</vendor>
+    <description>Impact 3D Simulator</description>
+  </information>
+  <resources>
+    <j2se version="1.5+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="impact3d.jar"/>
+    <jar href="lircom.jar"/>
+    <jar href="solitaire.jar"/>
+    <extension name="jogl" href="http://download.java.net/media/jogl/builds/archive/jsr-231-webstart-current/jogl.jnlp"/>
+  </resources>
+  <application-desc main-class="impact.Impact3D">
+	<argument>malvok</argument>
+	<argument>lircom://coderextreme.net:8180/</argument>
+  </application-desc/>
+</jnlp>

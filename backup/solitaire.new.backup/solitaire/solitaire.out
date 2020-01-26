@@ -1,0 +1,90 @@
+
+See5 [Release 1.20a]  	Sun Oct 10 00:10:21 2004
+--------------------
+
+    Options:
+	Probability thresholds
+	Do not use global pruning
+
+Class specified by attribute `legalMove'
+
+	** This demonstration version cannot process **
+	** more than 400 training or test cases.     **
+
+Read 400 cases (15 attributes) from solitaire.data
+
+Attributes included:
+    rankDifference
+    suitDifference
+
+Decision tree:
+
+suitDifference = -1: 10 (16/9)
+suitDifference = 0:
+:...rankDifference in [-100--1]:
+:   :...rankDifference = -1: 4 (71/2)
+:   :   rankDifference in [-100--2]:
+:   :   :...rankDifference in [-100--6]: 9 (2)
+:   :       rankDifference in [-5--2]: 1 (4/1)
+:   rankDifference in [0-12]:
+:   :...rankDifference = 0: 8 (3)
+:       rankDifference in [1-12]:
+:       :...rankDifference in [6-12]: 1 (2)
+:           rankDifference in [1-5]:
+:           :...rankDifference in [1-4]: 1 (7/4)
+:               rankDifference = 5: 9 (2)
+suitDifference = 1:
+:...rankDifference in [-100-0]:
+:   :...rankDifference in [-100--4]: 9 (2)
+:   :   rankDifference in [-3-0]: 1 (10/3)
+:   rankDifference in [1-12]:
+:   :...rankDifference = 1: 6 (123/43)
+:       rankDifference in [2-12]:
+:       :...rankDifference = 2: 10 (3/1)
+:           rankDifference in [3-12]:
+:           :...rankDifference = 3: 9 (5/2)
+:               rankDifference in [4-12]: 1 (3/1)
+suitDifference = 2:
+:...rankDifference in [-100-0]: 10 (24/14)
+    rankDifference in [1-12]:
+    :...rankDifference = 1: 6 (110/29)
+        rankDifference in [2-12]:
+        :...rankDifference in [2-3]: 9 (5/2)
+            rankDifference in [4-12]:
+            :...rankDifference in [4-7]: 1 (5/1)
+                rankDifference in [8-12]: 10 (3/1)
+
+
+Evaluation on training data (400 cases):
+
+	    Decision Tree   
+	  ----------------  
+	  Size      Errors  
+
+	    19  113(28.3%)   <<
+
+
+	   (a)   (b)   (c)   (d)   (e)   (f)   (g)   (h)   (i)   (j)   (k)   (l)   (m)   (n)   (o)   (p)   (q)   (r)   (s)    <-classified as
+	  ----  ----  ----  ----  ----  ----  ----  ----  ----  ----  ----  ----  ----  ----  ----  ----  ----  ----  ----
+	                                                                                                                      (a): class 0
+	          21                 1           3                 2    12                                                    (b): class 1
+	                                        68                                                                            (c): class 2
+	                                                                 2                                                    (d): class 3
+	                            69                                                                                        (e): class 4
+	                                                                 1                                                    (f): class 5
+	                                       161                                                                            (g): class 6
+	                                                                                                                      (h): class 7
+	                                                     3                                                                (i): class 8
+	           6                             1                12    10                                                    (j): class 9
+	           4                 1                             2    21                                                    (k): class 10
+	                                                                                                                      (l): class 11
+	                                                                                                                      (m): class 12
+	                                                                                                                      (n): class 13
+	                                                                                                                      (o): class 14
+	                                                                                                                      (p): class 15
+	                                                                                                                      (q): class 16
+	                                                                                                                      (r): class 17
+	                                                                                                                      (s): class 18
+
+
+Time: 0.0 secs

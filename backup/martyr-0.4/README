@@ -1,0 +1,25 @@
+
+Martyr - An IRC protocol framework for Java.
+
+See the docs directory for info pertaining to martyr, and to IRC in
+general.
+
+To compile:
+
+run "ant"
+
+To get started with using Martyr, take a look at the
+f00f.net.irc.martyr.IRCConnection class.
+
+
+Martyr is Copyright (C) 2000-2004, Ben Damm
+
+Martyr is distributed under the LGPL, see docs/LICENSE for more
+details.
+
+If you have any questions or comments, please send them to:
+
+Ben Damm, bdamm@f00f.net
+
+
+

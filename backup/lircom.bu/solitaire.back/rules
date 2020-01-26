@@ -1,0 +1,34 @@
+Phase 1:  The deal
+Shuffle cards
+Create 7 stacks
+Place 1 card up in the first stack.  Play 1 card down in the next 6 stacks
+Place 1 card up in the second stack.  Play 1 card down in the next 5 stacks
+Place 1 card up in the third stack.  Play 1 card down in the next 4 stacks
+Place 1 card up in the fourth stack.  Play 1 card down in the next 3 stacks
+Place 1 card up in the fifth stack.  Play 1 card down in the next 2 stacks
+Place 1 card up in the sixth stack.  Play 1 card down in the next stack
+Place 1 card up in the seventh stack.
+
+Phase 2:  The play
+Move cards from one stack to another.  Only face up cards may be moved.
+If there are no face up cards a stack, the top card may be made visible
+Face up cards may be moved as a group.  Face up cards must descend
+alternative color of suit.  There must be no repeated rank.  Rank
+may not be skipped.  Ranks go from K, Q, J, T, 9, 8, 7, 6, 5, 4, 3, 2, A
+Suits Diamonds and Hearts are red.  Suits Clubs and Spades are black.
+If a stack becomes empty, a king may be played on that stack face up.
+
+Phase 3:  Getting more cards involved
+At any time, a card may be flipped over from the remaining cards (the deck).
+The card is placed onto the waste pile and may be moved from there onto
+the 7 stacks or the foundations.  When the deck is exhausted, turn over
+the waste to form a new deck.
+
+Phase 4:  The foundation
+The 4 foundation stacks start with A's and ascend through the ranks.  Only
+one suit may be played on a foundation stack.  There must be no repeated
+or skipped ranks.  Card
+
+Phase 5:  The finish
+Game is complete when all cards are played on the foundation stacks.
+Another way to look at this is if all cards are face up.

@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+
+<!-- ======================================================================= -->
+<!-- Martyr build file                                                       -->
+<!-- For Ant: http://jakarta.apache.org/ant/manual/index.html                -->
+<!-- Designed to work with Ant 1.5                                           -->
+<!-- ======================================================================= -->
+
+<project name="Martyr" default="main" basedir=".">
+
+	<!-- Dist options -->
+	<property name="dist" value="dist" />
+	<property name="dist.version" value="0.4" />
+	<property name="dist.projectname" value="martyr" />
+	<property name="dist.basedir" value="dist" />
+	<property name="dist.name" value="${dist.projectname}-${dist.version}" />
+	<property name="dist.dir" value="${dist}/${dist.name}" />
+	<property name="dist.tar" value="${dist.dir}.tar" />
+	<property name="martyrjar" value="martyr.jar" />
+	<property name="lib" value="lib" />
+	<property name="src" value="src" />
+	<property name="dest" value="classes" /> 
+	<property name="reports.tests" value="${dest}" /> 
+	<property name="source" value="${src}" />       <!-- not so popular synonym for src -->
+	<property name="classes" value="${classes}" />  <!-- popular synonym for dest -->
+	<property name="junit.jar" value="lib/junit-4.3.1.jar" />
+    <property name="log4j.jar" value="lib/log4j-1.2.14.jar" />
+
+    <path id="test.classpath">
+		<pathelement location="${dest}" />
+		<fileset dir="${lib}">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+
+	<path id="compile.classpath">
+		<pathelement location="${dest}" />
+		<fileset dir="${lib}">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+
+	<target name="init">
+		<echo>Note: ant 1.7.0 is required at a minimum.</echo>
+		<property name="javadocs" value="javadocs" />
+		<property name="packages" value="f00f.net.irc.martyr.*,f00f.net.irc.martyr.services.*,f00f.net.irc.martyr.commands.*,f00f.net.irc.martyr.replies.*,f00f.net.irc.martyr.errors.*,f00f.net.irc.martyr.util.*,f00f.net.irc.martyr.test.*,f00f.net.irc.martyr.dcc.*" />
+	</target>
+	
+	<target name="compile" depends="init">
+		<mkdir dir="${dest}" />
+		<javac source="1.5" srcdir="${source}" destdir="${dest}" deprecation="on"
+		debug="on" >
+			<classpath refid="compile.classpath"/>
+		</javac>
+	</target>
+	
+	<target name="jar" depends="compile">
+		<copy file="${src}/log4j.properties" todir="${dest}" />
+		<jar jarfile="${martyrjar}" basedir="${dest}" >
+		<manifest>
+		      <attribute name="Built-By" value="${user.name}"/>
+		</manifest>
+		</jar>
+	</target>
+	
+	<target name="main" depends="jar">
+	</target>
+
+	<target name="build" depends="main">
+	</target>
+	
+	<target name="clean" depends="init">
+		<delete dir="${dest}" />
+	</target>
+	
+	<target name="javadocs" depends="init">
+		<mkdir dir="${javadocs}" />
+		<javadoc
+			packagenames="${packages}"
+			sourcepath="${source}"
+			destdir="${javadocs}"
+			use="true"
+			bottom="Copyright &amp;copy; 2000-2007 Ben Damm, Daniel Henninger, et al.">
+			<classpath refid="compile.classpath"/>
+		</javadoc>
+	</target>
+
+	<target name="cleandist" >
+		<delete dir="${dist}"/>
+	</target>
+
+	<target name="dist" depends="main,javadocs,cleandist">
+		<mkdir dir="${dist}" />
+		<mkdir dir="${dist.dir}" />
+		<copy todir="${dist.dir}/">
+			<fileset dir="." >
+				<exclude name="${dist}/" />
+				<exclude name="${dest}/" />
+				<exclude name="TODO" />
+				<!-- small dist -->
+				<!--exclude name="${martyrjar}" /-->
+				<exclude name="${javadocs}/" />
+			</fileset>
+		</copy>
+		<tar destfile="${dist.tar}" basedir="${dist}" >
+			<exclude name="**" />
+			<tarfileset dir="${dist.dir}" prefix="${dist.name}/">
+				<!--exclude name="*" /-->
+				<!--include name="${dist.dir}"/-->
+			</tarfileset>
+		</tar>
+		<gzip zipfile="${dist.tar}.gz" src="${dist.tar}" />
+	</target>
+
+	<target name="test" depends="main">
+		<junit haltonfailure="yes">
+			<classpath refid="test.classpath" />
+<!--			<test name="${test.class.name}" />-->
+			<batchtest fork="yes" todir="${reports.tests}">
+				<fileset dir="${src}">
+					<include name="**/Test*.java"/>
+					<exclude name="**/AllTests.java"/>
+				</fileset>
+			</batchtest>
+			<formatter type="plain" usefile="false" />
+		</junit>
+	</target>
+</project>
+
+<!--"-->

@@ -1,0 +1,25 @@
+
+Of course, you should be an experienced Java developer, since Martyr
+isn't a program, it is a framework.
+
+To compile martyr under Linux, just go
+
+ant
+
+In the martyr root directory.  Hopefully a martyr.jar will pop out.
+
+If not, check build.xml file.  You might try changing the
+"build.compiler" option.  Delete it to get the default javac compiler.
+You might need to include your tools.jar file (distributed with the
+JDK) in your classpath.
+
+
+You can also compile documentation:
+
+ant javadocs
+
+Under other platforms I do not know what the proper command is to
+compile martyr.  Ant, the build system used, is fully cross platform,
+so it should just be a matter of figuring out how to run Ant.
+
+

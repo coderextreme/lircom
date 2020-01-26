@@ -1,0 +1,108 @@
+v 0.4
+	- Fixed 10-seconds retry bug in AutoRegister
+	- Made AutoReconnect treat disconnects as failed connects.
+	- Added ability to totally shutdown an IRCConnection.
+	- Fixed bug in DCC by parsing quoted filenames properly.
+	- Fixed bug in DCC by connecting to provided IP addr
+	- Fixed bug in DCC by improving FServe compatibility.
+	- Added ability to mock incoming commands.
+	- Converted source code to subversion (Daniel Henninger)
+	- Moved Justin into main source code repository (Daniel Henninger)
+	- Java5 req'd (generics and other goodies) (Daniel Henninger)
+	- Made it possible to get channel and names list from names reply. (Daniel Henninger)
+	- Implemented every last error code in the IRC RFC. (Daniel Henninger)
+	- Retired Debug class and switched over to using log4j. (Daniel Henninger)
+	- Better Javadocs and design documentation. (Daniel Henninger)
+	- Added ISON support. (Daniel Henninger)
+	- Upgrades to NoticeCommand (Daniel Henninger)
+	- Added detection of load too high response (Daniel Henninger)
+	- Enhanced NAMES, added AWAY, LIST (Daniel Henninger)
+	- Added IRCStringUtils (Daniel Henninger)
+
+v 0.3.9
+	- Fixed bug in AutoRegister
+	- Removed f00f.net.irc.martyr.Auto*, they are totally deprecated.
+
+v 0.3.8
+	- Fixed bug in AbstractWhoisReply
+	- Fixed call order for command and state listeners.
+	- Made AutoJoin more extendible
+	- Added dcc2 documents
+
+v 0.3.7
+	- Patches from Morgan Christiansson:
+		- Improves join errors support
+		- Changed email
+		- Cleaned up a number of import blocks
+
+v 0.3.6
+	- Added WhoisCommand, a small test harness and some replies.
+	- Fixed own tests to not use deprecated classes.
+	- Added "last()" to ParameterIterator to get the ":" parameter.
+	- Added UnknownError and UnknownReply.
+
+v 0.3.5
+	- Bug fix from Bernhard Fastenrath: AutoReconnect respects
+	  disable if reconnect loop has already started.
+
+v 0.3.4
+	- IRCConnection now catches Throwable from state or command
+	  listeners
+	- Auto* moved into services sub-package
+
+v 0.3.3
+	- Added IRCConnection.get/setCommandSender
+	- FullNick.getSource
+	- AutoDccSetup no longer trusts sent hostname
+	- Ran findbugs on martyr (http://www.cs.umd.edu/~pugh/java/bugs/)
+
+v 0.3.2
+	- Patches from Morgan Christiansson:
+		- AutoJoin responds to Invites
+		- AutoJoin re-schedules joins on failure
+		- Fixed various bugs and some code layout
+v 0.3.1
+	- Documentation cleanup
+	- Fixed up AutoReconnect so that "go" works
+	- IRCConnection.setDaemon fix
+	- Added InCommand and OutCommand, removed Command
+	- GenericCommandAutoService enables by default
+	- Added support to initiate a DCC chat session
+	  (ChatRequestCommand)
+v 0.3.0
+	- Added DCC receive support
+	- Stabilized CtcpMessage
+	- Split AutoRegister into AutoReconnect
+	- Added nick iterator to AutoRegister
+	- Cleaned up FullNick
+	- Documentation enhancements
+	- Better use of subclassing in some areas
+v 0.2.2
+	- Fixed loop on disconnect.
+	- Added ability to supply a custom Socket on connect.
+v 0.2.1
+	- Major changes to the internal threading structure.
+	- Fixed the "KILL resiliency" and "KILL deadlock" bugs.
+	- State changes are now guaranteed to be in order.
+	- Additional documentation for IRCConnection.
+	- No changes to the API.
+v 0.2.0
+	- Added beginning of structure for MODE command.  MODE support is
+	  not complete yet, but this should allow for future use.  Can
+	  receive but not send.  Version 0.2.1 should contain more
+	  complete MODE support.
+v 0.1.7
+	- Fixed bug in ClientState, added paranoia to NamesReply
+v 0.1.6
+	- Added RawCommand
+	- Misc. Javadoc changes.
+v 0.1.5
+	- Added QuitCommand, PartCommand, WelcomeCommand, NamesReply,
+	  NamesEndReply.
+	- Added Member class.
+	- Added 'why' parameter to addMember and removeMember.
+	- Fixed NickCommand so that it recognizes changes to other's nicks.
+v 0.1.1
+	- Fixed some javadoc formatting.
+v 0.1
+	- Initial release.

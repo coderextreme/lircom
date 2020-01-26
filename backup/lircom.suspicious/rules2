@@ -1,0 +1,63 @@
+Phase 1:
+Shuffle cards in deck
+Pick one card from deck and place face up in stack 1
+Pick one card from deck and place face down in stack 2
+Pick one card from deck and place face down in stack 3
+Pick one card from deck and place face down in stack 4
+Pick one card from deck and place face down in stack 5
+Pick one card from deck and place face down in stack 6
+Pick one card from deck and place face down in stack 7
+Pick one card from deck and place face up in stack 2
+Pick one card from deck and place face down in stack 3
+Pick one card from deck and place face down in stack 4
+Pick one card from deck and place face down in stack 5
+Pick one card from deck and place face down in stack 6
+Pick one card from deck and place face down in stack 7
+Pick one card from deck and place face up in stack 3
+Pick one card from deck and place face down in stack 4
+Pick one card from deck and place face down in stack 5
+Pick one card from deck and place face down in stack 6
+Pick one card from deck and place face down in stack 7
+Pick one card from deck and place face up in stack 4
+Pick one card from deck and place face down in stack 5
+Pick one card from deck and place face down in stack 6
+Pick one card from deck and place face down in stack 7
+Pick one card from deck and place face up in stack 5
+Pick one card from deck and place face down in stack 6
+Pick one card from deck and place face down in stack 7
+Pick one card from deck and place face up in stack 6
+Pick one card from deck and place face down in stack 7
+Pick one card from deck and place face up in stack 7
+
+Phase 2a:
+Pick any face up card from any of stacks 1 through 7
+and place on a stack 1 through 7 where the suit is the
+opposite color and the rank is one greater than the
+card being played
+
+Phase 2b:
+Pick up a king and play it on an empty stack 1 through 7
+
+Phase 2c:
+A set of adjacent face up cards on a stack may be treated as a
+unit and played like the bottom card in Phase 2a and 2b.  Thus
+a 2 and Ace may be played on a 3 and a King and Queen may
+be played on an empty stack.  The top card must be included
+in this move.
+
+Phase 2d:
+A card may be picked from the waste or the stacks and played
+on the foundation, starting with Ace and ascending through
+the rank (no skips or repeats), while maintaining suit.  The
+last card played on the foundation is the king.
+
+Phase 2e:
+A card may be played from the deck onto the waste.  A card
+may be played from the waste to the foundation or the stacks.
+
+Phase 2f:
+If the deck is empty, the waste may be turned over to form
+a new deck.
+
+Phase 3:
+Game is over when all cards are played to the foundation.

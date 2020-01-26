@@ -1,0 +1,11 @@
+export CVS_RSH=ssh
+cvs -d :ext:bdamm@stack.f00f.net:/home/cvs co martyr
+
+You may want to set up RSA authentication, then use ssh-agent:
+
+eval $( ssh-agent )
+ssh-add
+
+Otherwise, cvs will ask you for your password every time you execute a cvs
+command.
+

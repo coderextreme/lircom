@@ -1,0 +1,18 @@
+This file lists important classes and how they interact.
+
+User names or nicks should be represented with one of two classes:
+
+util.FullNick - represents a nickname (sork) or a full name
+(sork!sork@f00f.net).  It has an 'equals' method which compares the
+nick portion of the full name only.  This is so that (new
+FullNick("sork")).equals( new FullNick("sork!sork@f00f.net"))
+evaluates to true.
+
+util.Member - represents a user on a channel.  The same user will have
+seperate entries for each channel they are on.  This records the nick
+(a FullNick) without any @ or + symbol, and the mode of the user.
+From the mode we can determine if they are an op, have voice, or
+whatever.
+
+
+
