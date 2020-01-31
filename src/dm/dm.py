@@ -12,25 +12,25 @@ port = 8180                 # Reserve a port for your service.
 nick = "malvok"
 
 class Message:
-	def __init__(self):
-		self.sequenceno = 0
-		self.clientno = 0
-		self.clientno += 1
-		self.rec = {}
-		dt = datetime.now()
-		self.fr = ":".join(lan_ip)+":"+str(dt.microsecond+self.clientno)
-		self.rec["*"] = "*"
+        def __init__(self):
+                self.sequenceno = 0
+                self.clientno = 0
+                self.clientno += 1
+                self.rec = {}
+                dt = datetime.now()
+                self.fr = ":".join(lan_ip)+":"+str(dt.microsecond+self.clientno)
+                self.rec["*"] = "*"
 
-	def generate(self, nick, message, to):
-		self.sequenceno += 1
-		error = 0
-		language = "en"
-		print "}{".join(to)
-		dt = datetime.now()
-		return "{"+"{"+("}{".join(to))+"}"+"}"+"{"+self.fr+"}"+"{"+str(dt.microsecond)+"}"+"{"+str(self.sequenceno)+"}"+"{"+str(error)+"}"+"{"+language+"}"+"{"+nick+"}"+message+"\n"
+        def generate(self, nick, message, to):
+                self.sequenceno += 1
+                error = 0
+                language = "en"
+                print("}{".join(to))
+                dt = datetime.now()
+                return "{"+"{"+("}{".join(to))+"}"+"}"+"{"+self.fr+"}"+"{"+str(dt.microsecond)+"}"+"{"+str(self.sequenceno)+"}"+"{"+str(error)+"}"+"{"+language+"}"+"{"+nick+"}"+message+"\n"
 
-	def parse(self, line):
-		tb = line.find("{")
+        def parse(self, line):
+                tb = line.find("{")
                 toe = tb
                 tob = line.find("{", toe+1)
                 while (toe+1 == tob):
@@ -72,7 +72,7 @@ class Message:
                     m.nick = line[nb+1:ne]
                 if (ne >= 0):
                     m.message = line[ne+1:]
-		return m
+                return m
 
 
 s.connect((host, port))
@@ -80,42 +80,42 @@ m = Message()
 stop = threading.Event()
 
 def readsocket(s, stop):
-	while(not stop.is_set()):
-		data = s.recv(1024)
-		msg = m.parse(data)
-		if msg.message.startswith("/fight"):
-			
-			s.send(m.generate(nick, "Ah, a brave soul!", {msg.fr : msg.fr}))
-			s.send(m.generate(nick, "You die!", {msg.fr : msg.fr}))
-		elif msg.message.startswith("/run"):
-			s.send(m.generate(nick, "Wimp!", {msg.fr : msg.fr}))
-		elif msg.message.startswith("/sing"):
-			s.send(m.generate(nick, "You sound like Barry Manilow!", {msg.fr : msg.fr}))
-		elif msg.message.startswith("/horoscope"):
-			s.send(m.generate(nick, "You will /run /sing /fight and /die!", {msg.fr : msg.fr}))
-		elif msg.message.startswith("/die"):
-			s.send(m.generate(nick, "You die! No, wait you're still alive!", {msg.fr : msg.fr}))
-		if not data: continue
-		# print data
-		print "<"+msg.nick+">"+msg.message
-		m.rec[msg.fr] = msg.fr
+        while(not stop.is_set()):
+                data = s.recv(1024)
+                msg = m.parse(data)
+                if msg.message.startswith("/fight"):
+                        
+                        s.send(m.generate(nick, "Ah, a brave soul!", {msg.fr : msg.fr}))
+                        s.send(m.generate(nick, "You die!", {msg.fr : msg.fr}))
+                elif msg.message.startswith("/run"):
+                        s.send(m.generate(nick, "Wimp!", {msg.fr : msg.fr}))
+                elif msg.message.startswith("/sing"):
+                        s.send(m.generate(nick, "You sound like Barry Manilow!", {msg.fr : msg.fr}))
+                elif msg.message.startswith("/horoscope"):
+                        s.send(m.generate(nick, "You will /run /sing /fight and /die!", {msg.fr : msg.fr}))
+                elif msg.message.startswith("/die"):
+                        s.send(m.generate(nick, "You die! No, wait you're still alive!", {msg.fr : msg.fr}))
+                if not data: continue
+                # print data
+                print("<"+msg.nick+">"+msg.message)
+                m.rec[msg.fr] = msg.fr
 
 t = Thread(target=readsocket, args=(s,stop))
 t.start()
 
 while True:
-	try:
-		line = sys.stdin.readline()
-		if line.startswith("/quit"):
-			sys.exit(0)
-		s.send(m.generate(nick, line, m.rec))
-		print "<"+nick+">"+line
-	except KeyboardInterrupt:
-		stop.set()
-		break
+        try:
+                line = sys.stdin.readline()
+                if line.startswith("/quit"):
+                        sys.exit(0)
+                s.send(m.generate(nick, line, m.rec))
+                print("<"+nick+">"+line)
+        except KeyboardInterrupt:
+                stop.set()
+                break
 
-	if not line:
-		stop.set()
-		break
+        if not line:
+                stop.set()
+                break
 
 s.close                     # Close the socket when done

@@ -1,6 +1,5 @@
 KEYSTORE=../mykeystore
-SVGCLASSPATH=/Users/yottzumm/Applications/aspectj-1.5.3/lib/aspectjrt.jar;/Users/yottzumm/Applications/batik-1.7/lib/batik-svggen.jar;/Users/yottzumm/Applications/batik-1.7/lib/batik-dom.jar;/Users/yottzumm/Applications/batik-1.7/lib/batik-awt-util.jar;/Users/yottzumm/Applications/batik-1.7/lib/batik-util.jar;/Users/yottzumm/Applications/batik-1.7/lib/xalan-2.6.0.jar;/Users/yottzumm/Applications/batik-1.7/lib/xml-apis.jar;/Users/yottzumm/Applications/batik-1.7/batik-1.7/lib/batik-all.jar
-CLASSPATH=target/lircom-1.jar;lib/cmu_time_awb.jar;lib/cmu_us_kal.jar;lib/cmudict04.jar;lib/cmulex.jar;lib/cmutimelex.jar;lib/en_us.jar;lib/jsapi.jar;lib/freetts-jsapi10.jar;../.m2/repository/net/sf/sociaal/freetts/1.2.2/freetts-1.2.2.jar;../.m2/repository/org/httpunit/httpunit/1.7.2/httpunit-1.7.2.jar;../.m2/repository/log4j/log4j/1.2.17/log4j-1.2.17.jar;lib/martyr.jar;lib/mbrola.jar;../.m2/repository/nekohtml/nekohtml/0.9.5/nekohtml-0.9.5.jar;../.m2/repository/xerces/xercesImpl/2.11.0/xercesImpl-2.11.0.jar;lib/xml-apis.jar;../.m2/repository/rhino/js/1.6R5/js-1.6R5.jar;../.m2/repository/org/json/json/20190722/json-20190722.jar
+CLASSPATH=target/lircom-1.jar;../.m2/repository/org/httpunit/httpunit/1.7.2/httpunit-1.7.2.jar;../.m2/repository/log4j/log4j/1.2.17/log4j-1.2.17.jar;lib/martyr.jar;../.m2/repository/nekohtml/nekohtml/0.9.5/nekohtml-0.9.5.jar;../.m2/repository/xerces/xercesImpl/2.11.0/xercesImpl-2.11.0.jar;lib/xml-apis.jar;../.m2/repository/rhino/js/1.6R5/js-1.6R5.jar;../.m2/repository/org/json/json/20190722/json-20190722.jar
 BFCLASSPATH=target/lircom-1.jar;../.m2/repository/org/httpunit/httpunit/1.7.2/httpunit-1.7.2.jar;../.m2/repository/nekohtml/nekohtml/0.9.5/nekohtml-0.9.5.jar;../.m2/repository/xerces/xercesImpl/2.11.0/xercesImpl-2.11.0.jar;lib/xml-apis.jar;../.m2/repository/rhino/js/1.6R5/js-1.6R5.jar
 
 
@@ -50,10 +49,6 @@ signall:
 speech: target/lircom-1.jar
 	java -Xmx256m -classpath "$(CLASSPATH)" lircom.Synth
 
-
-assist: target/lircom-1.jar
-	java -Xmx256m -classpath "$(CLASSPATH)" lircom.ChatAssist lircom.Chat
-
 channel: target/lircom-1.jar
 	java -Xmx256m -classpath "$(CLASSPATH)" lircom.MainWindow lircom.Channel
 
@@ -67,7 +62,6 @@ peer: target/lircom-1.jar
 #	(cd target; jar -cmf lircom/lircom.manifest lircom-1.jar lircom/Orbit2*class lircom/Animator*class; jarsigner -storepass argus1 -keystore $(KEYSTORE) lircom-1.jar myself)
 # JAVACODE2=Animator.java Synth.java
 # JAVACODE= BabelFish.java Bridge.java Channel.java Chat.java Client.java ClientConnect.java ClientException.java ClientOnServer.java Errors.java ExampleFileFilter.java Hyperactive.java IRCBridge.java IRCClient.java IRCScrape.java Identd.java Kanal.java Lircom.java MainApplet.java MainWindow.java Message.java Peer.java PossibleConnection.java ReceiveChatInterface.java Runestone.java SendChatInterface.java SendCommandInterface.java ServerAdvertise.java Smiley.java Trade.java Heathens.java Synth.java
-# OTHERJAVACODE= SVGFE.java WindowAspect.java
 target/lircom-1.jar:
 	mvn package
 
