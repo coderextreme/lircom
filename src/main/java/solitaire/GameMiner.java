@@ -2,86 +2,85 @@ package solitaire;
 
 import java.io.*;
 import java.util.*;
-import javax.swing.*;
-import org.json.*;
-
-class GUIThread extends Thread {
-	JFrame jf;
-	int toStackNo;
-	JSONArray cards;
-	public GUIThread(int toStackNo, JFrame jf, JSONArray cards) {
-		this.toStackNo = toStackNo;
-		this.jf = jf;
-		this.cards = cards;
-	}
-	public synchronized void run() {
-		Stack toStack = Game.stacks.get(toStackNo);
-		if (toStack == null) {
-			int x = (int)Math.floor(toStackNo/5) * 200;
-			int y = 100*toStackNo % 500;
-
-			toStack = new Stack(this.toStackNo, x, y, this.jf);
-		}
-		this.jf.getContentPane().add(toStack.gui);
-		if (cards != null) {
-			System.err.println("Putting "+cards+" into stack "+toStack.stack_no);
-			toStack.replaceAll(cards);
-		}
-	}
-}
+import javax.swing.JFrame;
 
 public class GameMiner {
 	public static Game game = null;
-	static public Stack getStack(JSONObject obj, String name) {
-		if (obj.has(name)) {
-			try {
-				Integer no = obj.getInt(name);
-				System.err.println("Retrieving stack "+no);
-				Stack s = Game.getStack(no);
-				return s;
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
+	public static JFrame jf = null;
+	static public void main(String arg[]) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String line;
+		while((line = br.readLine()) != null) {
+			processLine(line);
 		}
-		return null;
 	}
-	static public void processObj(JSONObject obj) {
-		try {
-			String command = obj.getString("command");
-			String principal = obj.optString("principal");
-			Boolean flag = obj.optBoolean("flag");
-			System.err.println("GameMiner.Processing "+obj);
-			Stack fromStack = getStack(obj,"fromStack");
-			Stack toStack = getStack(obj, "toStack");
-			Integer toStackNo = obj.optInt("toStack");
-
-			Integer fromPosition = obj.optInt("fromPosition");
-			Integer toPosition = obj.optInt("toPosition");
+	static public void processLine(String line) {
+		// System.err.println("GameMiner.Processing "+line);
+		StringTokenizer st = new StringTokenizer(line, "|");
+		String command = st.nextToken();
+		String stack = st.nextToken();
+		if (command.equals("PICK")) {
+			String position = st.nextToken();
+			String rank = st.nextToken();
+			String suit = st.nextToken();
+			// System.err.println(order+"|"+command+"|"+stack+"|"+position);
+			int istack = Integer.parseInt(stack);
+			Stack sm = Game.getStack(istack);
+			if (sm != null && sm.stack_no == istack) {
+				CardItem cim = (CardItem)sm.remove(Integer.parseInt(position));
+			}
+		} else if (command.equals("PLAY")) {
+			String position = st.nextToken();
+			String rank = st.nextToken();
+			String suit = st.nextToken();
+			// System.err.println(order+"|"+command+"|"+stack+"|"+position+"|"+rank+"|"+suit);
+			// find the card in the stacks
 			CardItem cim = null;
-			if (fromStack != null && fromPosition != null) {
-				cim = fromStack.elementAt(fromPosition);
+			int istack = Integer.parseInt(stack);
+			int irank = Integer.parseInt(rank);
+			int isuit = Integer.parseInt(suit);
+			Stack sm = Game.getStack(istack);
+			cim = Stack.cards[irank-1][isuit];
+			sm = Game.getStack(istack);
+			if (sm != null && sm.stack_no == istack) {
+				sm.insertElementAt(cim, Integer.parseInt(position));
 			}
-
-			if (command.equals("use")) {
-				fromStack.remove(cim);
-				toStack.insertElementAt(cim, toPosition);
-			} else if (command.equals("draw")) {
-				if (obj.getString("object").equals("stack")) {
-					JSONArray cards = obj.optJSONArray("cards");
-					SwingUtilities.invokeLater(new GUIThread(toStackNo, game.jf, cards));
-				} else {
-					fromStack.insertElementAt(cim, 0);
-				}
-			} else if (command.equals("see")) {
-				JSONArray cards = obj.optJSONArray("visible");
-				System.err.println(cards);
-				for (int c = 0; c < cards.length(); c++) {
-					CardItem icim = Game.cards.get(c);
-					icim.setCardCommandBE(principal, command, !cards.isNull(c), c);
-				}
+		} else if (command.equals("INVISIBLE")) {
+			String position = st.nextToken();
+			String rank = st.nextToken();
+			String suit = st.nextToken();
+			// System.err.println(order+"|"+command+"|"+stack+"|"+position+"|"+rank+"|"+suit);
+			int istack = Integer.parseInt(stack);
+			Stack sm = Game.getStack(istack);
+			if (sm != null && sm.stack_no == istack) {
+				CardItem cim = (CardItem)sm.elementAt(Integer.parseInt(position));
+				cim.setFaceUp(false);
 			}
-		} catch (JSONException e) {
-			e.printStackTrace();
+		} else if (command.equals("VISIBLE")) {
+			String position = st.nextToken();
+			String rank = st.nextToken();
+			String suit = st.nextToken();
+			// System.err.println(order+"|"+command+"|"+stack+"|"+position+"|"+rank+"|"+suit);
+			int istack = Integer.parseInt(stack);
+			Stack sm = Game.getStack(istack);
+			if (sm != null && sm.stack_no == istack) {
+				CardItem cim = (CardItem)sm.elementAt(Integer.parseInt(position));
+				cim.setFaceUp(true);
+			}
+		} else if (command.equals("NEWSTACK")) {
+			String x = st.nextToken();
+			String y = st.nextToken();
+			String off = st.nextToken();
+			String direction = st.nextToken();
+			// System.err.println("Creating stack "+stack);
+			new Stack(
+				Integer.parseInt(stack),
+				Integer.parseInt(x),
+				Integer.parseInt(y),
+				Integer.parseInt(off),
+				direction.charAt(0),
+				jf, game);
+			// System.err.println("Done creating stack "+stack);
 		}
 	}
 }

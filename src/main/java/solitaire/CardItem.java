@@ -4,20 +4,20 @@ import java.util.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import org.json.*;
 
 
-public class CardItem extends JLabel implements ListCellRenderer, MouseListener, MouseMotionListener, Cloneable {
-	private Integer rank;
-	private Integer suit;
+public class CardItem extends JLabel implements ListCellRenderer, MouseListener, Cloneable {
+	private int rank;
+	private int suit;
 	private boolean faceUp = false;
-	private Stack stack;
+	private int stack;
+	private int position;
 	private ImageIcon ii = null;
 	private static Game game;
 	private static Hashtable map = new Hashtable();
-	static public final String cardset = "cardset-standard/";
-	private static ImageIcon background = new ImageIcon(CardItem.class.getResource(cardset+"back101.gif"));
+	private static ImageIcon background = null;
 
+	static public final String cardset = "/solitaire/cardset-standard/";
 
 	static public final int Hearts = 0;
 	static public final int Spades = 1;
@@ -61,114 +61,80 @@ public class CardItem extends JLabel implements ListCellRenderer, MouseListener,
 	}
 			
 	public CardItem() {	
-		this.faceUp = false;
-		System.err.println("set Icon background ");
-		setIcon(background);
-		addMouseListener(this);
-		addMouseMotionListener(this);
 	}
-	public void setGIFname(String gifname) {
-		System.err.println("setIcon is "+gifname);
+	public CardItem(int suit, int rank, boolean faceUp, int stack, int position) {	
+	        if (background == null) {
+			background = new ImageIcon(getClass().getResource(cardset+"back101.gif"));
+		}
+		this.suit = suit;
+		this.rank = rank;
+		this.faceUp = faceUp;
+		this.stack = stack;
+		this.position = position;
+		addMouseListener(this);
+		setIcon((String)map.get(rank+"|"+suit));
+	}
+	public void setIcon(String gifname) {
 		ii = new ImageIcon(getClass().getResource(gifname));
 		setIcon(ii);
+		setSize(ii.getIconWidth(), ii.getIconHeight());
+		setFaceUp(faceUp);
 	}
 	public Dimension getPreferredSize() {
-		return new Dimension(background.getIconWidth(), background.getIconHeight());
+		return new Dimension(ii.getIconWidth(), ii.getIconHeight());
 	}
 	public Dimension getMinimumSize() {
-		return new Dimension(background.getIconWidth(), background.getIconHeight());
+		return new Dimension(ii.getIconWidth(), ii.getIconHeight());
 	}
-	public void toString(JSONObject obj) {
-		try {
-			obj.put("faceUp", faceUp);
-			if (stack == null) {
-				obj.put("fromStack", -1);
-				obj.put("fromPosition", 0);
-			} else {
-				obj.put("fromStack", stack.stack_no);
-				obj.put("fromPosition", stack.indexOf(this));
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+	public String toStringModel() {
+		return rank+"|"+suit+"|"+faceUp;
 	}
 	public String toString() {
 		return rank+"|"+suit;
 	}
 	public Component getListCellRendererComponent( JList list, Object value, int index, boolean isSelected, boolean cellHasFocus)
 	{
-		System.err.println("Icon is "+value);
-		setGIFname(value.toString());
+		setIcon(value.toString());
 		return this;
 	}
 	public boolean getFaceUp() {
 		return faceUp;
 	}
-	public static void callCardCommand(ActionEvent ae, String principal, String command, Boolean flag) {
-		((CardItem)((JPopupMenu)((JMenuItem)ae.getSource()).getParent()).getInvoker()).setCardCommand(principal, command, flag);
-	}
-	public void setCardCommand(String principal, String command, Boolean flag) {
-		System.err.println(command);
-		JSONObject obj = new JSONObject();
-		try {
-			obj.put("principal", principal);
-			obj.put("command", command);
-			obj.put("object", "card");
-			obj.put("flag", flag);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		if (command.equals("see")) {
-			this.faceUp = flag;
-		}
-		toString(obj);
-		Log.write(obj);
-	}
-	public void setCardCommandBE(String principal, String command, boolean flag, Integer code) {
-		if (command.equals("see")) {
-			this.faceUp = flag;
-		}
-		if (!faceUp) {
-			setIcon(background);
-			setSize(background.getIconWidth(), background.getIconHeight());
-			System.err.println("Card "+code+" Done Setting background and face up to "+faceUp);
-		} else {
-			rank = code % 13 + 1;
-			suit = code / 13;
-			String gifname = (String)map.get(rank+"|"+suit);
-			if (gifname != null) {
-				ii = new ImageIcon(getClass().getResource(gifname));
-				setIcon(ii);
-				setSize(ii.getIconWidth(), ii.getIconHeight());
+	public void setFaceUp(boolean faceUp) {
+		if (!this.faceUp && faceUp) {
+			if (stack == -1) {
+				Log.write("VISIBLE|0|0|"+toString());
+			} else {
+				Log.write("VISIBLE|"+stack+"|"+position+"|"+toString());
+			}
+		} else if (this.faceUp && !faceUp) {
+			if (stack == -1) {
+				Log.write("INVISIBLE|0|0|"+toString());
+			} else {
+				Log.write("INVISIBLE|"+stack+"|"+position+"|"+toString());
 			}
 		}
-		invalidate();
-		validate();
-		repaint();
+		this.faceUp = faceUp;
+		if (!faceUp) {
+			setIcon(background);
+		} else {
+			setIcon(ii);
+		}
+		Log.write(Stack.cards);
 	}
 	public void setGame(Game g) {
 		game = g;
-	}
-	public void 	mouseDragged(MouseEvent me) {
-		game.mouseDragged(me);
-	}
-	public void 	mouseMoved(MouseEvent me) {
-		game.mouseMoved(me);
 	}
 	public void 	mouseClicked(MouseEvent e) {
 		game.mouseClicked(e);
 	}
 	public void 	mouseEntered(MouseEvent e) {
-		game.mouseEntered(e);
 	}
 	public void 	mouseExited(MouseEvent e) {
-		game.mouseExited(e);
 	}
 	public void 	mousePressed(MouseEvent e) {
-		game.mousePressed(e);
 	}
 	public void 	mouseReleased(MouseEvent e)  {
-		game.mouseReleased(e);
 	}
 	static public int convertRank(String irank) {
 		if (irank.equals("Ace")) return Ace;
@@ -242,19 +208,19 @@ public class CardItem extends JLabel implements ListCellRenderer, MouseListener,
 	public void setRank(String rank) {
 		this.rank = convertRank(rank);
 	}
-	public void setRank(Integer rank) {
+	public void setRank(int rank) {
 		this.rank = rank;
 	}
 	public void setSuit(String suit) {
 		this.suit = convertSuit(suit);
 	}
-	public void setSuit(Integer suit) {
+	public void setSuit(int suit) {
 		this.suit = suit;
 	}
-	public Integer getRank() {
+	public int getRank() {
 		return rank;
 	}
-	public Integer getSuit() {
+	public int getSuit() {
 		return suit;
 	}
 	public Object clone() {
@@ -264,6 +230,7 @@ public class CardItem extends JLabel implements ListCellRenderer, MouseListener,
 			ci.suit = suit;
 			ci.faceUp = faceUp;
 			ci.stack = stack;
+			ci.position = position;
 			ci.ii = ii;
 			return ci;
 		} catch (Exception e) {
@@ -271,16 +238,18 @@ public class CardItem extends JLabel implements ListCellRenderer, MouseListener,
 			return null;
 		}
 	}
-	public int getPosition() {
-		return stack.indexOf(this);
+	public void setPosition(int p) {
+		position = p;
 	}
-	public void setStack(Stack s) {
+	public int getPosition() {
+		return position;
+	}
+	public void setStack(int s) {
 		stack = s;
 	}
-	public Stack getStack() {
+	public int getStack() {
 		return stack;
 	}
-/*
 	public void setSize(Dimension d) {
 		super.setSize(d);
 		// System.err.println("w "+d.width+" h "+d.height);
@@ -289,5 +258,4 @@ public class CardItem extends JLabel implements ListCellRenderer, MouseListener,
 		super.setLocation(x, y);
 		// System.err.println("x "+x+" y "+y);
 	}
-*/
 }

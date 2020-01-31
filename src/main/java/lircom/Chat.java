@@ -8,7 +8,6 @@ import java.net.*;
 import javax.swing.*;
 import javax.swing.text.*;
 import javax.swing.text.html.*;
-import org.json.*;
 
 class FromGUI extends InputStream {
 	int ba = 0;
@@ -375,10 +374,10 @@ public class Chat extends ClientOnServer implements WindowListener, ActionListen
 	int current = 0;
 	Trade t = null;
 	Vector contacts = new Vector();
-	StringBuffer html = new StringBuffer("<html><head><title>Chat</title></head><body><h1><div style='color:green;'>Start Chatting</div></h1><div style='align:left;'></div></body></html>");
-	String color = "green";
+	StringBuffer html = new StringBuffer("<html><head><title>Chat</title></head><body><h1><font color='white'>Start Chatting</font></h1><div align='left'></div></body></html>");
+	String color = "white";
 	Smiley smilies = new Smiley();
-	lircom.Synth synthesizer = new lircom.Synth();
+	Synth synthesizer = new Synth();
 	SendCommandInterface sci;
         String lang = "en";
         boolean sound = false;
@@ -403,86 +402,30 @@ public class Chat extends ClientOnServer implements WindowListener, ActionListen
 	Hashtable client_messages = new Hashtable();
         public void flushContacts() {
             try {
-		System.err.println("FLUSHING");
-		System.err.println("FLUSHING");
-		System.err.println("FLUSHING");
-		System.err.println("FLUSHING");
-		System.err.println("FLUSHING");
-		System.err.println("FLUSHING");
                 DefaultListModel dlm = (DefaultListModel)jp.getModel();
                 dlm.clear();
                 contacts.clear();
-		SwingUtilities.invokeLater(new Runnable() {
-		    public void run() {
-		      jp.revalidate(); // triggers a repaint of all the items in the JList.
-		      jp.getParent().repaint(); // Not sure if this one is needed
-		    }
-		  });
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-
-	class AddChatter implements Runnable {
-		String path;
-		String chatter;
-		public AddChatter(String path, String chatter) {
-			this.path = path;
-			this.chatter = chatter;
-		}
-		public void run() {
-			synchronized(contacts) {
-				DefaultListModel dlm = (DefaultListModel)jp.getModel();
-				int index = dlm.indexOf(chatter);
-				if (index >= 0) {
-					contacts.set(index, path);
-				} else {
-					contacts.add(0, path);
-					dlm.add(0, chatter);
-				}
-				SwingUtilities.invokeLater(new Runnable() {
-				    public void run() {
-				      jp.revalidate(); // triggers a repaint of all the items in the JList.
-				      jp.getParent().repaint(); // Not sure if this one is needed
-				    }
-				  });
-			}
-		}
-	}
 	public void addChatter(String path, String chatter) {
-		System.err.println("Adding "+path+" "+chatter);
-		SwingUtilities.invokeLater(new AddChatter(path, chatter));
-	}
-	class RemoveChatter implements Runnable {
-		String chatter;
-		public RemoveChatter(String chatter) {
-			this.chatter = chatter;
-		}
-		public void run() {
-			synchronized(contacts) {
-				DefaultListModel dlm = (DefaultListModel)jp.getModel();
-				int index = dlm.indexOf(chatter);
-				while (index >= 0) {
-					contacts.remove(index);
-					dlm.remove(index);
-					index = dlm.indexOf(chatter);
-				}
-				SwingUtilities.invokeLater(new Runnable() {
-				    public void run() {
-				      jp.revalidate(); // triggers a repaint of all the items in the JList.
-				      jp.getParent().repaint(); // Not sure if this one is needed
-				    }
-				  });
-			}
+		DefaultListModel dlm = (DefaultListModel)jp.getModel();
+		if (!dlm.contains(chatter)) {
+			contacts.add(0, path);
+			dlm.add(0, chatter);
 		}
 	}
 	public void removeChatter(String chatter) {
-		System.err.println("REMOVING "+chatter);
-		SwingUtilities.invokeLater(new RemoveChatter(chatter));
+		DefaultListModel dlm = (DefaultListModel)jp.getModel();
+		int index = dlm.indexOf(chatter);
+		if (index >= 0) {
+			contacts.remove(index);
+			dlm.remove(index);
+		}
 	}
 	public boolean processLine(String line) throws Exception {
-		Message m = Message.parse(new JSONObject(line));
+		Message m = Message.parse(line);
 	        if (!seenMessage(m, client_messages)) {
 			if (m.error.equals(K100)) {
 				System.err.println("Found error "+m.error+" in message "+m.message+" from "+m.from);
@@ -521,7 +464,6 @@ public class Chat extends ClientOnServer implements WindowListener, ActionListen
 		if (line.trim().equals("")) {
 			return;
 		}
-		line = line.replaceAll("%C", "");
                 history.add(line);
                 current = history.size();
                 int [] clino = jp.getSelectedIndices();
@@ -529,14 +471,12 @@ public class Chat extends ClientOnServer implements WindowListener, ActionListen
 		Hashtable rec = new Hashtable();
 		Hashtable ircrec = new Hashtable();
                 for (int i = 0; i < clino.length; i++) {
-		    DefaultListModel dlm = (DefaultListModel)jp.getModel();
-		    String chatter = (String)dlm.get(clino[i]);
-		    String path = (String)contacts.get(clino[i]);
-		    int ircind = path.indexOf("irc:");
+		    String contact = (String)contacts.get(clino[i]);
+		    int ircind = contact.indexOf("irc:");
 		    if (ircind == 0) {
-			    ircrec.put(path.substring(4), path.substring(4));
+			    ircrec.put(contact.substring(4), contact.substring(4));
 		    } else {
-			    rec.put(path, path);
+			    rec.put(contact, contact);
 		    }
                 }
                 if (clino.length == 0) {
@@ -557,22 +497,21 @@ public class Chat extends ClientOnServer implements WindowListener, ActionListen
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		System.err.println("Sending "+line);
 	        if (!seenMessage(m, gui_messages)) {
 			try {
 				if (sci != null) {
-					if (sci instanceof IRCBridge) {
-						if (ircrec.size() > 0) {
-							Iterator irci = ircrec.keySet().iterator();
-							while (irci.hasNext()) {
-								sci.msgSend(line, (String)irci.next());
-							}
-						} else {
-							sci.msgSend(line);
+					if (ircrec.size() > 0) {
+						Iterator irci = ircrec.keySet().iterator();
+						while (irci.hasNext()) {
+							sci.msgSend(line, (String)irci.next());
 						}
-					} else if (sci instanceof Heathens) {
-						sci.msgSend(m.generate().toString());
 					} else {
-						sci.msgSend(line);
+							if (sci instanceof Heathens) {
+								sci.msgSend(m.generate());
+							} else {
+								sci.msgSend(line);
+							}
 					}
 				}
 				say(from, "says", line, color);
@@ -584,14 +523,13 @@ public class Chat extends ClientOnServer implements WindowListener, ActionListen
         }
 	}
 	public void say(String nick, String verb, String message, String color) {
-		System.err.println(smilies.replace(message));
 		if (sound) {
                     synthesizer.speak(nick+" "+verb+" "+message);
                 }
 		if (verb.equals("says")) {
-			addToEnd("<div style='color:"+color+";align:left;'>&lt;"+nick+"&gt;"+smilies.replace(message)+"</div>");
+			addToEnd("<div align='left'><h3><font color='"+color+"'>&lt;"+nick+"&gt;"+smilies.replace(message)+"</font></h3></div>");
 		} else {
-			addToEnd("<div style='color:"+color+";align:left;'>"+nick+" "+verb+" "+message+"</div>");
+			addToEnd("<div align='left'><h3><font color='"+color+"'>"+nick+" "+verb+" "+message+"</font></h3></div>");
 		}
 	}
 	public void scrollToBottom() {
@@ -679,18 +617,8 @@ SwingUtilities.invokeLater(new Runnable() {
 		tf.addFocusListener(this);
                 ta.setEditable(true);
 		ta.setText(html.toString());
-		class MemberModel extends DefaultListModel {
-			public int getSize() {
-				System.err.println(super.getSize());
-				return super.getSize();
-			}
-			public int size() {
-				System.err.println(super.size());
-				return super.size();
-			}
-		}
-		jp.setModel(new MemberModel());
-		setColor("green");
+		jp.setModel(new DefaultListModel());
+		setColor("white");
 		tf.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_UP) {

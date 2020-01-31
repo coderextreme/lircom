@@ -2,12 +2,12 @@ package solitaire;
 
 import java.awt.*;
 
-public class StackLayout implements LayoutManager2 {
-	static final String X = "X";
-	static final String Y = "Y";
-	String direction = X;
+public class StackLayout implements LayoutManager {
+	static final char X = 'X';
+	static final char Y = 'Y';
+	char direction = X;
 	int offset = 15;
-	public StackLayout (int offset, String direction) {
+	public StackLayout (int offset, char direction) {
 		this.offset = offset;
 		this.direction = direction;
 	}
@@ -21,10 +21,10 @@ public class StackLayout implements LayoutManager2 {
 			Component c = parent.getComponent(i);
 			c.setLocation(xloc, yloc);
 			c.setSize(c.getPreferredSize());
-			if (direction.equals(X)) {
+			if (direction == X) {
 				xloc += offset;
 			}
-			if (direction.equals(Y)) {
+			if (direction == Y) {
 				yloc += offset;
 			}
 		}
@@ -37,13 +37,13 @@ public class StackLayout implements LayoutManager2 {
 		for (int i = parent.getComponentCount()-1; i >= 0 ; i--) {
 			c = parent.getComponent(i);
 			Dimension d = c.getMinimumSize();
-			if (direction.equals(X)) {
+			if (direction == X) {
 				width += offset;
 				if (d.height > height) {
 					height = d.height;
 				}
 			}
-			if (direction.equals(Y)) {
+			if (direction == Y) {
 				height += offset;
 				if (d.width > width) {
 					width = d.width;
@@ -52,10 +52,10 @@ public class StackLayout implements LayoutManager2 {
 		}
 		if (c != null) {
 			Dimension d = c.getMinimumSize();
-			if (direction.equals(X)) {
+			if (direction == X) {
 				width += d.width - offset;
 			}
-			if (direction.equals(Y)) {
+			if (direction == Y) {
 				height += d.height - offset;
 			}
 		}
@@ -70,13 +70,13 @@ public class StackLayout implements LayoutManager2 {
 		for (int i = parent.getComponentCount()-1; i >= 0 ; i--) {
 			c = parent.getComponent(i);
 			Dimension d = c.getPreferredSize();
-			if (direction.equals(X)) {
+			if (direction == X) {
 				width += offset;
 				if (d.height > height) {
 					height = d.height;
 				}
 			}
-			if (direction.equals(Y)) {
+			if (direction == Y) {
 				height += offset;
 				if (d.width > width) {
 					width = d.width;
@@ -85,10 +85,10 @@ public class StackLayout implements LayoutManager2 {
 		}
 		if (c != null) {
 			Dimension d = c.getPreferredSize();
-			if (direction.equals(X)) {
+			if (direction == X) {
 				width += d.width - offset;
 			}
-			if (direction.equals(Y)) {
+			if (direction == Y) {
 				height += d.height - offset;
 			}
 		}
@@ -102,14 +102,14 @@ public class StackLayout implements LayoutManager2 {
 		int yloc = 0;
 		Component c = null;
 		for (int i = parent.getComponentCount()-1; i >= 0 ; i--) {
-			if (direction.equals(X)) {
+			if (direction == X) {
 				if (x >= xloc && x <= xloc+offset) {
 					c = parent.getComponent(i);
 					break;
 				}
 				xloc += offset;
 			}
-			if (direction.equals(Y)) {
+			if (direction == Y) {
 				if (y >= yloc && y <= yloc+offset) {
 					c = parent.getComponent(i);
 					break;
@@ -127,14 +127,14 @@ public class StackLayout implements LayoutManager2 {
 		int yloc = 0;
 		int c = -1;
 		for (int i = parent.getComponentCount()-1; i >= 0 ; i--) {
-			if (direction.equals(X)) {
+			if (direction == X) {
 				if (x >= xloc && x <= xloc+offset) {
 					c = i;
 					break;
 				}
 				xloc += offset;
 			}
-			if (direction.equals(Y)) {
+			if (direction == Y) {
 				if (y >= yloc && y <= yloc+offset) {
 					c = i;
 					break;
@@ -146,13 +146,5 @@ public class StackLayout implements LayoutManager2 {
 			c = 0;
 		}
 		return c;
-	}
-	public void	addLayoutComponent(Component comp, Object constraints) {
-        }
-	public float	getLayoutAlignmentX(Container target) {return 0.0f;}
-	public float	getLayoutAlignmentY(Container target) {return 0.0f;}
-	public void	invalidateLayout(Container target) {}
-	public Dimension	maximumLayoutSize(Container target) {
-		return preferredLayoutSize(target);
 	}
 }

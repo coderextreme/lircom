@@ -9,9 +9,8 @@ package lircom;
 import java.net.*;
 import java.util.*;
 import java.io.*;
-import org.json.*;
 
-public class ClientOnServer extends ClientInterface implements Errors {
+public class ClientOnServer extends Thread implements Errors {
 	static Hashtable errors = null;
 	protected InputStream input;
 	protected PrintWriter output;
@@ -127,22 +126,8 @@ public class ClientOnServer extends ClientInterface implements Errors {
 		}
 		clients.remove(this.clientno);
 	}
-	public boolean processObj(JSONObject obj) throws Exception {
-		Message m = Message.parse(obj);
-		if (!seenMessage(m, server_messages)) {
-			try {
-				Hashtable rec = prepareToSend(m);
-				send(m, rec);
-			} catch (Message msge) {
-				messageException(msge);
-			}
-			return true;
-		} else {
-			return false;
-		}
-	}
 	public boolean processLine(String line) throws Exception {
-		Message m = Message.parse(new JSONObject(line));
+		Message m = Message.parse(line);
 		if (!seenMessage(m, server_messages)) {
 			try {
 				Hashtable rec = prepareToSend(m);
@@ -290,9 +275,6 @@ public class ClientOnServer extends ClientInterface implements Errors {
             messages.put(umsg, m);
             return false;
         }
-        public synchronized void send(JSONObject obj) throws Exception {
-		send(obj.toString());
-	}
         public synchronized void send(Message m) throws Exception {
 		// System.err.println(getNick()+" sending to server "+m.generate());
 		send(m.generate());

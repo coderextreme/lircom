@@ -4,8 +4,6 @@ import java.util.*;
 import java.io.*;
 import java.util.regex.*;
 
-import org.json.*;
-
 public class Channel extends Chat {
 	Hashtable subscribers = new Hashtable();
 	Hashtable subscribernicks = new Hashtable();
@@ -123,7 +121,7 @@ public class Channel extends Chat {
 		boolean b = super.processLine(line);
 		if (b) {
 			System.err.println("Processing "+line);
-			Message receivedMessage = Message.parse(new JSONObject(line));
+			Message receivedMessage = Message.parse(line);
 			fireActions(receivedMessage);
 		} else {
 			System.err.println("Message found");

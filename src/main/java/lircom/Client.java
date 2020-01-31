@@ -3,14 +3,12 @@ package lircom;
 import java.io.*;
 import java.net.*;
 
-import org.json.*;
-
 class ClientImpl extends ClientOnServer {
 	public ClientImpl(InputStream is, OutputStream os) throws Exception {
 		super(is, os);
 	}
 	public boolean processLine(String line) throws Exception {
-		Message m = Message.parse(new JSONObject(line));
+		Message m = Message.parse(line);
 		return true;
 	}
 }

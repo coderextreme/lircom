@@ -249,22 +249,7 @@ class IRCSendChat extends Thread implements SendChatInterface {
 					int numUsers = Integer.parseInt(st.nextToken());
 					String topic = line.substring(line.indexOf(":", 1));
 					chat.receiveRoom("irc:", channel, numUsers, topic);
-				} else if ((i = line.indexOf("353")) >= 0) {
-					System.err.println("Got it");
-					for (i = 0; i < 24; i++) {
-						System.err.println();
-					}
-					System.err.print(line);
-					System.err.print("__________");
-					StringTokenizer st = new StringTokenizer(line, " ");
-					String host = st.nextToken();
-					String cmd = st.nextToken();
-					String mynick = st.nextToken();
-					while (st.hasMoreTokens()) {
-						String user = st.nextToken();
-						System.err.print(user);
-					}
-					System.err.println();
+
 				}
 			}
 			System.err.println("Closing");
@@ -293,9 +278,9 @@ public class IRCBridge extends ClientState implements Observer, ActionListener, 
     	JTextField roomtf = new JTextField();
 	JPasswordField passwordtf = new JPasswordField();
 	JComboBox urlcb = new JComboBox();
-	String url = "irc://irc.robothive.org:6667/schizonation";
 	IRCConnection connection = null;
-	ReceiveChatInterface rci;
+	ReceiveChatInterface c;
+	MainWindow lircomwindow;
 
 	public void update(Observable o, Object arg) {
 		if (arg instanceof MessageCommand) {
@@ -306,59 +291,42 @@ public class IRCBridge extends ClientState implements Observer, ActionListener, 
 			int le = message.indexOf("}");
 			if (lb > 0 || le == -1 || lb > le) {
 				Message m = new Message("Goon", nick, message.substring(le+1), "en");
-				m.translate(rci.getLanguage());
-				rci.receive(nick, m.message);
+				m.translate(c.getLanguage());
+				c.receive(nick, m.message);
 			} else {
 				Message m = new Message("Goon", nick, message.substring(le+1), message.substring(lb+1, le));
-				m.translate(rci.getLanguage());
-				rci.receive(nick, m.message);
+				m.translate(c.getLanguage());
+				c.receive(nick, m.message);
 			}
-			// rci.receive(mc.getSource().toString(), mc.getMessage());
-		} else if (arg instanceof NoticeCommand) {
-			NoticeCommand nc = (NoticeCommand)arg;
-			String message = nc.getNotice();
-			String nick = "????";
-			if (nc.getFrom() != null) {
-				nick = nc.getFrom().toString();
-			}
-			int lb = message.indexOf("{");
-			int le = message.indexOf("}");
-			if (lb > 0 || le == -1 || lb > le) {
-				Message m = new Message("Goon", nick, message.substring(le+1), "en");
-				m.translate(rci.getLanguage());
-				rci.receive(nick, m.message);
-			} else {
-				Message m = new Message("Goon", nick, message.substring(le+1), message.substring(lb+1, le));
-				m.translate(rci.getLanguage());
-				rci.receive(nick, m.message);
-			}
+			// c.receive(mc.getSource().toString(), mc.getMessage());
 		} else if (arg instanceof JoinCommand) {
 			JoinCommand jc = (JoinCommand)arg;
-			rci.receiveJoin("irc:", jc.getChannel(), jc.getUser().getNick());
+			c.receiveJoin("irc:", jc.getChannel(), jc.getUser().getNick());
 		} else if (arg instanceof NamesReply) {
 			f00f.net.irc.martyr.clientstate.Channel ch = getChannel(roomtf.getText());
 			Enumeration e = ch.getMembers();
 			while (e.hasMoreElements()) {
 				Member m = (Member)e.nextElement();
-				rci.receivePresence("irc:", roomtf.getText(), m.getNick().getNick());
+				c.receivePresence("irc:", roomtf.getText(), m.getNick().getNick());
 			}
 		} else if (arg instanceof ActionCtcp) {
 			ActionCtcp ac = (ActionCtcp)arg;
-			rci.receiveAction(ac.getSource().toString(), ac.getMessage());
+			c.receiveAction(ac.getSource().toString(), ac.getMessage());
 		} else if (arg instanceof NickCommand) {
 			NickCommand nc = (NickCommand)arg;
-			rci.receiveNick("irc:", nc.getOldNick(), nc.getNick());
+			c.receiveNick("irc:", nc.getOldNick(), nc.getNick());
 		} else if (arg instanceof PartCommand) {
 			PartCommand pc = (PartCommand)arg;
-			rci.receiveLeave(pc.getChannel(), pc.getUser().getNick());
+			c.receiveLeave(pc.getChannel(), pc.getUser().getNick());
 		} else if (arg instanceof QuitCommand) {
 			QuitCommand qc = (QuitCommand)arg;
-			rci.receiveQuit(qc.getUser().getNick());
+			c.receiveQuit(qc.getUser().getNick());
 		}
 	}
 	public void actionPerformed(ActionEvent ae) {
 		try {
 			if (ae.getActionCommand().equals(CONNECT_BUTTON)) {
+				lircomwindow.setVisible(true);
 				connection = new IRCConnection( this );
 				connection.addCommandObserver(this);
 				String nick = usertf.getText();
@@ -384,20 +352,9 @@ public class IRCBridge extends ClientState implements Observer, ActionListener, 
 		msgSend(line, roomtf.getText());
 	}
 	public void msgSend(String line, String rec) {
-		System.err.println("SENDING*****"+line+" to "+rec);
 		if (line.startsWith("/")) {
 			int space = line.indexOf(" ");
-			if (line.length() > 3 && line.substring(1,3).equalsIgnoreCase("ME")) {
-				ActionCtcp ac = new ActionCtcp(rec, line.substring(3));
-				connection.sendCommand(ac);
-			} else if (line.length() > 6 && line.substring(1,6).equalsIgnoreCase("WHOIS")) {
-				String nick = line.substring(space+1);
-				WhoisCommand wc = new WhoisCommand(nick);
-				connection.sendCommand(wc);
-			} else if (line.substring(1,4).equalsIgnoreCase("WHO")) {
-				RawCommand rc = new RawCommand(line.substring(1));
-				connection.sendCommand(rc);
-			} else if (line.substring(1,5).equalsIgnoreCase("JOIN") && space > 0) {
+			if (line.substring(1,5).equalsIgnoreCase("JOIN") && space > 0) {
 				String room = line.substring(space+1);
 				JoinCommand jc = new JoinCommand(room);
 				connection.sendCommand(jc);
@@ -422,13 +379,16 @@ public class IRCBridge extends ClientState implements Observer, ActionListener, 
 				NickCommand nc = new NickCommand(newnick);
 				usertf.setText(newnick);
 				connection.sendCommand(nc);
+			} else if (line.substring(1,3).equalsIgnoreCase("ME")) {
+				ActionCtcp ac = new ActionCtcp(rec, line.substring(3));
+				connection.sendCommand(ac);
 			} else {
 				RawCommand rc = new RawCommand(line.substring(1));
 				connection.sendCommand(rc);
 			}
 		} else {
-			if (!rci.getLanguage().equals("__") && !rci.getLanguage().equals("en")) {
-				line = "{"+rci.getLanguage()+"}"+line;
+			if (!c.getLanguage().equals("__") && !c.getLanguage().equals("en")) {
+				line = "{"+c.getLanguage()+"}"+line;
 			}
 			MessageCommand mc = new MessageCommand(rec, line);
 			if (connection != null) {
@@ -437,9 +397,9 @@ public class IRCBridge extends ClientState implements Observer, ActionListener, 
 		}
 	}
 	public void parseURL(String url) {
-		String host = "irc.robothive.org";
+		String host = "irc.afternet.org";
 		String port = "6667";
-		String room = "#schizonation";
+		String room = "#thevillage";
 
 		int ds = url.indexOf("//");
 		int ss = url.indexOf("/", ds+2);
@@ -464,68 +424,57 @@ public class IRCBridge extends ClientState implements Observer, ActionListener, 
 		porttf.setText(port);
 		roomtf.setText(room);
 	}
-	class AddBridge implements Runnable {
-		IRCBridge bridge;
-		String nick;
-		ReceiveChatInterface rci;
-		public AddBridge(ReceiveChatInterface rci, String nick, IRCBridge bridge) {
-			this.bridge = bridge;
-			this.rci = rci;
-			this.nick = nick;
+	public IRCBridge(ReceiveChatInterface c, String nick, String url, MainWindow lircomwindow) {
+		this.c = c;
+		this.lircomwindow = lircomwindow;
+		try {
+			c.setSendCommandInterface(this);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		public void run() {
-			bridge.rci = this.rci;
-			try {
-				this.rci.setSendCommandInterface(bridge);
-			} catch (Exception e) {
-				e.printStackTrace();
+		JPanel jp = new JPanel();
+		jp.setLayout(new BoxLayout(jp, BoxLayout.Y_AXIS));
+
+		parseURL(url);
+
+		jp.add(urlcb);
+		urlcb.addItem(url);
+		urlcb.addItem("irc://irc.afternet.org:6667/thevillage");
+		urlcb.addItem("irc://irc.ircstorm.net:6667/schizophrenia");
+		urlcb.addItem("irc://eu.undernet.org:6667/schizophrenia");
+		urlcb.addItem("irc://208.69.42.178:7777/GenDiscussions");
+		urlcb.addActionListener(this);
+
+		jp.add(new JLabel("IRC Server"));
+		jp.add(hosttf);
+
+		jp.add(new JLabel("Port"));
+		jp.add(porttf);
+
+		jp.add(new JLabel("Room"));
+		jp.add(roomtf);
+
+		jp.add(new JLabel("User"));
+		usertf.setText(nick);
+		jp.add(usertf);
+
+		jp.add(new JLabel("Password"));
+		jp.add(passwordtf);
+
+	    	JButton jb = new JButton(CONNECT_BUTTON);
+		jb.addActionListener(this);
+		jp.add(jb);
+
+
+		jf.getContentPane().add(jp);
+		jf.pack();
+		jf.setVisible(true);
+		jf.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				jf.setVisible(false);
 			}
-
-			JPanel jp = new JPanel();
-			jp.setLayout(new BoxLayout(jp, BoxLayout.Y_AXIS));
-
-			parseURL(url);
-
-			jp.add(urlcb);
-			urlcb.addItem("irc://irc.robothive.org:6667/schizonation");
-			urlcb.addItem("irc://irc.ircstorm.net:6667/schizophrenia");
-			urlcb.addItem("irc://irc.ircstorm.net:6667/eden");
-			urlcb.addActionListener(bridge);
-
-			jp.add(new JLabel("IRC Server"));
-			jp.add(hosttf);
-
-			jp.add(new JLabel("Port"));
-			jp.add(porttf);
-
-			jp.add(new JLabel("Room"));
-			jp.add(roomtf);
-
-			jp.add(new JLabel("User"));
-			usertf.setText(nick);
-			jp.add(usertf);
-
-			jp.add(new JLabel("Password"));
-			jp.add(passwordtf);
-
-			JButton jb = new JButton(CONNECT_BUTTON);
-			jb.addActionListener(bridge);
-			jp.add(jb);
-
-
-			jf.getContentPane().add(jp);
-			jf.pack();
-			jf.setVisible(true);
-			jf.addWindowListener(new WindowAdapter() {
-				public void windowClosing(WindowEvent e) {
-					jf.setVisible(false);
-				}
-			});
-		}
-	}
-	public IRCBridge(ReceiveChatInterface rci, String nick) {
-		java.awt.EventQueue.invokeLater(new AddBridge(rci, nick, this));
-	}
+		});
+    }
 	public String getUser() {
 		return usertf.getText();
 	}

@@ -181,7 +181,8 @@ public class Lircom extends JFrame {
 			}
 			lircomwindow.setTitle(lircomwindow.nickname);
 			lircomwindow.setChat(classname, lircomwindow.nickname);
-			lircomwindow.setVisible(true);
+		
+            lircomwindow.setVisible(true);
  
                 } catch (Exception e) {
 			System.err.println("Died");

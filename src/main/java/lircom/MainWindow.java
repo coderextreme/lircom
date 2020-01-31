@@ -38,7 +38,6 @@ public class MainWindow extends javax.swing.JFrame implements java.awt.event.Win
         scrollingText = new javax.swing.JScrollPane();
         chat_Info_Area = new javax.swing.JEditorPane();
         member_List = new javax.swing.JList();
-        scrollingMembers = new javax.swing.JScrollPane();
         chat_Text_Field = new javax.swing.JTextField();
         backgroundImage = new javax.swing.JLabel();
         main_Menu_Bar = new javax.swing.JMenuBar();
@@ -47,7 +46,6 @@ public class MainWindow extends javax.swing.JFrame implements java.awt.event.Win
         selectBackgroundImage = new javax.swing.JMenuItem();
         selectDefaultTextColor = new javax.swing.JMenuItem();
         selectConnections = new javax.swing.JMenuItem();
-        selectIRCChannel = new javax.swing.JMenuItem();
         selectAdvertiseService = new javax.swing.JMenuItem();
         setBrowser = new javax.swing.JMenuItem();
         addChannel = new javax.swing.JMenuItem();
@@ -102,24 +100,19 @@ public class MainWindow extends javax.swing.JFrame implements java.awt.event.Win
 
         jPanel1.add(scrollingText, new java.awt.GridBagConstraints());
 
-        scrollingMembers.setMinimumSize(new java.awt.Dimension(300, 420));
-
         member_List.setBackground(new java.awt.Color(0, 0, 0));
         member_List.setForeground(new java.awt.Color(255, 255, 204));
         member_List.setToolTipText("Chatter List");
-        member_List.setMinimumSize(new java.awt.Dimension(300, 420));
+        member_List.setMinimumSize(new java.awt.Dimension(100, 420));
         member_List.setNextFocusableComponent(chat_Text_Field);
         member_List.setOpaque(false);
-        member_List.setPreferredSize(new java.awt.Dimension(300, 420));
-	member_List.setLayoutOrientation(javax.swing.JList.VERTICAL_WRAP);
-        scrollingMembers.getViewport().setView(member_List);
-
+        member_List.setPreferredSize(new java.awt.Dimension(100, 420));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.gridheight = java.awt.GridBagConstraints.RELATIVE;
-        jPanel1.add(scrollingMembers, gridBagConstraints);
+        jPanel1.add(member_List, gridBagConstraints);
 
         chat_Text_Field.setBackground(new java.awt.Color(0, 0, 0));
         chat_Text_Field.setForeground(new java.awt.Color(204, 255, 204));
@@ -144,10 +137,10 @@ public class MainWindow extends javax.swing.JFrame implements java.awt.event.Win
         jLayeredPane2.add(jPanel1, javax.swing.JLayeredPane.DRAG_LAYER);
 
         backgroundImage.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        backgroundImage.setIcon(new javax.swing.ImageIcon(getClass().getResource("Space_Tears_II.jpg"))); // NOI18N
+        backgroundImage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lircom/Space_Tears_II.jpg"))); // NOI18N
         backgroundImage.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         backgroundImage.setAlignmentY(1.0F);
-        backgroundImage.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("Space_Tears_II.jpg"))); // NOI18N
+        backgroundImage.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/lircom/Space_Tears_II.jpg"))); // NOI18N
         backgroundImage.setOpaque(true);
         backgroundImage.setBounds(0, 0, 800, 455);
         jLayeredPane2.add(backgroundImage, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -187,14 +180,6 @@ public class MainWindow extends javax.swing.JFrame implements java.awt.event.Win
             }
         });
         Main_Menu.add(selectConnections);
-
-        selectIRCChannel.setText("Add IRC Channel");
-        selectIRCChannel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                selectIRCChannelActionPerformed(evt);
-            }
-        });
-        Main_Menu.add(selectIRCChannel);
 
         selectAdvertiseService.setText("Advertise Service");
         selectAdvertiseService.addActionListener(new java.awt.event.ActionListener() {
@@ -553,6 +538,7 @@ public class MainWindow extends javax.swing.JFrame implements java.awt.event.Win
 		newChannel.setChat(classname, newChannel.nickname);
 		newChannel.setVisible(true);
 		newChannel.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+		// newChannel.bridge = new IRCBridge(newChannel.chat, newChannel.nickname);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -587,10 +573,6 @@ public class MainWindow extends javax.swing.JFrame implements java.awt.event.Win
         clientConnect.setVisible(true);
         clientConnect.harvest();
     }//GEN-LAST:event_selectConnectionsActionPerformed
-
-    private void selectIRCChannelActionPerformed(java.awt.event.ActionEvent evt) {
-		IRCBridge ib = new IRCBridge(this.chat, this.nickname);
-    }
 
     private void selectDefaultTextColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectDefaultTextColorActionPerformed
         // TODO add your handling code here:
@@ -680,9 +662,19 @@ public class MainWindow extends javax.swing.JFrame implements java.awt.event.Win
 			}
 			lircomwindow.setTitle(lircomwindow.nickname);
 			lircomwindow.setChat(classname, lircomwindow.nickname);
-                        lircomwindow.setVisible(true);
-                        lircomwindow.selectConnectionsActionPerformed(null);
-			IRCBridge ib = new IRCBridge(lircomwindow.chat, lircomwindow.nickname);
+			String url = "irc://irc.ircstorm.net:6667/schizophrenia";
+			if (args.length > 2) {
+				url = args[2];
+			} else {
+				url = javax.swing.JOptionPane.showInputDialog("Enter url:", url);
+			}
+			if (url == null) {
+				System.exit(0);
+			}
+
+                        // lircomwindow.setVisible(true);
+                        // lircomwindow.selectConnectionsActionPerformed(null);
+			lircomwindow.bridge = new IRCBridge(lircomwindow.chat, lircomwindow.nickname, url, lircomwindow);
     			// lircomwindow.warmChickenActionPerformed(null);
                         // lircomwindow.flashchatActionPerformed(null);
  
@@ -739,7 +731,6 @@ public class MainWindow extends javax.swing.JFrame implements java.awt.event.Win
                     PossibleConnection.get(i.next());
                 if (pcon.connected) {
                     try {
-                        System.err.println("Starting game on "+pcon.host+":"+pcon.port+" "+nickname);
                         g.startGame(mode, pcon.host, Integer.parseInt(pcon.port), nickname);
                         return;
                     } catch (Exception ex) {
@@ -764,9 +755,10 @@ public void 	windowOpened(java.awt.event.WindowEvent e) {}
     private java.io.File currentBrowserDirectory;
     private ServerAdvertise serverAdvertise;
     private ClientConnect clientConnect;
+    private IRCBridge bridge;
     public Chat chat;
     private Heathens heathens;
-    private java.awt.Color currentTextColor =  java.awt.Color.GREEN;
+    private java.awt.Color currentTextColor;
     private java.io.File currentDirectory;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu Main_Menu;
@@ -799,11 +791,9 @@ public void 	windowOpened(java.awt.event.WindowEvent e) {}
     private javax.swing.JMenuItem randomPlayer;
     private javax.swing.JMenuItem ru;
     private javax.swing.JScrollPane scrollingText;
-    private javax.swing.JScrollPane scrollingMembers;
     private javax.swing.JMenuItem selectAdvertiseService;
     private javax.swing.JMenuItem selectBackgroundImage;
     private javax.swing.JMenuItem selectConnections;
-    private javax.swing.JMenuItem selectIRCChannel;
     private javax.swing.JMenuItem selectDefaultTextColor;
     private javax.swing.JMenuItem setBrowser;
     private javax.swing.JMenu solitaireMenu;

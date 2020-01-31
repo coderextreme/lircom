@@ -4,11 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.event.*;
-import java.awt.event.*;
-import java.io.*;
 import java.util.*;
 import java.beans.*;
-import org.json.*;
 
 class StackBottom extends JLabel implements MouseListener {
 	Stack stack;
@@ -23,9 +20,7 @@ class StackBottom extends JLabel implements MouseListener {
 		addMouseListener(this);
 	}
 	public void 	mouseClicked(MouseEvent e) {
-		if (game != null) {
-			game.mouseClicked(e);
-		}
+		game.mouseClicked(e);
 	}
 	public void 	mouseEntered(MouseEvent e) {
 	}
@@ -37,156 +32,57 @@ class StackBottom extends JLabel implements MouseListener {
 	}
 }
 
-class PopupListener extends MouseAdapter {
-    Stack toStack;
-    JPopupMenu popup;
-    Component component;
-    public void mousePressed(MouseEvent e) {
-        maybeShowPopup(e);
-    }
-
-    public void mouseReleased(MouseEvent e) {
-        maybeShowPopup(e);
-    }
-
-    private void maybeShowPopup(MouseEvent e) {
-        if (e.isPopupTrigger()) {
-	    component = e.getComponent();
-            this.popup.show(e.getComponent(),
-                       e.getX(), e.getY());
-        }
-    }
-    public PopupListener(Stack toStack, JPopupMenu popup) {
-	this.toStack = toStack;
-	this.popup = popup;
-    }
-}
-
-
 public class Stack implements ActionListener, ChangeListener {
-	PopupListener popupListener;
+	static CardItem[][] cards;
 	int x;
 	int y;
 	JPanel gui = null;
 	int stack_no;
+	static int totstack = 0;
 	JTextField offsetjtf = null;
 	JCheckBox directcb = null;
 	static JFrame jw = null;
-	JFrame jf = null;
 	static JViewport jvp = null;
 	static JPanel jp = null;
-	public static Game game = null;
+	JFrame jf = null;
+	Game game = null;
 	Random r = new Random();
-	Vector<CardItem> cards = new Vector<CardItem>();
 
-	public Stack(int stack_no, JFrame jf) {
-		this(stack_no, (100+ stack_no * 100)%700, 50*stack_no % 450, jf);
+	static {
+		init();
 	}
-
-	public Stack(int stack_no, int x, int y, JFrame jf) {
-		this(stack_no, x, y, 20, StackLayout.X, jf);
-	}
-
-	public static void build(int x, int y) {
-		JSONObject obj = new JSONObject();
-		try {
-			obj.put("principal", "self");
-			obj.put("command", "draw");
-			obj.put("object", "stack");
-			obj.put("flag", true);
-			obj.put("x", x);
-			obj.put("y", y);
-		} catch (JSONException e) {
-			e.printStackTrace();
+	static public void init() {
+		cards = new CardItem[CardItem.King][CardItem.Clubs+1];
+		for (int isuit = CardItem.Hearts; isuit <= CardItem.Clubs; isuit++) {
+			for (int irank = CardItem.Ace; irank <= CardItem.King; irank++) {
+				Stack.cards[irank-1][isuit] = new CardItem(
+					isuit,
+					irank,
+					false,
+					-1,
+					13*(int)isuit+(int)(irank-1));
+			}
 		}
-		// will return toStack
-		System.err.println("BUILDING A STACK "+obj);
-		Log.write(obj);
+		Log.write(Stack.cards);
 	}
-	class StackActionListener implements ActionListener {
-		String principal;
-		String command;
-		Stack object;
-		Boolean flag;
-		public StackActionListener(String principal, String command, Stack object, Boolean flag) {
-			this.principal = principal;
-			this.command = command;
-			this.object = object;
-			this.flag = flag;
-		}
-		public void actionPerformed(ActionEvent ae) {
-			setStackCommand(principal, command, object, flag);
-		}
-	}
-	class CardActionListener implements ActionListener {
-		String principal;
-		String command;
-		String object;
-		Boolean flag;
-		public CardActionListener(String principal, String command, String object, Boolean flag) {
-			this.principal = principal;
-			this.command = command;
-			this.object = object;
-			this.flag = flag;
-		}
-		public void actionPerformed(ActionEvent ae) {
-			CardItem.callCardCommand(ae, principal, command, flag);
-		}
-	}
-	public void makeMenu(JPopupMenu popup, String [] principals, String [] commands) {
-		JMenuItem menuItem;
-/*
-		menuItem = new JMenuItem("Draw a card");
-		menuItem.addActionListener(new CardActionListener("self", "draw", "card", true));
-		popup.add(menuItem);
-*/
-		menuItem = new JMenuItem("Show a card");
-		menuItem.addActionListener(new CardActionListener("self", "see", "card", true));
-		popup.add(menuItem);
-		menuItem = new JMenuItem("Hide a card");
-		menuItem.addActionListener(new CardActionListener("self", "see", "card", false));
-		popup.add(menuItem);
-		menuItem = new JMenuItem("Discard a stack");
-		menuItem.addActionListener(new StackActionListener("self", "discard", this, true));
-		popup.add(menuItem);
-
-		menuItem = new JMenuItem("Show a stack");
-		menuItem.addActionListener(new StackActionListener("self", "see", this, true));
-		popup.add(menuItem);
-		menuItem = new JMenuItem("Hide a stack");
-		menuItem.addActionListener(new StackActionListener("self", "see", this, false));
-		popup.add(menuItem);
-		menuItem = new JMenuItem("Create a new private stack");
-		menuItem.addActionListener(new StackActionListener("self", "draw", this, true));
-		popup.add(menuItem);
-		menuItem = new JMenuItem("Make a private stack public");
-		menuItem.addActionListener(new StackActionListener("public", "use", this, true));
-		popup.add(menuItem);
-		menuItem = new JMenuItem("Create a new public stack");
-		menuItem.addActionListener(new StackActionListener("public", "draw", this, true));
-		popup.add(menuItem);
-	}
-	public Stack(int stack_no, int x, int y, int off, String direction, JFrame jf) {
-		this.stack_no = stack_no;
-		Game.stacks.put(stack_no, this);
-		gui = new JPanel();
-		JPopupMenu popup = new JPopupMenu();
-
-		makeMenu(popup, new String[] {"public", "self"}, new String[] {"draw", "see", "use", "discard"});
-
-		this.popupListener = new PopupListener(this, popup);
+	public Stack(int stack_no, int x, int y, int off, char direction, JFrame jf, Game game) {
 		//System.err.println("Got here A");
+		gui = new JPanel();
+		this.stack_no = stack_no;
 		this.x = x;
 		this.y = y;
 		this.game = game;
+		Game.stacks.add(this);
+		totstack++;
 		//System.err.println("Got here B");
+		Log.write("NEWSTACK|"+stack_no+"|"+x+"|"+y+"|"+off+"|"+direction);
 		//System.err.println("Got here C");
-		setLayout(off, direction);
+		gui.setLayout(new StackLayout(off, direction));
 		gui.setLocation(x, y);
-		setLayout(off, direction);
+		gui.setLayout(new StackLayout(off, direction));
 		JLabel stackBottom = new StackBottom(this, game);
 		gui.add(stackBottom);
-		setSize();
+		gui.setSize(gui.getLayout().preferredLayoutSize(gui));
 		gui.setVisible(true);
 		//System.err.println("Got here D");
 		if (jw == null) {
@@ -206,7 +102,7 @@ public class Stack implements ActionListener, ChangeListener {
 		
 		JLabel directjl = new JLabel("Direction");
 		st.add(directjl);
-		directcb = new JCheckBox(direction);
+		directcb = new JCheckBox(""+direction);
 		directcb.addChangeListener(this);
 		st.add(directcb);
 		//System.err.println("Got here E");
@@ -222,14 +118,18 @@ public class Stack implements ActionListener, ChangeListener {
 		jw.setLocation(0,600);
 		jw.setVisible(true);
 		this.jf = jf;
-		// jf.getContentPane().add(gui);
 		//System.err.println("Got here F");
+		jf.getContentPane().add(gui);
+		Log.write(Stack.cards);
+	}
+	public Stack(int x, int y, int off, char direction, JFrame jf, Game game) {
+		this(totstack, x, y, off, direction, jf, game);
 	}
 	public void actionPerformed(ActionEvent ae) {
 		System.err.println("Action Performed");
 		if (ae.getSource() == offsetjtf) {
-			setLayout(offsetjtf.getText(), directcb.getText());
-			setSize();
+			gui.setLayout(new StackLayout(Integer.parseInt(offsetjtf.getText()), directcb.getText().charAt(0)));
+			gui.setSize(gui.getLayout().preferredLayoutSize(gui));
 			jf.invalidate();
 			jf.validate();
 			gui.invalidate();
@@ -239,26 +139,15 @@ public class Stack implements ActionListener, ChangeListener {
 			// jw.setVisible(false);
 		}
 	}
-	public void setSize() {
-		gui.setSize(gui.getLayout().preferredLayoutSize(gui));
-		// gui.setSize(400,100);
-	}
-	public void setLayout(int offset, String direction) {
-		gui.setLayout(new StackLayout(offset, direction));
-		// gui.setLayout(null);
-	}
-	public void setLayout(String offset, String direction) {
-		setLayout(Integer.parseInt(offset), direction);
-	}
 	public void stateChanged(ChangeEvent e) {
 		System.err.println("State Changed");
-		if (directcb.getText().equals(StackLayout.X)) {
+		if (directcb.getText().charAt(0) == StackLayout.X) {
 			directcb.setText(""+StackLayout.Y);
 		} else {
 			directcb.setText(""+StackLayout.X);
 		}
-		setLayout(offsetjtf.getText(), directcb.getText());
-		setSize();
+		gui.setLayout(new StackLayout(Integer.parseInt(offsetjtf.getText()), directcb.getText().charAt(0)));
+		gui.setSize(gui.getLayout().preferredLayoutSize(gui));
 		jf.invalidate();
 		jf.validate();
 		gui.invalidate();
@@ -266,111 +155,97 @@ public class Stack implements ActionListener, ChangeListener {
 		gui.repaint();
 		jf.repaint();
 	}
-	static public void move(CardItem icim, Stack fromStack, Stack toStack, CardItem toCard) {
-		move(icim, fromStack, toStack, toStack.indexOf(toCard));
+	public void remove(CardItem ci) {
+		remove(indexOf(ci));
 	}
-
-	// when the to-stack is empty
-	static public void move(CardItem icim, Stack fromStack, Stack toStack, int toPosition) {
-		JSONObject obj = new JSONObject();
-		try {
-			obj.put("command", "use");
-			obj.put("object", "card");
-			obj.put("flag", true);
-			obj.put("principal", "public");
-			obj.put("fromStack", fromStack.stack_no);
-			obj.put("fromPosition", fromStack.indexOf(icim));
-			obj.put("toPosition", toPosition);
-			obj.put("toStack", toStack.stack_no);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		icim.toString(obj);
-		System.err.println("MOVING "+obj+" to "+toPosition);
-
-		Log.write(obj);
-	}
-
-	public void replaceAll(JSONArray array) {
-		ListIterator<CardItem> i = cards.listIterator();
-		while (i.hasNext()) {
-			CardItem cim = i.next();
-			if (cim != null) {
-				gui.remove(cim);
-				cim.setStack(Game.getStack(0)); // back to draw pile
-				i.remove();
-			}
-		}
-		for (int c = 0; c < array.length(); c++) {
-			boolean isNull = array.isNull(c);
-			Integer code = array.optInt(c);
-			System.err.println(c+" "+isNull+" "+code);
-			if (code > -1 && !isNull) {
-				System.err.println("Entering "+code);
-				CardItem cim = Game.cards.get(code);
-				if (cim != null) {
-					cim.setStack(this);
-					add(cim);
+	public Object remove(int i) {
+		CardItem icim = null;
+		for (int isuit = CardItem.Hearts; isuit <= CardItem.Clubs; isuit++) {
+			for (int irank = CardItem.Ace; irank <= CardItem.King; irank++) {
+				CardItem cim = cards[irank-1][isuit];
+				if(cim.getStack() == stack_no) {
+					if (cim.getPosition() > i) {
+						cim.setPosition(cim.getPosition()-1);
+/*
+						if (cim.getPosition() == 0 && cim.getStack() == 2) {
+							System.err.println("NEW TOP!!!!!!!!!!!! stack "+cim.getStack()+" suit "+CardItem.convertSuit(cim.getSuit())+" rank "+CardItem.convertRank(cim.getRank())+" position "+cim.getPosition()+" faceUp "+cim.getFaceUp());
+						}
+*/
+					} else if (cim.getPosition() == i) {
+						icim = cim;
+					}
 				}
 			}
 		}
-		setSize();
+		if (gui != null) {
+			gui.remove(icim);
+			gui.setSize(gui.getLayout().preferredLayoutSize(gui));
+		}
+		Log.write("PICK|"+stack_no+"|"+i+"|"+icim.toString());
+/*
+		if (icim.getStack() == 2) {
+			System.err.println("REMOVING stack "+icim.getStack()+" suit "+CardItem.convertSuit(icim.getSuit())+" rank "+CardItem.convertRank(icim.getRank())+" position "+icim.getPosition()+" faceUp "+icim.getFaceUp());
+		}
+*/
+		icim.setStack(-1);
+		icim.setPosition(-1);
 		jf.invalidate();
 		jf.validate();
 		gui.invalidate();
 		gui.validate();
 		gui.repaint();
 		jf.repaint();
+		Log.write(Stack.cards);
+		return icim;
 	}
-	public void remove(CardItem icim) {
-		cards.remove(icim);
-		if (gui != null) {
-			System.err.println("removing from GUI");
-			gui.remove(icim);
-			icim.setStack(Game.getStack(0));
-
-			setSize();
-			jf.invalidate();
-			jf.validate();
-			gui.invalidate();
-			gui.validate();
-			gui.repaint();
-			jf.repaint();
-		}
-	}
-	public void insertElementAt(CardItem icim, Integer pos) {
-		Stack toStack = this;
-		Stack fromStack = icim.getStack();
-		if (fromStack != null) {
-			icim.removeMouseListener(fromStack.popupListener);
-		}
-		icim.setStack(toStack);
-		icim.addMouseListener(toStack.popupListener);
-		if (!cards.contains(icim)) {
-			cards.add(icim);
-			if (gui != null) {
-				gui.add(icim, 0);
-				setSize();
+	public void insertElementAt(CardItem icim, int pos) {
+		for (int isuit = CardItem.Hearts; isuit <= CardItem.Clubs; isuit++) {
+			for (int irank = CardItem.Ace; irank <= CardItem.King; irank++) {
+				CardItem cim = cards[irank-1][isuit];
+				if(cim.getStack() == stack_no) {
+					if (cim.getPosition() >= pos) {
+						cim.setPosition(cim.getPosition()+1);
+					}
+				}
 			}
 		}
-
+		icim.setStack(stack_no);
+		icim.setPosition(pos);
+/*
+		if (icim.getStack() == 2) {
+			System.err.println("ADDING stack "+icim.getStack()+" suit "+CardItem.convertSuit(icim.getSuit())+" rank "+CardItem.convertRank(icim.getRank())+" position "+icim.getPosition()+" faceUp "+icim.getFaceUp());
+		}
+		if (icim.getPosition() == 0 && icim.getStack() == 2) {
+			System.err.println("NEW TOP************ stack "+icim.getStack()+" suit "+CardItem.convertSuit(icim.getSuit())+" rank "+CardItem.convertRank(icim.getRank())+" position "+icim.getPosition()+" faceUp "+icim.getFaceUp());
+		}
+*/
+		if (gui != null) {
+			gui.add(icim, pos);
+			gui.setSize(gui.getLayout().preferredLayoutSize(gui));
+		}
+		Log.write("PLAY|"+stack_no+"|"+pos+"|"+icim.toString());
 		jf.invalidate();
 		jf.validate();
 		gui.invalidate();
 		gui.validate();
 		gui.repaint();
 		jf.repaint();
+		Log.write(Stack.cards);
 	}
 	public boolean add(CardItem obj) {
 		insertElementAt(obj, 0);
-		obj.setStack(this);
 		return true;
 	}
 	public CardItem elementAt(int i) {
-		if (size() == 0 || i == -1) {
-			return null;
+		for (int isuit = CardItem.Hearts; isuit <= CardItem.Clubs; isuit++) {
+			for (int irank = CardItem.Ace; irank <= CardItem.King; irank++) {
+				CardItem cim = cards[irank-1][isuit];
+				if(cim.getStack() == stack_no && cim.getPosition() == i) {
+					return cim;
+				}
+			}
 		}
-		return cards.elementAt(i);
+		return null;
 	}
 	public CardItem getTopCard() {
 		return elementAt(0);
@@ -379,48 +254,91 @@ public class Stack implements ActionListener, ChangeListener {
 		return elementAt(1);
 	}
 	public int indexOf(CardItem cim) {
-		return cards.indexOf(cim);
+		return cim.getPosition();
 	}
 	public int size() {
-		return cards.size();
+		int size = 0;
+		for (int isuit = CardItem.Hearts; isuit <= CardItem.Clubs; isuit++) {
+			for (int irank = CardItem.Ace; irank <= CardItem.King; irank++) {
+				CardItem cim = cards[irank-1][isuit];
+				if(cim.getStack() == stack_no) {
+					size++;
+				}
+			}
+		}
+		return size;
 	}
 	public boolean isEmpty() {
-		return cards.isEmpty();
+		for (int isuit = CardItem.Hearts; isuit <= CardItem.Clubs; isuit++) {
+			for (int irank = CardItem.Ace; irank <= CardItem.King; irank++) {
+				CardItem cim = cards[irank-1][isuit];
+				if(cim.getStack() == stack_no) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	public CardItem findCard(int rank, int suit) {
+		CardItem cim = cards[rank-1][suit];
+		if (cim.getRank() == rank && cim.getSuit() == suit) {
+			return cim;
+		} else {
+			return null;
+		}
 	}
 	public boolean isBottomCard(CardItem icim) {
-		return icim.equals(cards.lastElement());
+		int maxpos = -1;
+		for (int isuit = CardItem.Hearts; isuit <= CardItem.Clubs; isuit++) {
+			for (int irank = CardItem.Ace; irank <= CardItem.King; irank++) {
+				CardItem cim = cards[irank-1][isuit];
+				if(cim.getStack() == stack_no) {
+					if (cim.getPosition() > maxpos) {
+						maxpos = cim.getPosition();
+					}
+				}
+			}
+		}
+		return icim.getPosition() == maxpos;
 	}
 	public CardItem getRandomCard() {
-		Hashtable<Integer,CardItem> carditems = Game.cards;
+		ArrayList carditems = new ArrayList();
+		for (int isuit = CardItem.Hearts; isuit <= CardItem.Clubs; isuit++) {
+			for (int irank = CardItem.Ace; irank <= CardItem.King; irank++) {
+				CardItem cim = cards[irank-1][isuit];
+				if(cim.getStack() == stack_no && cim.getFaceUp()) {
+					if (cim.getPosition() < 0 || cim.getPosition() > 51) {
+						System.err.println("Error illegal position");
+					}
+					carditems.add(cim);
+				}
+			}
+		}
 		if (carditems.size() == 0) {
 			return null;
 		} else {
 			return (CardItem)carditems.get(r.nextInt(carditems.size()));
 		}
 	}
+	public void printStack() {
+		for (int isuit = CardItem.Hearts; isuit <= CardItem.Clubs; isuit++) {
+			for (int irank = CardItem.Ace; irank <= CardItem.King; irank++) {
+				CardItem cim = cards[irank-1][isuit];
+				if(cim.getStack() == stack_no) {
+					System.err.println("stack "+cim.getStack()+" suit "+CardItem.convertSuit(cim.getSuit())+" rank "+CardItem.convertRank(cim.getRank())+" position "+cim.getPosition()+" faceUp "+cim.getFaceUp());
+				}
+			}
+		}
+	}
 	static public boolean allFaceUp () {
-		Iterator<CardItem> i = Game.cards.values().iterator();
-		while (i.hasNext()) {
-			CardItem cim = i.next();
-			if (!cim.getFaceUp()) {
-				return false;
+		for (int isuit = CardItem.Hearts; isuit <= CardItem.Clubs; isuit++) {
+			for (int irank = CardItem.Ace; irank <= CardItem.King; irank++) {
+				CardItem cim = cards[irank-1][isuit];
+				if (!cim.getFaceUp()) {
+					return false;
+				}
 			}
 		}
 		return true;
-	}
-	public void setStackCommandBE(String principal, String command, Stack object, Boolean flag) {
-	}
-	public void setStackCommand(String principal, String command, Stack object, Boolean flag) {
-		JSONObject obj = new JSONObject();
-		try {
-			obj.put("principal", principal);
-			obj.put("command", command);
-			obj.put("object", "stack");
-			obj.put("fromStack", object.stack_no);
-			obj.put("flag", flag);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		Log.write(obj);
 	}
 }
