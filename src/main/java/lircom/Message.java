@@ -75,15 +75,19 @@ public class Message extends Throwable {
 		String toit = (String)i.next();
 		to.put(toit);
 	}
-	obj.put("to", to);
-	obj.put("from", from);
-	obj.put("timestamp", timestamp);
-        obj.put("sequenceno", sequenceno);
-        obj.put("error", error);
-        obj.put("language", language);
-        obj.put("nick", nick);
-        obj.put("message", message);
-	obj.put("json", json);
+	try {
+		obj.put("to", to);
+		obj.put("from", from);
+		obj.put("timestamp", timestamp);
+		obj.put("sequenceno", sequenceno);
+		obj.put("error", error);
+		obj.put("language", language);
+		obj.put("nick", nick);
+		obj.put("message", message);
+		obj.put("json", json);
+	} catch (JSONException e) {
+		e.printStackTrace();
+	}
         System.err.println(System.currentTimeMillis()+" Sending "+obj);
         return obj;
     }

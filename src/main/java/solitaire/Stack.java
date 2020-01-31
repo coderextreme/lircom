@@ -87,12 +87,16 @@ public class Stack implements ActionListener, ChangeListener {
 
 	public static void build(int x, int y) {
 		JSONObject obj = new JSONObject();
-		obj.put("principal", "self");
-		obj.put("command", "draw");
-		obj.put("object", "stack");
-		obj.put("flag", true);
-		obj.put("x", x);
-		obj.put("y", y);
+		try {
+			obj.put("principal", "self");
+			obj.put("command", "draw");
+			obj.put("object", "stack");
+			obj.put("flag", true);
+			obj.put("x", x);
+			obj.put("y", y);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		// will return toStack
 		System.err.println("BUILDING A STACK "+obj);
 		Log.write(obj);
@@ -267,14 +271,18 @@ public class Stack implements ActionListener, ChangeListener {
 	// when the to-stack is empty
 	static public void move(CardItem icim, Stack fromStack, Stack toStack, int toPosition) {
 		JSONObject obj = new JSONObject();
-		obj.put("command", "use");
-		obj.put("object", "card");
-		obj.put("flag", true);
-		obj.put("principal", "public");
-		obj.put("fromStack", fromStack.stack_no);
-		obj.put("fromPosition", fromStack.indexOf(icim));
-		obj.put("toPosition", toPosition);
-		obj.put("toStack", toStack.stack_no);
+		try {
+			obj.put("command", "use");
+			obj.put("object", "card");
+			obj.put("flag", true);
+			obj.put("principal", "public");
+			obj.put("fromStack", fromStack.stack_no);
+			obj.put("fromPosition", fromStack.indexOf(icim));
+			obj.put("toPosition", toPosition);
+			obj.put("toStack", toStack.stack_no);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		icim.toString(obj);
 		System.err.println("MOVING "+obj+" to "+toPosition);
 
@@ -402,11 +410,15 @@ public class Stack implements ActionListener, ChangeListener {
 	}
 	public void setStackCommand(String principal, String command, Stack object, Boolean flag) {
 		JSONObject obj = new JSONObject();
-		obj.put("principal", principal);
-		obj.put("command", command);
-		obj.put("object", "stack");
-		obj.put("fromStack", object.stack_no);
-		obj.put("flag", flag);
+		try {
+			obj.put("principal", principal);
+			obj.put("command", command);
+			obj.put("object", "stack");
+			obj.put("fromStack", object.stack_no);
+			obj.put("flag", flag);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		Log.write(obj);
 	}
 }

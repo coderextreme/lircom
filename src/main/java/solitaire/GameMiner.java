@@ -34,46 +34,54 @@ public class GameMiner {
 	public static Game game = null;
 	static public Stack getStack(JSONObject obj, String name) {
 		if (obj.has(name)) {
-			Integer no = obj.getInt(name);
-			System.err.println("Retrieving stack "+no);
-			Stack s = Game.getStack(no);
-			return s;
+			try {
+				Integer no = obj.getInt(name);
+				System.err.println("Retrieving stack "+no);
+				Stack s = Game.getStack(no);
+				return s;
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 		}
 		return null;
 	}
 	static public void processObj(JSONObject obj) {
-		String command = obj.getString("command");
-		String principal = obj.optString("principal");
-		Boolean flag = obj.optBoolean("flag");
-		System.err.println("GameMiner.Processing "+obj);
-		Stack fromStack = getStack(obj,"fromStack");
-		Stack toStack = getStack(obj, "toStack");
-		Integer toStackNo = obj.optInt("toStack");
+		try {
+			String command = obj.getString("command");
+			String principal = obj.optString("principal");
+			Boolean flag = obj.optBoolean("flag");
+			System.err.println("GameMiner.Processing "+obj);
+			Stack fromStack = getStack(obj,"fromStack");
+			Stack toStack = getStack(obj, "toStack");
+			Integer toStackNo = obj.optInt("toStack");
 
-		Integer fromPosition = obj.optInt("fromPosition");
-		Integer toPosition = obj.optInt("toPosition");
-		CardItem cim = null;
-		if (fromStack != null && fromPosition != null) {
-			cim = fromStack.elementAt(fromPosition);
-		}
+			Integer fromPosition = obj.optInt("fromPosition");
+			Integer toPosition = obj.optInt("toPosition");
+			CardItem cim = null;
+			if (fromStack != null && fromPosition != null) {
+				cim = fromStack.elementAt(fromPosition);
+			}
 
-		if (command.equals("use")) {
-			fromStack.remove(cim);
-			toStack.insertElementAt(cim, toPosition);
-		} else if (command.equals("draw")) {
-			if (obj.getString("object").equals("stack")) {
-				JSONArray cards = obj.optJSONArray("cards");
-				SwingUtilities.invokeLater(new GUIThread(toStackNo, game.jf, cards));
-			} else {
-				fromStack.insertElementAt(cim, 0);
+			if (command.equals("use")) {
+				fromStack.remove(cim);
+				toStack.insertElementAt(cim, toPosition);
+			} else if (command.equals("draw")) {
+				if (obj.getString("object").equals("stack")) {
+					JSONArray cards = obj.optJSONArray("cards");
+					SwingUtilities.invokeLater(new GUIThread(toStackNo, game.jf, cards));
+				} else {
+					fromStack.insertElementAt(cim, 0);
+				}
+			} else if (command.equals("see")) {
+				JSONArray cards = obj.optJSONArray("visible");
+				System.err.println(cards);
+				for (int c = 0; c < cards.length(); c++) {
+					CardItem icim = Game.cards.get(c);
+					icim.setCardCommandBE(principal, command, !cards.isNull(c), c);
+				}
 			}
-		} else if (command.equals("see")) {
-			JSONArray cards = obj.optJSONArray("visible");
-			System.err.println(cards);
-			for (int c = 0; c < cards.length(); c++) {
-				CardItem icim = Game.cards.get(c);
-				icim.setCardCommandBE(principal, command, !cards.isNull(c), c);
-			}
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
 	}
 }

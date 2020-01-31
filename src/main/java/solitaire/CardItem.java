@@ -79,13 +79,17 @@ public class CardItem extends JLabel implements ListCellRenderer, MouseListener,
 		return new Dimension(background.getIconWidth(), background.getIconHeight());
 	}
 	public void toString(JSONObject obj) {
-		obj.put("faceUp", faceUp);
-		if (stack == null) {
-			obj.put("fromStack", -1);
-			obj.put("fromPosition", 0);
-		} else {
-			obj.put("fromStack", stack.stack_no);
-			obj.put("fromPosition", stack.indexOf(this));
+		try {
+			obj.put("faceUp", faceUp);
+			if (stack == null) {
+				obj.put("fromStack", -1);
+				obj.put("fromPosition", 0);
+			} else {
+				obj.put("fromStack", stack.stack_no);
+				obj.put("fromPosition", stack.indexOf(this));
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
 	}
 	public String toString() {
@@ -106,10 +110,14 @@ public class CardItem extends JLabel implements ListCellRenderer, MouseListener,
 	public void setCardCommand(String principal, String command, Boolean flag) {
 		System.err.println(command);
 		JSONObject obj = new JSONObject();
-		obj.put("principal", principal);
-		obj.put("command", command);
-		obj.put("object", "card");
-		obj.put("flag", flag);
+		try {
+			obj.put("principal", principal);
+			obj.put("command", command);
+			obj.put("object", "card");
+			obj.put("flag", flag);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		if (command.equals("see")) {
 			this.faceUp = flag;
 		}
