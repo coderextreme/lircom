@@ -73,11 +73,15 @@ public abstract class SocketIO extends ClientInterface {
 		}
 	}
 /*
-	public static void main(String args[]) throws URISyntaxException {
-		SocketIO sio = new SocketIO("localhost", 8088, "yottzumm");
-		sio.start();
-		Message m = new Message("*", sio.getNick(), "has entered", "en");
-		sio.send(m);
+	public static void main(String args[]) {
+		try {
+			SocketIO sio = new SocketIO("localhost", 8088, "yottzumm");
+			sio.start();
+			Message m = new Message("*", sio.getNick(), "has entered", "en");
+			sio.send(m);
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
 	}
 */
 }

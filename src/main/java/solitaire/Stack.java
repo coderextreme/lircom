@@ -23,7 +23,9 @@ class StackBottom extends JLabel implements MouseListener {
 		addMouseListener(this);
 	}
 	public void 	mouseClicked(MouseEvent e) {
-		game.mouseClicked(e);
+		if (game != null) {
+			game.mouseClicked(e);
+		}
 	}
 	public void 	mouseEntered(MouseEvent e) {
 	}
