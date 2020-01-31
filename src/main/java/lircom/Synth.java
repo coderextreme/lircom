@@ -1,4 +1,7 @@
 package lircom;
+
+import java.io.*;
+
 /**
  * Copyright 2003 Sun Microsystems, Inc.
  *
@@ -7,18 +10,6 @@ package lircom;
  * WARRANTIES.
  */
 
-/*
-import com.sun.speech.freetts.jsapi.FreeTTSEngineCentral; 
-*/
-
-/*
-import java.util.Locale;
-
-import javax.speech.EngineList; 
-import javax.speech.EngineCreate; 
-import javax.speech.synthesis.Synthesizer;
-import javax.speech.synthesis.SynthesizerModeDesc;
-*/
 
 /**
  * A talking clock powered by FreeTTS.
@@ -38,45 +29,13 @@ public class Synth {
 		"Victoria"
 	};
 
-/*
-    private Synthesizer synthesizer;
-*/
 
 
     /**
      * Creates the synthesizer, called by the constructor.
      */
     public Synth() {
-
-/*
-        try {
-	    javax.speech.synthesis.Voice kevinHQ = new javax.speech.synthesis.Voice("kevin16",
-			javax.speech.synthesis.Voice.GENDER_DONT_CARE, javax.speech.synthesis.Voice.AGE_DONT_CARE, null);
-            SynthesizerModeDesc desc = 
-                new SynthesizerModeDesc(null, 
-                                        "general",
-                                        Locale.US, 
-                                        Boolean.FALSE,
-                                        new javax.speech.synthesis.Voice [] { kevinHQ });
-
-            FreeTTSEngineCentral central = new FreeTTSEngineCentral();
-            EngineList list = central.createEngineList(desc); 
-            
-            if (list.size() > 0) { 
-                EngineCreate creator = (EngineCreate) list.get(0); 
-                synthesizer = (Synthesizer) creator.createEngine(); 
-            } 
-            if (synthesizer == null) {
-                System.err.println("Cannot create synthesizer");
-                System.exit(1);
-            }
-            synthesizer.allocate();
-            synthesizer.resume();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-*/
+	    
     }
 
 
@@ -97,44 +56,75 @@ public class Synth {
 		voice = voices[r.nextInt(voices.length)];
 		nickToVoice.put(nick, voice);
 	}
-/*
-        if (os.startsWith("Mac")) {
-*/
-                String speakingProcess = "/usr/bin/say";
-		try {
+	try {
+		if (os.startsWith("Mac")) {
+			String speakingProcess = "/usr/bin/say";
 			System.err.println(speakingProcess+" -v "+voice+" "+saying);
 			Runtime.getRuntime().exec(new String[] {speakingProcess, "-v", voice, saying} );
-		} catch (Exception e) {
-		    e.printStackTrace();
+		} else {
+			System.err.println("PowerShell "+saying);
+			String[] commandList = {"PowerShell.exe", "-Command", "Add-Type -AssemblyName System.Speech; $ss = New-Object -TypeName System.Speech.Synthesis.SpeechSynthesizer; $ss.Speak('"+(saying.replace("'", ""))+"');"};
+			Process powerShellProcess = Runtime.getRuntime().exec(commandList);
+			powerShellProcess.getOutputStream().close();
+			String line;
+			System.out.println("Output:");
+			BufferedReader stdout = new BufferedReader(new InputStreamReader(
+			powerShellProcess.getInputStream()));
+			while ((line = stdout.readLine()) != null) {
+				System.out.println(line);
+			}
+			stdout.close();
+			System.out.println("Error:");
+			BufferedReader stderr = new BufferedReader(new InputStreamReader(
+			powerShellProcess.getErrorStream()));
+			while ((line = stderr.readLine()) != null) {
+				System.out.println(line);
+			}
+			stderr.close();
+			System.out.println("Done");
+	 
+	 
 		}
-/*
-        } else {
-		synthesizer.speakPlainText(saying, null);
-		try {
-		    synthesizer.waitEngineState(Synthesizer.QUEUE_EMPTY);
-		} catch (Exception e) {
-		    e.printStackTrace();
-		}
+	} catch (Exception e) {
+	    e.printStackTrace();
 	}
-*/
     }
     public void deallocate() {
-/*
-	try {
-          synthesizer.deallocate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-*/
     }
 
     /**
      * main() method to run the Synth.
      */
     public static void main(String args[]) {
+	try {
+		String[] commandList = {"PowerShell.exe", "-Command", "Add-Type -AssemblyName System.Speech; $ss = New-Object -TypeName System.Speech.Synthesis.SpeechSynthesizer; $ss.Speak('this is really simple, just type in what you want the computer to say');"};
+		Process powerShellProcess = Runtime.getRuntime().exec(commandList);
+		powerShellProcess.getOutputStream().close();
+		String line;
+		System.out.println("Output:");
+		BufferedReader stdout = new BufferedReader(new InputStreamReader(
+		powerShellProcess.getInputStream()));
+		while ((line = stdout.readLine()) != null) {
+			System.out.println(line);
+		}
+		stdout.close();
+		System.out.println("Error:");
+		BufferedReader stderr = new BufferedReader(new InputStreamReader(
+		powerShellProcess.getErrorStream()));
+		while ((line = stderr.readLine()) != null) {
+			System.out.println(line);
+		}
+		stderr.close();
+		System.out.println("Done");
+ 
+ 
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+/*
         Synth synth = new Synth();
 	synth.speak("'Hello, World!'");
-	synth.deallocate();
 
+*/
     }
 }

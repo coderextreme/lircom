@@ -293,7 +293,7 @@ public class IRCBridge extends ClientState implements Observer, ActionListener, 
     	JTextField roomtf = new JTextField();
 	JPasswordField passwordtf = new JPasswordField();
 	JComboBox urlcb = new JComboBox();
-	String url = "irc://irc.afternet.org:6667/thevillage";
+	String url = "irc://irc.robothive.org:6667/schizonation";
 	IRCConnection connection = null;
 	ReceiveChatInterface rci;
 
@@ -437,9 +437,9 @@ public class IRCBridge extends ClientState implements Observer, ActionListener, 
 		}
 	}
 	public void parseURL(String url) {
-		String host = "irc.afternet.org";
+		String host = "irc.robothive.org";
 		String port = "6667";
-		String room = "#thevillage";
+		String room = "#schizonation";
 
 		int ds = url.indexOf("//");
 		int ss = url.indexOf("/", ds+2);
@@ -487,11 +487,9 @@ public class IRCBridge extends ClientState implements Observer, ActionListener, 
 			parseURL(url);
 
 			jp.add(urlcb);
-			urlcb.addItem("irc://irc.afternet.org:6667/thevillage");
-			urlcb.addItem("irc://irc.afternet.org:6667/schizophrenia");
+			urlcb.addItem("irc://irc.robothive.org:6667/schizonation");
 			urlcb.addItem("irc://irc.ircstorm.net:6667/schizophrenia");
 			urlcb.addItem("irc://irc.ircstorm.net:6667/eden");
-			urlcb.addItem("irc://eu.undernet.org:6667/schizophrenia");
 			urlcb.addActionListener(bridge);
 
 			jp.add(new JLabel("IRC Server"));
