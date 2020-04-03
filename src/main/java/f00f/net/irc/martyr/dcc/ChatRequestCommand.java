@@ -4,11 +4,12 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import f00f.net.irc.martyr.IRCConnection;
 import f00f.net.irc.martyr.OutCommand;
 import f00f.net.irc.martyr.commands.CtcpMessage;
-import org.apache.log4j.Logger;
 
 /**
  * ChatRequestCommand sets up a socket to listen for a dcc connection
@@ -21,7 +22,7 @@ import org.apache.log4j.Logger;
 //TODO not working yet
 public class ChatRequestCommand implements OutCommand
 {
-    static Logger log = Logger.getLogger(ChatRequestCommand.class);
+    static Logger log = Logger.getLogger("ChatRequestCommand");
 
     /**
 	 * Defaults to 30 minutes 
@@ -67,7 +68,7 @@ public class ChatRequestCommand implements OutCommand
 
 		int lport = ss.getLocalPort();
 		rendered = new CtcpMessage( toWhom, "DCC", "CHAT CHAT " + addr + " " + lport ).render();
-		log.debug("ChatRequestCommand: "+rendered);
+		log.log(Level.FINE, "ChatRequestCommand: "+rendered);
 	}
 
 	/**
@@ -108,7 +109,7 @@ public class ChatRequestCommand implements OutCommand
 			}
 			catch( IOException ioe )
 			{
-				log.error("ChatRequestCommand: "+ioe.toString());
+				log.log(Level.SEVERE, "ChatRequestCommand: "+ioe.toString());
 				ioe.printStackTrace();
 			}
 		}

@@ -1,5 +1,7 @@
 package f00f.net.irc.martyr.replies;
 
+import java.util.logging.Level;
+
 import f00f.net.irc.martyr.InCommand;
 import f00f.net.irc.martyr.util.ParameterIterator;
 
@@ -30,9 +32,9 @@ public class WhoisUserReply extends AbstractWhoisReply
 	{
 		pi.next(); // throw away the nick
 		host = (String)pi.next(); // hostmask
-		log.debug("WhoisUserReply: host: " + host);
+		log.log(Level.FINE, "WhoisUserReply: host: " + host);
 		name = pi.last(); // the "Name"
-		log.debug("WhoisUserReply: name: " + name);
+		log.log(Level.FINE, "WhoisUserReply: name: " + name);
 	}
 
 	public InCommand parse( String prefix, String identifier, String params )

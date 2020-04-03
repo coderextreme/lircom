@@ -9,17 +9,28 @@ package impact;
 // Notes: * Based on example 13-3 (p 542) in the "OpenGL Programming Guide"
 //        * This version should handle overlapping objects correctly.
 //---------------------------------------------------------------------------------
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.Canvas.*;
-import java.nio.*;
-import java.util.*;
-import com.jogamp.opengl.*;
-import com.jogamp.opengl.glu.*;
-import com.jogamp.opengl.awt.*;
-import com.jogamp.opengl.util.*;
-import com.jogamp.opengl.util.gl2.*;
+import java.awt.Frame;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.nio.IntBuffer;
+import java.util.Random;
+
 import com.jogamp.common.nio.Buffers;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLCapabilities;
+import com.jogamp.opengl.GLDrawableFactory;
+import com.jogamp.opengl.GLEventListener;
+import com.jogamp.opengl.GLProfile;
+import com.jogamp.opengl.awt.ComponentEvents;
+import com.jogamp.opengl.awt.GLCanvas;
+import com.jogamp.opengl.glu.GLU;
+import com.jogamp.opengl.util.Animator;
+import com.jogamp.opengl.util.gl2.GLUT;
 
 public class Picking
 {

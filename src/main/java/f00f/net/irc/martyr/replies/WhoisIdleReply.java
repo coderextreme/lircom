@@ -1,14 +1,15 @@
 package f00f.net.irc.martyr.replies;
 
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import f00f.net.irc.martyr.InCommand;
 import f00f.net.irc.martyr.util.ParameterIterator;
-import java.util.Date;
-
-import org.apache.log4j.Logger;
 
 public class WhoisIdleReply extends AbstractWhoisReply
 {
-    static Logger log = Logger.getLogger(WhoisIdleReply.class);
+    static Logger log = Logger.getLogger("WhoisIdleReply");
 
     private int idleTime;
 	private Date loginTime;
@@ -55,8 +56,8 @@ public class WhoisIdleReply extends AbstractWhoisReply
 			String loginTimeStr = (String)pi.next(); // Idle description
 			loginTime = new Date( Long.parseLong( loginTimeStr ) * 1000 );
 		}
-		log.debug("WhoisIdleReply: idle: " + idleTime);
-		log.debug("WhoisIdleReply: login: " + loginTime);
+		log.log(Level.FINE, "WhoisIdleReply: idle: " + idleTime);
+		log.log(Level.FINE, "WhoisIdleReply: login: " + loginTime);
 	}
 
 	public InCommand parse( String prefix, String identifier, String params )

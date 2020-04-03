@@ -10,10 +10,9 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import f00f.net.irc.martyr.services.AutoJoin;
-import f00f.net.irc.martyr.services.AutoRegister;
-import f00f.net.irc.martyr.services.AutoResponder;
 import f00f.net.irc.martyr.GenericCommandAutoService;
 import f00f.net.irc.martyr.IRCConnection;
 import f00f.net.irc.martyr.InCommand;
@@ -24,7 +23,9 @@ import f00f.net.irc.martyr.dcc.ChatRequestCommand;
 import f00f.net.irc.martyr.dcc.DccChatHandler;
 import f00f.net.irc.martyr.dcc.DccSendHandler;
 import f00f.net.irc.martyr.dcc.DccType;
-import org.apache.log4j.Logger;
+import f00f.net.irc.martyr.services.AutoJoin;
+import f00f.net.irc.martyr.services.AutoRegister;
+import f00f.net.irc.martyr.services.AutoResponder;
 
 
 /**
@@ -50,7 +51,7 @@ import org.apache.log4j.Logger;
  */
 public class DccTestBot 
 {
-    static Logger log = Logger.getLogger(DccTestBot.class);
+    static Logger log = Logger.getLogger("DccTestBot");
 
 
     /**
@@ -93,7 +94,7 @@ public class DccTestBot
         public void handleDccChat( Socket socket )
             throws IOException
         {
-            log.debug("Handling DCC chat");
+            log.log(Level.FINE, "Handling DCC chat");
             try
             {
                 BufferedReader br =
@@ -110,7 +111,7 @@ public class DccTestBot
             }
             finally
             {
-                log.debug("Terminated DCC chat");
+                log.log(Level.FINE, "Terminated DCC chat");
             }
         }
 
@@ -180,13 +181,13 @@ public class DccTestBot
                 }
                 catch( IOException ioe )
                 {
-                    log.error("Can't form connection");
+                    log.log(Level.SEVERE, "Can't form connection");
                     ioe.printStackTrace();
                 }
             }
             else
             {
-                log.debug("Unknown command: " + mc.getMessage());
+                log.log(Level.FINE, "Unknown command: " + mc.getMessage());
             }
         }
     }

@@ -10,6 +10,9 @@
  */
 package f00f.net.irc.martyr.services;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import f00f.net.irc.martyr.GenericAutoService;
 import f00f.net.irc.martyr.IRCConnection;
 import f00f.net.irc.martyr.InCommand;
@@ -20,7 +23,6 @@ import f00f.net.irc.martyr.commands.InviteCommand;
 import f00f.net.irc.martyr.commands.JoinCommand;
 import f00f.net.irc.martyr.commands.KickCommand;
 import f00f.net.irc.martyr.errors.GenericJoinError;
-import org.apache.log4j.Logger;
 
 /**
  * <p>AutoJoin joins a group if the IRCConnection is ready.  It will wait until
@@ -32,7 +34,7 @@ import org.apache.log4j.Logger;
  */
 public class AutoJoin extends GenericAutoService
 {
-    static Logger log = Logger.getLogger(AutoJoin.class);
+    static Logger log = Logger.getLogger("AutoJoin");
 
     private String channel = null;
     private String key = null;
@@ -89,7 +91,7 @@ public class AutoJoin extends GenericAutoService
 
             if( Channel.areEqual( joinErr.getChannel(), channel ) )
             {
-                log.debug("AutoJoin: Failed to join channel: "+joinErr.getComment());
+                log.log(Level.FINE, "AutoJoin: Failed to join channel: "+joinErr.getComment());
                 scheduleJoin();
             }
         }

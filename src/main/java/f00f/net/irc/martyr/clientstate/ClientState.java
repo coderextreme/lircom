@@ -8,9 +8,10 @@ package f00f.net.irc.martyr.clientstate;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import f00f.net.irc.martyr.util.FullNick;
-import org.apache.log4j.Logger;
 
 /**
  * <p>Maintains a list of client-related facts such as what channels we
@@ -35,7 +36,7 @@ import org.apache.log4j.Logger;
 public class ClientState
 {
 
-    static Logger log = Logger.getLogger(ClientState.class);
+    static Logger log = Logger.getLogger("ClientState");
 
     private FullNick nick = null;
     private String user = "";
@@ -51,11 +52,11 @@ public class ClientState
     {
         if( nick == null )
         {
-            log.debug("ClientState: Set nick to null");
+            log.log(Level.FINE, "ClientState: Set nick to null");
         }
         else
         {
-            log.debug("ClientState: Set nick to \"" + nick + "\"");
+            log.log(Level.FINE, "ClientState: Set nick to \"" + nick + "\"");
         }
         this.nick = nick;
     }
@@ -144,7 +145,7 @@ public class ClientState
 
     protected void addChannel( Channel channel )
     {
-        log.debug("ClientState: Channel added: " + channel.getName());
+        log.log(Level.FINE, "ClientState: Channel added: " + channel.getName());
         channels.put( channel.getName().toLowerCase(), channel );
     }
 
@@ -162,7 +163,7 @@ public class ClientState
      */
     public void removeChannel( String channel )
     {
-        log.debug("ClientState: Channel removed: " + channel);
+        log.log(Level.FINE, "ClientState: Channel removed: " + channel);
         channels.remove( channel.toLowerCase() );
     }
 

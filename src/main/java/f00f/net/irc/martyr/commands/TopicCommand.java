@@ -1,16 +1,17 @@
 package f00f.net.irc.martyr.commands;
 
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import f00f.net.irc.martyr.CommandRegister;
 import f00f.net.irc.martyr.InCommand;
 import f00f.net.irc.martyr.clientstate.Channel;
 import f00f.net.irc.martyr.clientstate.ClientState;
-import org.apache.log4j.Logger;
 
 public class TopicCommand extends AbstractCommand
 {
-    static Logger log = Logger.getLogger(TopicCommand.class);
+    static Logger log = Logger.getLogger("TopicCommand");
 
     private String channel;
     private String topic;
@@ -70,7 +71,7 @@ public class TopicCommand extends AbstractCommand
 
     public boolean updateClientState( ClientState state )
     {
-        log.debug("Topic: Channel: " + channel);
+        log.log(Level.FINE, "Topic: Channel: " + channel);
         Channel chan = state.getChannel( channel );
         chan.setTopic( topic );
         chan.setTopicDate( new Date() );

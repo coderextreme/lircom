@@ -2,20 +2,21 @@ package f00f.net.irc.martyr.commands;
 
 import java.util.HashMap;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import f00f.net.irc.martyr.InCommand;
 import f00f.net.irc.martyr.Mode;
 import f00f.net.irc.martyr.clientstate.ClientState;
 import f00f.net.irc.martyr.modes.user.InvisibleMode;
 import f00f.net.irc.martyr.util.FullNick;
-import org.apache.log4j.Logger;
 
 /**
  * Defines a user MODE command.
  */
 public class UserModeCommand extends ModeCommand
 {
-    static Logger log = Logger.getLogger(ModeCommand.class);
+    static Logger log = Logger.getLogger("ModeCommand");
 
     private FullNick user;
 	private FullNick sender;
@@ -31,7 +32,7 @@ public class UserModeCommand extends ModeCommand
 	
 		if( !sender.equals( user ) ) 
 		{
-			log.error("UserModeCommand: Odd: mode change for a user that isn't us.");
+			log.log(Level.SEVERE, "UserModeCommand: Odd: mode change for a user that isn't us.");
 			return;
 		}
 		
@@ -78,8 +79,8 @@ public class UserModeCommand extends ModeCommand
     }
 
     {
-		log.debug("TODO: UserModeCommand: Can't send");
-		log.debug("TODO: UserModeCommand: Does not update client state");
+		log.log(Level.FINE, "TODO: UserModeCommand: Can't send");
+		log.log(Level.FINE, "TODO: UserModeCommand: Does not update client state");
 	}
 
     public boolean updateClientState( ClientState state )

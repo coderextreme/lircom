@@ -1,12 +1,14 @@
 package f00f.net.irc.martyr.replies;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import f00f.net.irc.martyr.InCommand;
 import f00f.net.irc.martyr.util.ParameterIterator;
-import org.apache.log4j.Logger;
 
 public class WhoisServerReply extends AbstractWhoisReply
 {
-    static Logger log = Logger.getLogger(WhoisServerReply.class);
+    static Logger log = Logger.getLogger("WhoisServerReply");
 
     private String serverName;
 	private String serverDesc;
@@ -48,8 +50,8 @@ public class WhoisServerReply extends AbstractWhoisReply
 	{
 		serverName = (String)pi.next(); // Server name
 		serverDesc = (String)pi.next(); // Server description
-		log.debug("WhoisServerReply: server name: " + serverName);
-		log.debug("WhoisServerReply: server desc: " + serverDesc);
+		log.log(Level.FINE, "WhoisServerReply: server name: " + serverName);
+		log.log(Level.FINE, "WhoisServerReply: server desc: " + serverDesc);
 	}
 
 	public InCommand parse( String prefix, String identifier, String params )

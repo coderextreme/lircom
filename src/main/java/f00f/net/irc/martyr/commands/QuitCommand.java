@@ -1,12 +1,13 @@
 package f00f.net.irc.martyr.commands;
 
 import java.util.Enumeration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import f00f.net.irc.martyr.InCommand;
 import f00f.net.irc.martyr.clientstate.Channel;
 import f00f.net.irc.martyr.clientstate.ClientState;
 import f00f.net.irc.martyr.util.FullNick;
-import org.apache.log4j.Logger;
 
 /**
  * <p>Defines QUIT command.  The QUIT command asks the irc server to
@@ -23,7 +24,7 @@ import org.apache.log4j.Logger;
  */
 public class QuitCommand extends AbstractCommand
 {
-    static Logger log = Logger.getLogger(QuitCommand.class);
+    static Logger log = Logger.getLogger("QuitCommand");
 
     private String reason;
     private FullNick user;
@@ -98,11 +99,11 @@ public class QuitCommand extends AbstractCommand
      */
     public boolean updateClientState( ClientState state )
     {
-        log.debug( "Nick: " + state.getNick().toString() );
+        log.log(Level.FINE,  "Nick: " + state.getNick().toString() );
         if( isOurQuit(state) )
         {
             // We've quit
-            log.debug("QUIT: We've quit: " + reason);
+            log.log(Level.FINE, "QUIT: We've quit: " + reason);
 
             // What should we do with the client state here?
             return true;
@@ -111,7 +112,7 @@ public class QuitCommand extends AbstractCommand
         {
             // Someone else quit.  We need to remove them from each group
             // they are in.
-            log.debug("QUIT: " + user + " quit: " + reason);
+            log.log(Level.FINE, "QUIT: " + user + " quit: " + reason);
 
             // 1) Grab channels
             Enumeration channelNames = state.getChannelNames();

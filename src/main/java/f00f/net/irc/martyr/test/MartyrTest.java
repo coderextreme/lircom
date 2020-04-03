@@ -1,16 +1,17 @@
 package f00f.net.irc.martyr.test;
 
+import java.util.logging.Logger;
+
+import f00f.net.irc.martyr.IRCConnection;
+import f00f.net.irc.martyr.commands.QuitCommand;
 import f00f.net.irc.martyr.services.AutoJoin;
 import f00f.net.irc.martyr.services.AutoReconnect;
 import f00f.net.irc.martyr.services.AutoRegister;
 import f00f.net.irc.martyr.services.AutoResponder;
-import f00f.net.irc.martyr.IRCConnection;
-import f00f.net.irc.martyr.commands.QuitCommand;
-import org.apache.log4j.Logger;
 
 public class MartyrTest
 {
-    static Logger log = Logger.getLogger(MartyrTest.class);
+    static Logger log = Logger.getLogger("MartyrTest");
 
     /** A really simple test, all this does is login to a network and
      * join a channel, say hello, then die after 15 seconds.

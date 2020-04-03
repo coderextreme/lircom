@@ -1,16 +1,18 @@
 package f00f.net.irc.martyr.test;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import f00f.net.irc.martyr.IRCConnection;
 import f00f.net.irc.martyr.commands.QuitCommand;
 import f00f.net.irc.martyr.commands.WhoisCommand;
 import f00f.net.irc.martyr.services.AutoReconnect;
 import f00f.net.irc.martyr.services.AutoRegister;
 import f00f.net.irc.martyr.services.AutoResponder;
-import org.apache.log4j.Logger;
 
 public class WhoisTest
 {
-    static Logger log = Logger.getLogger(WhoisTest.class);
+    static Logger log = Logger.getLogger("WhoisTest");
 
 
     /** A really simple test, all this does is login to a network and
@@ -29,7 +31,7 @@ public class WhoisTest
 
         if( args.length != 3 )
         {
-            log.error("<server> <port> <target>");
+            log.log(Level.SEVERE, "<server> <port> <target>");
             return;
         }
 

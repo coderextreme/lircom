@@ -1,6 +1,6 @@
 package impact;
 
-import java.net.*;
+import java.net.Socket;
 
 class Proxy implements LineHandler {
         static Proxy proxy = new Proxy();

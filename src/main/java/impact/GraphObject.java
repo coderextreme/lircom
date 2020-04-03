@@ -1,11 +1,9 @@
 package impact;
 
 import java.util.List;
-import java.util.Iterator;
 import java.util.Vector;
-import com.jogamp.opengl.util.*;
-import com.jogamp.opengl.*;
-import com.jogamp.common.nio.Buffers;
+
+import com.jogamp.opengl.GL2;
 
 public abstract class GraphObject {
 	List<GraphObject> graphObjects = new Vector<GraphObject>();

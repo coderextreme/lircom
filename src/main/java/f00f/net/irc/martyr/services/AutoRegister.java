@@ -2,19 +2,20 @@ package f00f.net.irc.martyr.services;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import f00f.net.irc.martyr.GenericAutoService;
 import f00f.net.irc.martyr.IRCConnection;
 import f00f.net.irc.martyr.InCommand;
-import f00f.net.irc.martyr.GenericAutoService;
 import f00f.net.irc.martyr.State;
 import f00f.net.irc.martyr.TimerTaskCommand;
 import f00f.net.irc.martyr.clientstate.ClientState;
 import f00f.net.irc.martyr.commands.NickCommand;
-import f00f.net.irc.martyr.commands.UserCommand;
 import f00f.net.irc.martyr.commands.PassCommand;
+import f00f.net.irc.martyr.commands.UserCommand;
 import f00f.net.irc.martyr.errors.NickInUseError;
 import f00f.net.irc.martyr.util.FullNick;
-import org.apache.log4j.Logger;
 
 /**
  * <p>AutoRegister performs the task of registering the user with the server
@@ -50,7 +51,7 @@ import org.apache.log4j.Logger;
  */
 public class AutoRegister extends GenericAutoService
 {
-    static Logger log = Logger.getLogger(AutoRegister.class);
+    static Logger log = Logger.getLogger("AutoRegister");
 
     // I've lost track of why the timer stuff was in here.  I think the
     // original purpose was to make AutoRegister take control of the nick
@@ -164,7 +165,7 @@ public class AutoRegister extends GenericAutoService
 
     protected void updateState( State state )
     {
-        log.debug("AutoRegister: Update with state " + state);
+        log.log(Level.FINE, "AutoRegister: Update with state " + state);
         if( state == State.UNREGISTERED )
         {
             // We need to do some registerin'!
@@ -182,7 +183,7 @@ public class AutoRegister extends GenericAutoService
             clientState.setPass( pass );
         }
 
-        log.debug("AutoRegister: Returned from " + state);
+        log.log(Level.FINE, "AutoRegister: Returned from " + state);
     }
 
     protected void updateCommand( InCommand command )
@@ -254,7 +255,7 @@ public class AutoRegister extends GenericAutoService
     {
         if( getConnection().getState() != State.UNREGISTERED )
         {
-            log.fatal("AutoRegister: Tried to register but we are not UNREGISTERED");
+            log.log(Level.SEVERE, "AutoRegister: Tried to register but we are not UNREGISTERED");
             return;
         }
 

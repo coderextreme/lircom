@@ -1,18 +1,45 @@
 package lircom;
 
-import java.io.*;
-import java.lang.*;
-import java.util.*;
-import java.net.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import f00f.net.irc.martyr.*;
-import f00f.net.irc.martyr.services.*;
-import f00f.net.irc.martyr.clientstate.*;
-import f00f.net.irc.martyr.clientstate.*;
-import f00f.net.irc.martyr.commands.*;
-import f00f.net.irc.martyr.replies.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.util.Enumeration;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.StringTokenizer;
+import java.util.Vector;
+
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+
+import f00f.net.irc.martyr.IRCConnection;
+import f00f.net.irc.martyr.clientstate.ClientState;
+import f00f.net.irc.martyr.clientstate.Member;
+import f00f.net.irc.martyr.commands.ActionCtcp;
+import f00f.net.irc.martyr.commands.JoinCommand;
+import f00f.net.irc.martyr.commands.MessageCommand;
+import f00f.net.irc.martyr.commands.NickCommand;
+import f00f.net.irc.martyr.commands.PartCommand;
+import f00f.net.irc.martyr.commands.QuitCommand;
+import f00f.net.irc.martyr.commands.RawCommand;
+import f00f.net.irc.martyr.commands.TopicCommand;
+import f00f.net.irc.martyr.replies.NamesReply;
+import f00f.net.irc.martyr.services.AutoJoin;
+import f00f.net.irc.martyr.services.AutoReconnect;
+import f00f.net.irc.martyr.services.AutoRegister;
+import f00f.net.irc.martyr.services.AutoResponder;
 
 class IRCSendChat extends Thread implements SendChatInterface {
 	InputStream is = null;

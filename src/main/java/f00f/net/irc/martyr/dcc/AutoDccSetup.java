@@ -6,12 +6,13 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import f00f.net.irc.martyr.GenericCommandAutoService;
 import f00f.net.irc.martyr.IRCConnection;
 import f00f.net.irc.martyr.InCommand;
 import f00f.net.irc.martyr.commands.CtcpMessage;
-import org.apache.log4j.Logger;
 
 /**
  * <p>AutoDccSetup enables an application to "listen" for when another
@@ -42,7 +43,7 @@ import org.apache.log4j.Logger;
  */
 public abstract class AutoDccSetup extends GenericCommandAutoService
 {
-    static Logger log = Logger.getLogger(AutoDccSetup.class);
+    static Logger log = Logger.getLogger("AutoDccSetup");
 
     public AutoDccSetup( IRCConnection connection )
     {
@@ -142,7 +143,7 @@ public abstract class AutoDccSetup extends GenericCommandAutoService
             return;
         }
 
-        log.debug("AutoDccSetup: "+ctcpMsg.getMessage());
+        log.log(Level.FINE, "AutoDccSetup: "+ctcpMsg.getMessage());
         //StringTokenizer tokens = new StringTokenizer( ctcpMsg.getMessage() );
         Iterator tokens = tokenizeParams(ctcpMsg.getMessage()).iterator();
 

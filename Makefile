@@ -62,6 +62,8 @@ peer: target/lircom-1.jar
 #	(cd target; jar -cmf lircom/lircom.manifest lircom-1.jar lircom/Orbit2*class lircom/Animator*class; jarsigner -storepass argus1 -keystore $(KEYSTORE) lircom-1.jar myself)
 # JAVACODE2=Animator.java Synth.java
 # JAVACODE= BabelFish.java Bridge.java Channel.java Chat.java Client.java ClientConnect.java ClientException.java ClientOnServer.java Errors.java ExampleFileFilter.java Hyperactive.java IRCBridge.java IRCClient.java IRCScrape.java Identd.java Kanal.java Lircom.java MainApplet.java MainWindow.java Message.java Peer.java PossibleConnection.java ReceiveChatInterface.java Runestone.java SendChatInterface.java SendCommandInterface.java ServerAdvertise.java Smiley.java Trade.java Heathens.java Synth.java
+
+
 target/lircom-1.jar:
 	mvn package
 
@@ -75,16 +77,16 @@ target/lircom-1.jar:
 SOLCLASSPATH=../.m2/repository/xerces/xercesImpl/2.11.0/xercesImpl-2.11.0.jar;lib/xmlParserAPIs-2.6.1.jar;../.m2/repository/nekohtml/nekohtml/0.9.5/nekohtml-0.9.5.jar;target/lircom-1.jar;../.m2/repository/org/httpunit/httpunit/1.7.2/httpunit-1.7.2.jar;lib/martyr.jar;../.m2/repository/log4j/log4j/1.2.17/log4j-1.2.17.jar;lib/servlet-api-2.4.jar;../.m2/repository/rhino/js/1.6R5/js-1.6R5.jar;../.m2/repository/io/socket/engine.io-client/0.6.3/engine.io-client-0.6.3.jar;../.m2/repository/io/socket/socket.io-client/0.6.3/socket.io-client-0.6.3.jar;../.m2/repository/com/squareup/okhttp/okhttp/2.7.0/okhttp-2.7.0.jar;../.m2/repository/com/squareup/okhttp/okhttp-ws/2.7.0/okhttp-ws-2.7.0.jar;../.m2/repository/com/squareup/okio/okio/1.6.0/okio-1.6.0.jar;../.m2/repository/org/json/json/20190722/json-20190722.jar
 
 random: target/lircom-1.jar
-	java -Xmx256m -classpath "$(SOLCLASSPATH)" solitaire.Game random localhost 8088
+	java -Xmx256m -classpath "$(SOLCLASSPATH)" solitaire.Game random localhost 8180
 
 methodical: target/lircom-1.jar
-	java -Xmx256m -classpath "$(SOLCLASSPATH)" solitaire.Game methodical localhost 8088
+	java -Xmx256m -classpath "$(SOLCLASSPATH)" solitaire.Game methodical localhost 8180
 
 display: target/lircom-1.jar
-	java -Xmx256m -classpath "$(SOLCLASSPATH)" solitaire.Game display localhost 8088
+	java -Xmx256m -classpath "$(SOLCLASSPATH)" solitaire.Game display localhost 8180
 
 dealer: target/lircom-1.jar
-	java -Xmx256m -classpath "$(SOLCLASSPATH)" solitaire.Game dealer localhost 8088
+	java -Xmx256m -classpath "$(SOLCLASSPATH)" solitaire.Game dealer localhost 8180
 
 sign: target/lircom-1.jar
 	jarsigner -keystore $(KEYSTORE) target/lircom-1.jar myself

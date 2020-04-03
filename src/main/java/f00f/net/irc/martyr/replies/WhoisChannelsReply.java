@@ -1,16 +1,17 @@
 package f00f.net.irc.martyr.replies;
 
-import f00f.net.irc.martyr.InCommand;
-import f00f.net.irc.martyr.util.ParameterIterator;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.apache.log4j.Logger;
+import f00f.net.irc.martyr.InCommand;
+import f00f.net.irc.martyr.util.ParameterIterator;
 
 public class WhoisChannelsReply extends AbstractWhoisReply
 {
-    static Logger log = Logger.getLogger(WhoisChannelsReply.class);
+    static Logger log = Logger.getLogger("WhoisChannelsReply");
 
     private String channels;
 
@@ -58,7 +59,7 @@ public class WhoisChannelsReply extends AbstractWhoisReply
 	{
 		channels = pi.last(); // Channels
 
-		log.debug("WhoisChannelsReply: channels: " + channels);
+		log.log(Level.FINE, "WhoisChannelsReply: channels: " + channels);
 	}
 
 	public InCommand parse( String prefix, String identifier, String params )

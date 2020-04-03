@@ -1,11 +1,13 @@
 package f00f.net.irc.martyr.replies;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import f00f.net.irc.martyr.util.ParameterIterator;
-import org.apache.log4j.Logger;
 
 public abstract class AbstractWhoisReply extends GenericReply
 {
-    static Logger log = Logger.getLogger(AbstractWhoisReply.class);
+    static Logger log = Logger.getLogger("AbstractWhoisReply");
 
     private String target = null;
 
@@ -50,7 +52,7 @@ public abstract class AbstractWhoisReply extends GenericReply
 		ParameterIterator pi = new ParameterIterator(params);
 		pi.next(); // throw away our own nick
 		this.target = (String)pi.next();
-		log.debug("AbstractWhoisReply: Whois target: " + target);
+		log.log(Level.FINE, "AbstractWhoisReply: Whois target: " + target);
 
 		return pi;
 	}

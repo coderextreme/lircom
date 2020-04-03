@@ -1,14 +1,15 @@
 package f00f.net.irc.martyr.services;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import f00f.net.irc.martyr.GenericAutoService;
 import f00f.net.irc.martyr.IRCConnection;
 import f00f.net.irc.martyr.InCommand;
-import f00f.net.irc.martyr.GenericAutoService;
 import f00f.net.irc.martyr.State;
 import f00f.net.irc.martyr.clientstate.ClientState;
 import f00f.net.irc.martyr.commands.QuitCommand;
-import org.apache.log4j.Logger;
 
 /**
  * <p>AutoReconnect performs the job of reconnecting to the server, if
@@ -29,7 +30,7 @@ import org.apache.log4j.Logger;
  */
 public class AutoReconnect extends GenericAutoService
 {
-    static Logger log = Logger.getLogger(AutoReconnect.class);
+    static Logger log = Logger.getLogger("AutoReconnect");
 
     private int attempt;
     private int maxAttempts;
@@ -125,7 +126,7 @@ public class AutoReconnect extends GenericAutoService
 
     protected void updateState( State state )
     {
-        log.debug("AutoReconnect: Update with state " + state);
+        log.log(Level.FINE, "AutoReconnect: Update with state " + state);
         if( state == State.UNCONNECTED )
         {
             // This should only happen if we were connected and then
@@ -140,7 +141,7 @@ public class AutoReconnect extends GenericAutoService
             this.attempt = 0;
         }
 
-        log.debug("AutoReconnect: Returned from " + state);
+        log.log(Level.FINE, "AutoReconnect: Returned from " + state);
     }
 
     /**
@@ -200,7 +201,7 @@ public class AutoReconnect extends GenericAutoService
      * */
     protected void finalFailure()
     {
-        log.debug("AutoReconnect: Final failure.");
+        log.log(Level.FINE, "AutoReconnect: Final failure.");
         this.attempt = 0;
     }
 
@@ -215,14 +216,14 @@ public class AutoReconnect extends GenericAutoService
      * */
     protected boolean failedToConnect( Exception error )
     {
-        log.debug("AutoReconnect: Error connecting: " + error);
+        log.log(Level.FINE, "AutoReconnect: Error connecting: " + error);
 
         this.attempt++;
 
         // abort if we've tried too many times
         if( attempt >= maxAttempts )
         {
-            log.debug("AutoReconnect: Tried " + attempt + " times, giving up.");
+            log.log(Level.FINE, "AutoReconnect: Tried " + attempt + " times, giving up.");
             finalFailure();
             return false;
         }
@@ -255,7 +256,7 @@ public class AutoReconnect extends GenericAutoService
                 && command instanceof QuitCommand
                 && ((QuitCommand)command).isOurQuit(getConnection().getClientState()) )
         {
-            log.debug("AutoReconnect: Disabling due to receiving own QUIT.");
+            log.log(Level.FINE, "AutoReconnect: Disabling due to receiving own QUIT.");
             disable();
         }
     }

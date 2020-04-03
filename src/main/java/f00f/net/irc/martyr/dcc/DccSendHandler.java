@@ -1,12 +1,12 @@
 package f00f.net.irc.martyr.dcc;
 
-import org.apache.log4j.Logger;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A DccSendHandler manages a DCC "send" (to us) file transfer.  If
@@ -18,7 +18,7 @@ import java.net.Socket;
  */
 public class DccSendHandler extends Thread
 {
-    static Logger log = Logger.getLogger(DccSendHandler.class);
+    static Logger log = Logger.getLogger("DccSendHandler");
 
     private Socket socket_;
 	private String filename_;
@@ -56,7 +56,7 @@ public class DccSendHandler extends Thread
 	{
 		OutputStream dest = getStreamForReceive( filename, filesize );
 		
-		log.debug("DccSendHandler: handleDcc in thread: " + Thread.currentThread().getName());
+		log.log(Level.FINE, "DccSendHandler: handleDcc in thread: " + Thread.currentThread().getName());
 
 		// read/write as per protocol
 		InputStream incoming = socket.getInputStream();
@@ -101,8 +101,8 @@ public class DccSendHandler extends Thread
 			dest.close();
 		}
 		
-		log.debug("DccSendHandler: Done writing file: " + filename);
-		log.debug("DccSendHandler: Total bytes: " + totalin);
+		log.log(Level.FINE, "DccSendHandler: Done writing file: " + filename);
+		log.log(Level.FINE, "DccSendHandler: Total bytes: " + totalin);
 		socket.close();
 	}
 	

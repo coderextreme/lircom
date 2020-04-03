@@ -1,16 +1,17 @@
 package f00f.net.irc.martyr.replies;
 
-import java.util.List;
 import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import f00f.net.irc.martyr.InCommand;
 import f00f.net.irc.martyr.clientstate.Channel;
 import f00f.net.irc.martyr.clientstate.ClientState;
-import org.apache.log4j.Logger;
 
 public class NamesReply extends GenericReply
 {
-    static Logger log = Logger.getLogger(NamesReply.class);
+    static Logger log = Logger.getLogger("NamesReply");
 
     private List<String> names;
     private String channel;
@@ -48,13 +49,13 @@ public class NamesReply extends GenericReply
 
         if( channel == null )
         {
-            log.error("NamesReply: Channel is null");
+            log.log(Level.SEVERE, "NamesReply: Channel is null");
             return false;
         }
 
         if( channelObj == null )
         {
-            log.fatal("NamesReply: No channel object for channel: " + channel);
+            log.log(Level.SEVERE, "NamesReply: No channel object for channel: " + channel);
             return false;
         }
 

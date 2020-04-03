@@ -1,6 +1,6 @@
 package lircom;
 
-import java.io.*;
+import java.io.InputStream;
 
 public interface ReceiveChatInterface {
 	void receive(String from, String message, String color);

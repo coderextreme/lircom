@@ -1,9 +1,8 @@
 package f00f.net.irc.martyr;
 
-import org.apache.log4j.Logger;
-
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Logger;
 
 /**
  * ClientStateMonitor asks commands to update the client state.
@@ -11,7 +10,7 @@ import java.util.Observer;
 public class ClientStateMonitor implements Observer
 {
 
-    static Logger log = Logger.getLogger(ClientStateMonitor.class);
+    static Logger log = Logger.getLogger("ClientStateMonitor");
 
     private IRCConnection connection;
 
@@ -53,11 +52,11 @@ public class ClientStateMonitor implements Observer
         try
         {
             if( command.updateClientState( connection.getClientState() ) )
-                log.debug("ClientStateMonnitor: Client state updated");
+                log.log(java.util.logging.Level.FINE, "ClientStateMonnitor: Client state updated");
         }
         catch( Throwable e )
         {
-            log.error("ClientStateMonitor: Client state update failed.", e);
+            log.log(java.util.logging.Level.SEVERE, "ClientStateMonitor: Client state update failed.", e);
         }
 
     }

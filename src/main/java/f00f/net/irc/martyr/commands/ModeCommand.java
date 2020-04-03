@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import f00f.net.irc.martyr.CommandRegister;
 import f00f.net.irc.martyr.InCommand;
@@ -13,7 +15,6 @@ import f00f.net.irc.martyr.OutCommand;
 import f00f.net.irc.martyr.State;
 import f00f.net.irc.martyr.clientstate.Channel;
 import f00f.net.irc.martyr.clientstate.ClientState;
-import org.apache.log4j.Logger;
 
 /**
  * Defines MODE command.  Since the MODE command is of two distinct
@@ -24,7 +25,7 @@ import org.apache.log4j.Logger;
  */
 public class ModeCommand implements InCommand, OutCommand
 {
-    static Logger log = Logger.getLogger(ModeCommand.class);
+    static Logger log = Logger.getLogger("ModeCommand");
 
     public static final String IDENTIFIER = "MODE";
 	private String source;
@@ -50,7 +51,7 @@ public class ModeCommand implements InCommand, OutCommand
 
 		if( modes.get( modeChar ) != null )
 		{
-			log.error("ModeCommand: Warning: Two modes with same letter: " +
+			log.log(Level.SEVERE, "ModeCommand: Warning: Two modes with same letter: " +
 				modes.get( modeChar ) + " and " + mode);
 		}
 		
@@ -85,7 +86,7 @@ public class ModeCommand implements InCommand, OutCommand
 	
 		String str = tokens.nextToken();
 	
-		//log.debug("ModeCommand: Prefix: " + prefix + " str: " + str
+		//log.log(Level.FINE, "ModeCommand: Prefix: " + prefix + " str: " + str
 		//	+ " total: " + params);
 		
 		// Malformed command.
@@ -200,7 +201,7 @@ public class ModeCommand implements InCommand, OutCommand
 					// we don't know anything about needs a parameter?
 					// Things get messy if it does need a parameter, and we
 					// don't eat the string.
-					log.fatal("ModeCommand: Unknown mode: " + lookingAt);
+					log.log(Level.SEVERE, "ModeCommand: Unknown mode: " + lookingAt);
 				}
 				else
 				{

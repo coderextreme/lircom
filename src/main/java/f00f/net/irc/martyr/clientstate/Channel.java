@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import f00f.net.irc.martyr.Command;
 import f00f.net.irc.martyr.InCommand;
@@ -13,7 +15,6 @@ import f00f.net.irc.martyr.Mode;
 import f00f.net.irc.martyr.modes.channel.OperMode;
 import f00f.net.irc.martyr.modes.channel.VoiceMode;
 import f00f.net.irc.martyr.util.FullNick;
-import org.apache.log4j.Logger;
 
 /**
  * Channel is simply a repository for information about a channel.
@@ -46,7 +47,7 @@ import org.apache.log4j.Logger;
 public class Channel
 {
 
-    static Logger log = Logger.getLogger(Channel.class);
+    static Logger log = Logger.getLogger("Channel");
 
     private String name = null;
 	private String topic = null;
@@ -283,13 +284,7 @@ public class Channel
 		return null;
 	}
 	
-	public void setTopic( String topic )
-	{
-		log.debug(getName()+": Topic: " + topic);
-		this.topic = topic;
-	}
-	
-	public String getTopic()
+	public String setTopic( String topic )
 	{
 		return topic;
 	}
@@ -301,7 +296,7 @@ public class Channel
 	
 	public void setTopicDate( Date date )
 	{
-		log.debug(getName()+": Topic date: " + date);
+		log.log(Level.FINE, getName()+": Topic date: " + date);
 		this.topicDate = date;
 	}
 	
@@ -312,7 +307,7 @@ public class Channel
 
 	public void setCreationDate( Date date )
 	{
-		log.debug(getName()+": Creation date: " + date);
+		log.log(Level.FINE, getName()+": Creation date: " + date);
 		this.creationDate = date;
 	}
 	
@@ -323,7 +318,7 @@ public class Channel
 	
 	public void setTopicAuthor( String author )
 	{
-		log.debug(getName()+": Topic by: " + author);
+		log.log(Level.FINE, getName()+": Topic by: " + author);
 		this.topicAuthor = author;
 	}
 	

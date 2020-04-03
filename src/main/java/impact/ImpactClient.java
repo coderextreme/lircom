@@ -1,6 +1,6 @@
 package impact;
 
-import java.util.*;
+import java.util.Hashtable;
 
 public class ImpactClient extends lircom.ClientOnServer {
 	public ImpactClient(java.net.Socket s, String nick) throws Exception {

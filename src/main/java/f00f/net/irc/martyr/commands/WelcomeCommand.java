@@ -1,11 +1,13 @@
 package f00f.net.irc.martyr.commands;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import f00f.net.irc.martyr.CommandRegister;
 import f00f.net.irc.martyr.InCommand;
 import f00f.net.irc.martyr.clientstate.ClientState;
 import f00f.net.irc.martyr.util.FullNick;
 import f00f.net.irc.martyr.util.ParameterIterator;
-import org.apache.log4j.Logger;
 
 
 /**
@@ -15,7 +17,7 @@ import org.apache.log4j.Logger;
  */
 public class WelcomeCommand extends AbstractInCommand
 {
-    static Logger log = Logger.getLogger(WelcomeCommand.class);
+    static Logger log = Logger.getLogger("WelcomeCommand");
 
     private String notice;
     private String nick;
@@ -36,8 +38,8 @@ public class WelcomeCommand extends AbstractInCommand
     {
         this.notice = notice;
         this.nick = nick;
-        log.debug("WelcomeCommand: Nick is: `" + nick + "'");
-        log.debug("WelcomeCommand: Notice is: `"+notice+"'");
+        log.log(Level.FINE, "WelcomeCommand: Nick is: `" + nick + "'");
+        log.log(Level.FINE, "WelcomeCommand: Notice is: `"+notice+"'");
     }
 
     /**
@@ -62,7 +64,7 @@ public class WelcomeCommand extends AbstractInCommand
         }
         if( pi.hasNext() )
         {
-            log.fatal("WelcomeCommand: More than two parameters, confused.");
+            log.log(Level.SEVERE, "WelcomeCommand: More than two parameters, confused.");
         }
 
 
@@ -77,7 +79,7 @@ public class WelcomeCommand extends AbstractInCommand
      */
     public boolean updateClientState( ClientState state )
     {
-        log.debug("WelcomeCommand: updated client state with: " + new FullNick( nick ));
+        log.log(Level.FINE, "WelcomeCommand: updated client state with: " + new FullNick( nick ));
         state.setNick( new FullNick( nick ) );
 
         return true;

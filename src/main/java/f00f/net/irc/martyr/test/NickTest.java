@@ -1,17 +1,18 @@
 package f00f.net.irc.martyr.test;
 
+import java.util.logging.Logger;
+
+import f00f.net.irc.martyr.IRCConnection;
+import f00f.net.irc.martyr.commands.NickCommand;
+import f00f.net.irc.martyr.commands.QuitCommand;
 import f00f.net.irc.martyr.services.AutoJoin;
 import f00f.net.irc.martyr.services.AutoReconnect;
 import f00f.net.irc.martyr.services.AutoRegister;
 import f00f.net.irc.martyr.services.AutoResponder;
-import f00f.net.irc.martyr.IRCConnection;
-import f00f.net.irc.martyr.commands.QuitCommand;
-import f00f.net.irc.martyr.commands.NickCommand;
-import org.apache.log4j.Logger;
 
 public class NickTest
 {
-    static Logger log = Logger.getLogger(NickTest.class);
+    static Logger log = Logger.getLogger("NickTest");
 
 
     /** A really simple test, all this does is login to a network and

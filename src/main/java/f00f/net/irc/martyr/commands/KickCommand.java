@@ -1,10 +1,12 @@
 package f00f.net.irc.martyr.commands;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import f00f.net.irc.martyr.InCommand;
 import f00f.net.irc.martyr.clientstate.Channel;
 import f00f.net.irc.martyr.clientstate.ClientState;
 import f00f.net.irc.martyr.util.FullNick;
-import org.apache.log4j.Logger;
 
 
 /**
@@ -13,7 +15,7 @@ import org.apache.log4j.Logger;
 public class KickCommand extends AbstractCommand
 {
 
-    static Logger log = Logger.getLogger(KickCommand.class);
+    static Logger log = Logger.getLogger("KickCommand");
 
     private String channel;
     private FullNick userKicker;
@@ -90,14 +92,14 @@ public class KickCommand extends AbstractCommand
         if( kickedUs( state ) )
         {
             // We've been kicked.
-            log.debug("KICK: We've been kicked " + channel);
+            log.log(Level.FINE, "KICK: We've been kicked " + channel);
             state.removeChannel( channel );
             return true;
         }
         else
         {
             // Someone else was kicked.
-            log.debug("KICK: " + userKicked.getNick() + " kicked " + channel);
+            log.log(Level.FINE, "KICK: " + userKicked.getNick() + " kicked " + channel);
             // 1) Grab group
             Channel channelObj = state.getChannel( channel );
             channelObj.removeMember( userKicked, this );

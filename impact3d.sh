@@ -1,7 +1,6 @@
 #!/bin/bash -x
-cd lircom
 make peer &
 sleep 1
-cd ..
-java -Xmx256m -classpath /Users/johncarlson/Downloads/jogamp-all/jogamp-all-platforms/jar/jogl-all-natives-macosx-universal.jar:/Users/johncarlson/Downloads/jogamp-all/jogamp-all-platforms/jar/jogl-all.jar:impact3d.jar:.:/Users/johncarlson/Downloads/jogamp-all/jogamp-all-platforms/jar/gluegen-rt.jar impact.Impact3D
+export JOGAMP_JARS=c:/Users/coderextreme/Downloads/jogamp-all-platforms/jar
 
+java -Xmx256m -classpath "${JOGAMP_JARS}/jogl-all.jar;${JOGAMP_JARS}/jogl-all-natives-windows-amd64.jar;target/lircom-1.jar;.;${JOGAMP_JARS}/gluegen-rt.jar" impact.Impact3D

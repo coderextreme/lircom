@@ -1,6 +1,5 @@
 package f00f.net.irc.martyr.test;
 
-import org.apache.log4j.PropertyConfigurator;
 import org.junit.Before;
 
 /**
@@ -16,8 +15,6 @@ public class AbstractMartyrTest
 	@Before
 	public void initTest()
 	{
-		// Load log4j
-		new PropertyConfigurator();
 	}
 }
 

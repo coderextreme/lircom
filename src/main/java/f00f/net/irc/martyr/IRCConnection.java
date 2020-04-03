@@ -28,12 +28,13 @@ import java.net.Socket;
 import java.util.LinkedList;
 import java.util.Observer;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import f00f.net.irc.martyr.clientstate.ClientState;
 import f00f.net.irc.martyr.commands.UnknownCommand;
 import f00f.net.irc.martyr.errors.UnknownError;
 import f00f.net.irc.martyr.replies.UnknownReply;
-import org.apache.log4j.Logger;
 
 // TODO:
 // 
@@ -185,7 +186,7 @@ import org.apache.log4j.Logger;
  *  -- Off I go to do other stuff.
  */
 public class IRCConnection {
-    static Logger log = Logger.getLogger(IRCConnection.class);
+    static Logger log = Logger.getLogger("IRCConnection");
 
     public IRCConnection()
     {
@@ -246,10 +247,10 @@ public class IRCConnection {
     {
         synchronized( connectMonitor )
         {
-            log.debug("IRCConnection: Connecting to " + server + ":" + port);
+            log.log(Level.FINE, "IRCConnection: Connecting to " + server + ":" + port);
             if( connected )
             {
-                log.error("IRCConnection: Connect requested, but we are already connected!");
+                log.log(Level.SEVERE, "IRCConnection: Connect requested, but we are already connected!");
                 return;
             }
 
@@ -370,25 +371,25 @@ public class IRCConnection {
 
     public void addStateObserver( Observer observer )
     {
-        log.debug("IRCConnection: Added state observer " + observer);
+        log.log(Level.FINE, "IRCConnection: Added state observer " + observer);
         stateObservers.addObserver( observer );
     }
 
     public void removeStateObserver( Observer observer )
     {
-        log.debug("IRCConnection: Removed state observer " + observer);
+        log.log(Level.FINE, "IRCConnection: Removed state observer " + observer);
         stateObservers.deleteObserver( observer );
     }
 
     public void addCommandObserver( Observer observer )
     {
-        log.debug("IRCConnection: Added command observer " + observer);
+        log.log(Level.FINE, "IRCConnection: Added command observer " + observer);
         commandObservers.addObserver( observer );
     }
 
     public void removeCommandObserver( Observer observer )
     {
-        log.debug("IRCConnection: Removed command observer " + observer);
+        log.log(Level.FINE, "IRCConnection: Removed command observer " + observer);
         commandObservers.deleteObserver( observer );
     }
 
@@ -505,10 +506,10 @@ public class IRCConnection {
 
     void socketError( IOException ioe )
     {
-        log.debug("Socket error called.");
-        //log.debug("IRCConnection: The stack of the exception:", ioe);
+        log.log(Level.FINE, "Socket error called.");
+        //log.log(Level.FINE, "IRCConnection: The stack of the exception:", ioe);
 
-        log.fatal("Socket error", ioe);
+        log.log(Level.SEVERE, "Socket error", ioe);
         disconnect();
     }
 
@@ -568,17 +569,17 @@ public class IRCConnection {
             if( UnknownError.isError( identifier ) )
             {
                 command = new UnknownError( identifier );
-                log.warn("IRCConnection: Using " + command);
+                log.log(Level.WARNING, "IRCConnection: Using " + command);
             }
             else if( UnknownReply.isReply( identifier ) )
             {
                 command = new UnknownReply( identifier );
-                log.warn("IRCConnection: Using " + command);
+                log.log(Level.WARNING, "IRCConnection: Using " + command);
             }
             else
             {
                 // The identifier doesn't map to a command.
-                log.warn("IRCConnection: Unknown command");
+                log.log(Level.WARNING, "IRCConnection: Unknown command");
                 command = new UnknownCommand();
             }
         }
@@ -588,10 +589,10 @@ public class IRCConnection {
 
             if( command == null )
             {
-                log.error("IRCConnection: CommandFactory[" + commandFactory + "] returned NULL");
+                log.log(Level.SEVERE, "IRCConnection: CommandFactory[" + commandFactory + "] returned NULL");
                 return null;
             }
-            log.debug("IRCConnection: Using " + command);
+            log.log(Level.FINE, "IRCConnection: Using " + command);
         }
 
         return command;
@@ -637,7 +638,7 @@ public class IRCConnection {
 
     protected void handleUnparsableCommand( String wholeString, Exception e )
     {
-        log.error( "Unable to parse server message.", e );
+        log.log(Level.SEVERE, "Unable to parse server message.", e );
     }
 
     /**
@@ -664,7 +665,7 @@ public class IRCConnection {
         }
         catch( Throwable e )
         {
-            log.error("IRCConnection: Command notify failed.", e);
+            log.log(Level.SEVERE, "IRCConnection: Command notify failed.", e);
         }
 
     }
@@ -818,7 +819,7 @@ public class IRCConnection {
         // it off to the IRCConnection class.
         //if( inputHandler != null )
         //{
-        //    log.fatal("IRCConnection: Non-null input handler on connect!!");
+        //    log.log(Level.SEVERE, "IRCConnection: Non-null input handler on connect!!");
         //    return;
         //}
 
@@ -829,13 +830,13 @@ public class IRCConnection {
             // sense to test for this condition.
             if( inputHandler != null && inputHandler.pendingMessages() )
             {
-                log.fatal("IRCConnection: Tried to connect, but there are pending messages!");
+                log.log(Level.SEVERE, "IRCConnection: Tried to connect, but there are pending messages!");
                 return;
             }
 
             if( inputHandler != null && inputHandler.isAlive() )
             {
-                log.fatal("IRCConnection: Tried to connect, but the input handler is still alive!");
+                log.log(Level.SEVERE, "IRCConnection: Tried to connect, but the input handler is still alive!");
                 return;
             }
 
@@ -881,7 +882,7 @@ public class IRCConnection {
                 while( true )
                 {
                     // Process all events in the event queue.
-                    log.debug("IRCConnection: Processing events");
+                    log.log(Level.FINE, "IRCConnection: Processing events");
                     while( processEvents() ) { }
 
                     // We can't process events while synchronized on the
@@ -902,7 +903,7 @@ public class IRCConnection {
             }
             catch( InterruptedException ie )
             {
-                log.warn( "Interrupted while handling events.", ie );
+                log.log(Level.WARNING, "Interrupted while handling events.", ie );
                 // And we do what?
                 // We die, that's what we do.
             }
@@ -953,7 +954,7 @@ public class IRCConnection {
 
             if( disconnectPending )
             {
-                log.debug("IRCConnection: Process events: Disconnect pending.");
+                log.log(Level.FINE, "IRCConnection: Process events: Disconnect pending.");
                 doDisconnect();
                 events = true;
             }
@@ -998,7 +999,7 @@ public class IRCConnection {
                 final long startTime = System.currentTimeMillis();
                 final long sleepTime = 1000;
                 final long stopTime = startTime + sleepTime;
-                log.debug("IRCConnection: Sleeping for a bit ("
+                log.log(Level.FINE, "IRCConnection: Sleeping for a bit ("
                     + sleepTime + ")..");
                 // Slow things down a bit so the server doesn't kill us
                 // Also, we want to give a second to let any pending messages
@@ -1014,12 +1015,12 @@ public class IRCConnection {
                 // Ignore
             }
 
-            log.debug("IRCConnection: Stopping input handler.");
+            log.log(Level.FINE, "IRCConnection: Stopping input handler.");
             // Deprecated?
             // inputHandler.stop();
             // inputHandler = null;
 
-            log.debug("IRCConnection: Closing socket.");
+            log.log(Level.FINE, "IRCConnection: Closing socket.");
             try
             {
                 socket.close();
@@ -1042,23 +1043,23 @@ public class IRCConnection {
         // We'll wait for it to die.
         synchronized( inputHandlerMonitor )
         {
-            log.debug("IRCConnection: Waiting for the input handler to die..");
+            log.log(Level.FINE, "IRCConnection: Waiting for the input handler to die..");
             try
             {
-                // log.debug("IRCConnection: Stack:");
+                // log.log(Level.FINE, "IRCConnection: Stack:");
 
                 if( inputHandler.isAlive() )
                     inputHandler.join();
                 else
                 {
-                    log.debug("IRCConnection: No waiting required, input hander is already dead.");
+                    log.log(Level.FINE, "IRCConnection: No waiting required, input hander is already dead.");
                 }
             }
             catch( InterruptedException ie )
             {
-                log.debug("IRCConnection: Error in join(): " + ie);
+                log.log(Level.FINE, "IRCConnection: Error in join(): " + ie);
             }
-            log.debug("IRCConnection: Done waiting for the input handler to die.");
+            log.log(Level.FINE, "IRCConnection: Done waiting for the input handler to die.");
         }
 
 
@@ -1074,7 +1075,7 @@ public class IRCConnection {
 
     protected void handleSocketCloseException( IOException ioe )
     {
-        log.warn( "Error closing socket.", ioe );
+        log.log(Level.WARNING, "Error closing socket.", ioe );
     }
 
     /**
@@ -1105,7 +1106,7 @@ public class IRCConnection {
         {
             state = newState;
 
-            log.debug("IRCConnection: State switch: " + state);
+            log.log(Level.FINE, "IRCConnection: State switch: " + state);
 
             try
             {
@@ -1114,7 +1115,7 @@ public class IRCConnection {
             }
             catch( Throwable e )
             {
-                log.error("IRCConnection: State update failed.", e);
+                log.log(Level.SEVERE, "IRCConnection: State update failed.", e);
             }
 
             if( stateQueue.isEmpty() )
@@ -1155,7 +1156,7 @@ public class IRCConnection {
 
                 if( disconnectPending )
                 {
-                    log.debug("IRCConnection: Send cancelled, disconnect pending.");
+                    log.log(Level.FINE, "IRCConnection: Send cancelled, disconnect pending.");
                     return;
                 }
 

@@ -1,10 +1,12 @@
 package f00f.net.irc.martyr.commands;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import f00f.net.irc.martyr.InCommand;
 import f00f.net.irc.martyr.clientstate.Channel;
 import f00f.net.irc.martyr.clientstate.ClientState;
 import f00f.net.irc.martyr.util.FullNick;
-import org.apache.log4j.Logger;
 
 
 /**
@@ -13,7 +15,7 @@ import org.apache.log4j.Logger;
 public class JoinCommand extends AbstractCommand
 {
 
-    static Logger log = Logger.getLogger(JoinCommand.class);
+    static Logger log = Logger.getLogger("JoinCommand");
 
     private String channel;
     private String secret;
@@ -110,14 +112,14 @@ public class JoinCommand extends AbstractCommand
         if( weJoined( state ) )
         {
             // We've joined a group.
-            log.debug("JOIN: We've joined " + channel);
+            log.log(Level.FINE, "JOIN: We've joined " + channel);
             state.addChannel( channel );
             return true;
         }
         else
         {
             // Someone else joined the group.
-            log.debug("JOIN: " + user + " joined " + channel);
+            log.log(Level.FINE, "JOIN: " + user + " joined " + channel);
             // 1) Grab group
             Channel channelObj = state.getChannel( channel );
             // 2) Add user

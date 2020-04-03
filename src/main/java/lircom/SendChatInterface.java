@@ -1,7 +1,6 @@
 package lircom;
 
-import java.io.*;
-import java.util.*;
+import java.io.InputStream;
 
 public interface SendChatInterface {
 	void username(String username);

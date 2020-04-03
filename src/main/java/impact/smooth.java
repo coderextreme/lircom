@@ -1,11 +1,19 @@
-import java.awt.event.*;
-import javax.swing.*;
+package impact;
 
-import com.jogamp.opengl.*;
-import com.jogamp.opengl.glu.*;
-import com.jogamp.opengl.awt.*;
-import com.jogamp.opengl.util.*;
-import com.jogamp.opengl.util.gl2.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
+import javax.swing.JFrame;
+
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLCapabilities;
+import com.jogamp.opengl.GLEventListener;
+import com.jogamp.opengl.GLProfile;
+import com.jogamp.opengl.awt.GLCanvas;
+import com.jogamp.opengl.glu.GLU;
+import com.jogamp.opengl.util.gl2.GLUT;
 
 /**
  * This program demonstrates smooth shading. A smooth shaded polygon is drawn in

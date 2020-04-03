@@ -5,10 +5,10 @@
  * 	*/
 package f00f.net.irc.martyr.util;
 
-import org.apache.log4j.Logger;
-
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 //TODO: Unit test
 
@@ -20,7 +20,7 @@ import java.util.NoSuchElementException;
  */
 public class ParameterIterator implements Iterator
 {
-    static Logger log = Logger.getLogger(ParameterIterator.class);
+    static Logger log = Logger.getLogger("ParameterIterator");
 
     private String paramStr;
 	private int position;
@@ -28,7 +28,7 @@ public class ParameterIterator implements Iterator
 	
 	public ParameterIterator( String paramStr )
 	{
-		log.debug("ParameterIterator: Params: `" + paramStr + "'");
+		log.log(Level.FINE, "ParameterIterator: Params: `" + paramStr + "'");
 		// We don't check for null here because hasNext is the place
 		// to do it, according to the definition for Iterator.
 		// next() should throw an exception.

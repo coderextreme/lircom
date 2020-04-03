@@ -1,9 +1,15 @@
 package solitaire;
 
-import java.util.*;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.Hashtable;
+
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.ListCellRenderer;
 
 
 public class CardItem extends JLabel implements ListCellRenderer, MouseListener, Cloneable {
