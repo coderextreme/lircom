@@ -1,5 +1,0 @@
-- add "ant dist" to generate javadoc zip file, tar.gz, etc.
-- Finish sending modes
-- the ability to supply password for autoreconnect, for password protected servers
-- Create a ChannelCommand interface, split MessageCommand into two.
-

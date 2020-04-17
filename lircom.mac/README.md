@@ -6,7 +6,7 @@ Make sure your system has wget64 or wget (mac)
 
 Host:
 
-Start the shell script at command prompt:
+Start the shell script at Terminal:
 
 $ sh mac.sh
 
