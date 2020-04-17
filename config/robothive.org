@@ -1,0 +1,7 @@
+Server:irc.robothive.org
+Port:6667
+Nickname:yottzumm
+User:yottzumm@gmail.com
+Name:yottzumm
+/connect
+/join #schizonation
