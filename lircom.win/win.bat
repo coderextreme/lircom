@@ -1,3 +1,4 @@
+del lircom*.*
 set HOME=%HOMEDRIVE%\%HOMEPATH%
 %HOME%\bin\wget64.exe https://coderextreme.net/lircom.zip
 jar -xf lircom.zip

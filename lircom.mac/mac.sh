@@ -1,3 +1,4 @@
+rm -r ./lircom*
 wget64 https://coderextreme.net/lircom.zip
 jar -xf lircom.zip
 export DIR=`pwd`/lircom
