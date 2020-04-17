@@ -1,17 +1,35 @@
 package lircom;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 // screen scraper written in HTTPUNIT for the runestone
-import org.w3c.dom.*;
-import org.xml.sax.*;
-import javax.xml.parsers.*;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.*;
-import javax.xml.transform.stream.*;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import com.meterware.httpunit.*;
-import java.io.*;
-import java.util.*;
-import javax.swing.*;
-import java.awt.event.*;
+import com.meterware.httpunit.WebResponse;
+import com.meterware.httpunit.WebConversation;
 
 public class Heathens extends Thread implements ActionListener, SendCommandInterface {
     JTextField jtf = new JTextField();
@@ -100,6 +118,8 @@ public class Heathens extends Thread implements ActionListener, SendCommandInter
 	try  {
 			// System.err.println("Posting");
 
+
+	    	    	HttpUnitOptions.setScriptingEnabled(false);
 			WebRequest req = new PostMethodWebRequest(jtf.getText());
 			req.setParameter("nick", getUser()); // user (everyone I guess)
 			req.setParameter("text", line); // user entry
@@ -127,7 +147,7 @@ public class Heathens extends Thread implements ActionListener, SendCommandInter
     }
     public void run()     {
 	    try {
-
+	    	    HttpUnitOptions.setScriptingEnabled(false);
 		    for(;;) {
 			WebRequest req = new PostMethodWebRequest(jtf.getText());
 			req.setParameter("nick", getUser()); // user (everyone I guess)

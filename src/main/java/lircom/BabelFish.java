@@ -8,6 +8,7 @@ public class BabelFish {
     static WebConversation trackerconversation = new WebConversation();
     static public String translate(String message, String from, String to) throws Exception {
 		String out = null;
+	    	HttpUnitOptions.setScriptingEnabled(false);
 		WebRequest req = new PostMethodWebRequest("http://babelfish.yahoo.com/translate_txt");
 		req.setParameter("ei", "UTF-8");
 		req.setParameter("doit", "done");

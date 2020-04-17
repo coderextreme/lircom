@@ -8,6 +8,8 @@ import javax.xml.transform.*;
 import javax.xml.transform.dom.*;
 import javax.xml.transform.stream.*;
 import com.meterware.httpunit.*;
+import com.meterware.httpunit.WebResponse;
+import com.meterware.httpunit.WebConversation;
 import java.io.*;
 import java.util.*;
 import javax.swing.*;
@@ -77,6 +79,7 @@ public class Runestone extends Thread implements ActionListener, SendCommandInte
 			}
 			trackerconversation.setAuthorization(usertf.getText().trim(), new String(pass.getPassword()).trim());
 			System.err.println("Setting timezone");
+	    	    	HttpUnitOptions.setScriptingEnabled(false);
 			WebRequest req = new PostMethodWebRequest(jtf.getText());
 			req.setParameter("sendAndLoad", "[type Function]");
 			req.setParameter("tz", "0"); // time zone
@@ -141,6 +144,7 @@ public class Runestone extends Thread implements ActionListener, SendCommandInte
     public void msgSend(String line) {
 	try  {
 
+	    	    	HttpUnitOptions.setScriptingEnabled(false);
 			WebRequest req = new PostMethodWebRequest(jtf.getText());
 			req.setParameter("sendAndLoad", "[type Function]");
 			req.setParameter("a", "undefined"); // ???
@@ -230,6 +234,7 @@ public class Runestone extends Thread implements ActionListener, SendCommandInte
     public void run()     {
 	    try {
 
+	    	    HttpUnitOptions.setScriptingEnabled(false);
 		    for(;;) {
 			WebRequest req = new PostMethodWebRequest(jtf.getText());
 			req.setParameter("sendAndLoad", "[type Function]");
