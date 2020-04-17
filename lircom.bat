@@ -3,4 +3,4 @@ set CLASSPATH=%HOME%\lircom\target\lircom-1.jar;%HOME%\m2\httpunit-1.7.2.jar;%HO
 
 java -Dsun.java2d.opengl=true -Xmx256m -classpath %CLASSPATH% lircom.MainWindow lircom.Chat
 
-cat
+REM cat
