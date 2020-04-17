@@ -662,6 +662,7 @@ public class MainWindow extends javax.swing.JFrame implements java.awt.event.Win
 			}
 			lircomwindow.setTitle(lircomwindow.nickname);
 			lircomwindow.setChat(classname, lircomwindow.nickname);
+			/*
 			String url = "irc://irc.ircstorm.net:6667/schizophrenia";
 			if (args.length > 2) {
 				url = args[2];
@@ -671,10 +672,11 @@ public class MainWindow extends javax.swing.JFrame implements java.awt.event.Win
 			if (url == null) {
 				System.exit(0);
 			}
+			*/
 
-                        // lircomwindow.setVisible(true);
-                        // lircomwindow.selectConnectionsActionPerformed(null);
-			lircomwindow.bridge = new IRCBridge(lircomwindow.chat, lircomwindow.nickname, url, lircomwindow);
+                        lircomwindow.setVisible(true);
+                        lircomwindow.selectConnectionsActionPerformed(null);
+			// lircomwindow.bridge = new IRCBridge(lircomwindow.chat, lircomwindow.nickname, url, lircomwindow);
     			// lircomwindow.warmChickenActionPerformed(null);
                         // lircomwindow.flashchatActionPerformed(null);
  
