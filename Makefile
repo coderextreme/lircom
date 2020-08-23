@@ -44,7 +44,7 @@ Heathens: target/lircom-1.jar
 
 signall:
 	-(cp `echo "$(CLASSPATH)" | tr ";" '\n'` lib)
-	(for i in lib/*jar; do jarsigner -storepass argus1 -keystore $(KEYSTORE) $$i myself; done)
+	(for i in lib/*jar; do jarsigner -storepass foobar -keystore $(KEYSTORE) $$i myself; done)
 
 speech: target/lircom-1.jar
 	java -Xmx256m -classpath "$(CLASSPATH)" lircom.Synth
