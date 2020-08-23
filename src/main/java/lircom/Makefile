@@ -21,7 +21,7 @@ yottzumm2: ../lircom.jar
 	(export JAVA_LIB_PATH=../../jogamp/jogamp-windows-amd64/lib/; $(JAVA) -Djava.library.path=$(JAVA_LIB_PATH) -Xmx256m -classpath $(CLASSPATH) lircom.MainWindow lircom.Chat yottzumm2)
 
 $(KEYSTORE):
-	keytool -genkeypair -keystore $(KEYSTORE) -alias myself -storepass argus1 
+	keytool -genkeypair -keystore $(KEYSTORE) -alias myself -storepass foobar 
 clean:
 	rm *.class ../lircom.jar
 
@@ -46,7 +46,7 @@ Heathens: ../lircom.jar
 
 signall:
 	-(cp `echo $(CLASSPATH) | tr : '\n'` ../../lib)
-	(for i in ../../lib/*jar; do jarsigner -storepass argus1 -keystore $(KEYSTORE) $$i myself; done)
+	(for i in ../../lib/*jar; do jarsigner -storepass foobar -keystore $(KEYSTORE) $$i myself; done)
 
 speech: ../lircom.jar
 	$(JAVA) -Xmx256m -classpath $(CLASSPATH) lircom.Synth
@@ -69,14 +69,14 @@ peer2: ../lircom.jar
 
 ../orbit.jar: Orbit2.java Animator.java
 	$(JAVAC) -encoding UTF-8 -target 14 -classpath $(CLASSPATH2) Orbit2.java Animator.java
-	(cd ..; jar -cmf lircom/lircom.manifest orbit.jar lircom/Orbit2*class lircom/Animator*class; jarsigner -storepass argus1 -keystore $(KEYSTORE) orbit.jar myself)
+	(cd ..; jar -cmf lircom/lircom.manifest orbit.jar lircom/Orbit2*class lircom/Animator*class; jarsigner -storepass foobar -keystore $(KEYSTORE) orbit.jar myself)
 JAVACODE2=Animator.java Synth.java
 JAVACODE= BabelFish.java Bridge.java Channel.java Chat.java Client.java ClientConnect.java ClientException.java ClientOnServer.java Errors.java ExampleFileFilter.java Hyperactive.java IRCBridge.java IRCClient.java Identd.java Kanal.java Lircom.java MainApplet.java MainWindow.java Message.java Peer.java PossibleConnection.java ReceiveChatInterface.java Runestone.java SendChatInterface.java SendCommandInterface.java ServerAdvertise.java Smiley.java Trade.java Heathens.java
 OTHERJAVACODE= SVGFE.java WindowAspect.java
 ../lircom.jar: $(JAVACODE)
 	$(JAVAC) -encoding UTF-8 -target 14 -classpath $(CLASSPATH) $(JAVACODE)
 	jar -cmf ../lircom/lircom.manifest ../lircom.jar ../lircom
-	(cd ..; jar -cmf lircom/lircom.manifest lircom.jar lircom; jarsigner -storepass argus1 -keystore $(KEYSTORE) lircom.jar myself)
+	(cd ..; jar -cmf lircom/lircom.manifest lircom.jar lircom; jarsigner -storepass foobar -keystore $(KEYSTORE) lircom.jar myself)
 	# cp ../lircom.jar /Users/yottzumm/Applications/apache-tomcat-6.0.14/webapps/web/WEB-INF/lib/
 
 ../chat3d.jar: $(JAVACODE)
