@@ -15,10 +15,10 @@ CLASSPATH2="..;../orbit.jar;/Users/yottzumm/Applications/jogl/build/jogl.jar;/Us
 CLASSPATH3="../lircom.jar;../../lib/log4j-1.2.14.jar"
 
 lircom: ../lircom.jar
-	(export JAVA_LIB_PATH=C:/Users/coderextreme/Downloads/jogamp-all-platfomrms/lib/windows-amd64/; $(JAVA) -Djava.library.path=$(JAVA_LIB_PATH) -Xmx256m -classpath $(CLASSPATH) lircom.MainWindow lircom.Chat yottzumm)
+	(export JAVA_LIB_PATH=C:/Users/coderextreme/Downloads/jogamp-all-platfomrms/lib/windows-amd64/ ; $(JAVA) -Djava.library.path=$(JAVA_LIB_PATH) -Xmx256m -classpath "$(CLASSPATH)" lircom.MainWindow lircom.Chat yottzumm)
 
 yottzumm2: ../lircom.jar
-	(export JAVA_LIB_PATH=C:/Users/coderextreme/Downloads/jogamp-all-platfomrms/lib/windows-amd64/; $(JAVA) -Djava.library.path=$(JAVA_LIB_PATH) -Xmx256m -classpath $(CLASSPATH) lircom.MainWindow lircom.Chat yottzumm2)
+	(export JAVA_LIB_PATH=C:/Users/coderextreme/Downloads/jogamp-all-platfomrms/lib/windows-amd64/ ; $(JAVA) -Djava.library.path=$(JAVA_LIB_PATH) -Xmx256m -classpath "$(CLASSPATH)" lircom.MainWindow lircom.Chat yottzumm2)
 
 $(KEYSTORE):
 	keytool -genkeypair -keyalg DSA -keysize 1024 -keystore $(KEYSTORE) -alias myself -storepass foobar 
@@ -26,22 +26,22 @@ clean:
 	rm *.class ../lircom.jar
 
 orbit: ../orbit.jar
-	(export JAVA_LIB_PATH=C:/Users/coderextreme/Downloads/jogamp-all-platfomrms/lib/windows-amd64/; $(JAVA) -Djava.library.path=$(JAVA_LIB_PATH) -Xmx256m -classpath $(CLASSPATH2) lircom.Orbit2)
+	(export JAVA_LIB_PATH=C:/Users/coderextreme/Downloads/jogamp-all-platfomrms/lib/windows-amd64/ ; $(JAVA) -Djava.library.path=$(JAVA_LIB_PATH) -Xmx256m -classpath "$(CLASSPATH2)" lircom.Orbit2)
 
 irc: ../lircom.jar
-	$(JAVA) -classpath $(CLASSPATH3) lircom.IRCClient afternet.config symbion.config
+	$(JAVA) -classpath "$(CLASSPATH3)" lircom.IRCClient afternet.config symbion.config
 
 wikispeak: ../lircom.jar
-	$(JAVA) -classpath $(CLASSPATH3) lircom.IRCClient ircstorm.config
+	$(JAVA) -classpath "$(CLASSPATH3)" lircom.IRCClient ircstorm.config
 
 babelfish: ../lircom.jar
-	$(JAVA) -classpath $(BFCLASSPATH) lircom.BabelFish "thank you"
+	$(JAVA) -classpath "$(BFCLASSPATH)" lircom.BabelFish "thank you"
 
 runestone: ../lircom.jar
-	$(JAVA) -Xmx256m -classpath $(CLASSPATH) lircom.Runestone
+	$(JAVA) -Xmx256m -classpath "$(CLASSPATH)" lircom.Runestone
 
 Heathens: ../lircom.jar
-	$(JAVA) -Xmx256m -classpath $(CLASSPATH) lircom.Heathens
+	$(JAVA) -Xmx256m -classpath "$(CLASSPATH)" lircom.Heathens
 
 
 signall:
@@ -49,26 +49,26 @@ signall:
 	(for i in ../../lib/*jar; do jarsigner -storepass foobar -keystore $(KEYSTORE) $$i myself; done)
 
 speech: ../lircom.jar
-	$(JAVA) -Xmx256m -classpath $(CLASSPATH) lircom.Synth
+	$(JAVA) -Xmx256m -classpath "$(CLASSPATH)" lircom.Synth
 
 
 assist: ../lircom.jar
-	$(JAVA) -Xmx256m -classpath $(CLASSPATH) lircom.ChatAssist lircom.Chat
+	$(JAVA) -Xmx256m -classpath "$(CLASSPATH)" lircom.ChatAssist lircom.Chat
 
 channel: ../lircom.jar
-	$(JAVA) -Xmx256m -classpath $(CLASSPATH) lircom.MainWindow lircom.Channel
+	$(JAVA) -Xmx256m -classpath "$(CLASSPATH)" lircom.MainWindow lircom.Channel
 
 kanal: ../lircom.jar
-	$(JAVA) -Xmx256m -classpath $(CLASSPATH) lircom.MainWindow lircom.Kanal
+	$(JAVA) -Xmx256m -classpath "$(CLASSPATH)" lircom.MainWindow lircom.Kanal
 
 peer: ../lircom.jar
-	$(JAVA) -Xmx256m -classpath $(CLASSPATH) lircom.Peer 8180
+	$(JAVA) -Xmx256m -classpath "$(CLASSPATH)" lircom.Peer 8180
 
 peer2: ../lircom.jar
-	$(JAVA) -Xmx256m -classpath $(CLASSPATH) lircom.Peer 7000
+	$(JAVA) -Xmx256m -classpath "$(CLASSPATH)" lircom.Peer 7000
 
 ../orbit.jar: Orbit2.java Animator.java
-	$(JAVAC) -encoding UTF-8 -target 14 -classpath $(CLASSPATH2) Orbit2.java Animator.java
+	$(JAVAC) -encoding UTF-8 -target 14 -classpath "$(CLASSPATH2)" Orbit2.java Animator.java
 	(cd ..; jar -cmf lircom/lircom.manifest orbit.jar lircom/Orbit2*class lircom/Animator*class; jarsigner -storepass foobar -keystore $(KEYSTORE) orbit.jar myself)
 JAVACODE2=Animator.java Synth.java
 JAVACODE= BabelFish.java Bridge.java Channel.java Chat.java Client.java ClientConnect.java ClientException.java ClientOnServer.java Errors.java ExampleFileFilter.java Hyperactive.java IRCBridge.java IRCClient.java Identd.java Kanal.java Lircom.java MainApplet.java MainWindow.java Message.java Peer.java PossibleConnection.java ReceiveChatInterface.java Runestone.java SendChatInterface.java SendCommandInterface.java ServerAdvertise.java Smiley.java Trade.java Heathens.java
@@ -80,8 +80,8 @@ OTHERJAVACODE= SVGFE.java WindowAspect.java
 	# cp ../lircom.jar /Users/yottzumm/Applications/apache-tomcat-6.0.14/webapps/web/WEB-INF/lib/
 
 ../chat3d.jar: $(JAVACODE)
-	$(JAVAC) -encoding UTF-8 -target 14 -classpath $(CLASSPATH) $(JAVACODE)
+	$(JAVAC) -encoding UTF-8 -target 14 -classpath "$(CLASSPATH)" $(JAVACODE)
 	(cd ..; jar -cmf lircom/lircom.manifest chat3d.jar lircom; jarsigner -keystore $(KEYSTORE) chat3d.jar myself)
 
 chat3d: ../chat3d.jar
-	$(JAVA) -Xmx256m -classpath ../chat3d.jar:$(CLASSPATH) lircom.MainWindow lircom.Chat
+	$(JAVA) -Xmx256m -classpath "../chat3d.jar;$(CLASSPATH)" lircom.MainWindow lircom.Chat
