@@ -15,10 +15,10 @@ CLASSPATH2="..;../orbit.jar;/Users/yottzumm/Applications/jogl/build/jogl.jar;/Us
 CLASSPATH3="../lircom.jar;../../lib/log4j-1.2.14.jar"
 
 lircom: ../lircom.jar
-	(export JAVA_LIB_PATH=C:/Users/coderextreme/Downloads/jogamp-all-platfomrms/lib/windows-amd64/ ; $(JAVA) -Djava.library.path=$(JAVA_LIB_PATH) -Xmx256m -classpath "$(CLASSPATH)" lircom.MainWindow lircom.Chat yottzumm)
+	(export JAVA_LIB_PATH=C:/Users/coderextreme/Downloads/jogamp-all-platforms/lib/windows-amd64/ ; $(JAVA) -Djava.library.path=$(JAVA_LIB_PATH) -Xmx256m -classpath "$(CLASSPATH)" lircom.MainWindow lircom.Chat yottzumm)
 
 yottzumm2: ../lircom.jar
-	(export JAVA_LIB_PATH=C:/Users/coderextreme/Downloads/jogamp-all-platfomrms/lib/windows-amd64/ ; $(JAVA) -Djava.library.path=$(JAVA_LIB_PATH) -Xmx256m -classpath "$(CLASSPATH)" lircom.MainWindow lircom.Chat yottzumm2)
+	(export JAVA_LIB_PATH=C:/Users/coderextreme/Downloads/jogamp-all-platforms/lib/windows-amd64/ ; $(JAVA) -Djava.library.path=$(JAVA_LIB_PATH) -Xmx256m -classpath "$(CLASSPATH)" lircom.MainWindow lircom.Chat yottzumm2)
 
 $(KEYSTORE):
 	keytool -genkeypair -keyalg DSA -keysize 1024 -keystore $(KEYSTORE) -alias myself -storepass foobar 
@@ -26,7 +26,7 @@ clean:
 	rm *.class ../lircom.jar
 
 orbit: ../orbit.jar
-	(export JAVA_LIB_PATH=C:/Users/coderextreme/Downloads/jogamp-all-platfomrms/lib/windows-amd64/ ; $(JAVA) -Djava.library.path=$(JAVA_LIB_PATH) -Xmx256m -classpath "$(CLASSPATH2)" lircom.Orbit2)
+	(export JAVA_LIB_PATH=C:/Users/coderextreme/Downloads/jogamp-all-platforms/lib/windows-amd64/ ; $(JAVA) -Djava.library.path=$(JAVA_LIB_PATH) -Xmx256m -classpath "$(CLASSPATH2)" lircom.Orbit2)
 
 irc: ../lircom.jar
 	$(JAVA) -classpath "$(CLASSPATH3)" lircom.IRCClient afternet.config symbion.config
