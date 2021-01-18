@@ -57,11 +57,7 @@ public class Synth {
 		nickToVoice.put(nick, voice);
 	}
 	try {
-		if (os.startsWith("Mac")) {
-			String speakingProcess = "/usr/bin/say";
-			System.err.println(speakingProcess+" -v "+voice+" "+saying);
-			Runtime.getRuntime().exec(new String[] {speakingProcess, "-v", voice, saying} );
-		} else {
+		 if (os.startsWith("Win")) {
 			System.err.println("PowerShell "+saying);
 			String[] commandList = {"PowerShell.exe", "-Command", "Add-Type -AssemblyName System.Speech; $ss = New-Object -TypeName System.Speech.Synthesis.SpeechSynthesizer; $ss.Speak('"+(saying.replace("'", ""))+"');"};
 			Process powerShellProcess = Runtime.getRuntime().exec(commandList);
@@ -82,8 +78,17 @@ public class Synth {
 			}
 			stderr.close();
 			System.out.println("Done");
+		} else if (os.startsWith("Lin")) {
+			String speakingProcess = "/usr/bin/espeak";
+			voice = "!v/"+nick;
+			System.err.println(speakingProcess+" -v "+voice+" '"+saying+"'");
+			Runtime.getRuntime().exec(new String[] {speakingProcess, "-v", voice, saying} );
 	 
 	 
+		} else {
+			String speakingProcess = "/usr/bin/say";
+			System.err.println(speakingProcess+" -v "+voice+" "+saying);
+			Runtime.getRuntime().exec(new String[] {speakingProcess, "-v", voice, saying} );
 		}
 	} catch (Exception e) {
 	    e.printStackTrace();
