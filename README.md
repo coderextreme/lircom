@@ -34,3 +34,16 @@ Enter nickname
 On Form a connection screen, pick server by nickname or IP address (Remote Server).  Check only one Connect? box.  Guest should not pick localhost, unless both people are on same host.  Click Connect button.
 
 Chat away!  Replace "type here" with your message.
+
+# Impact 3D
+
+Download JOGAMP and Gluegen from here:
+
+https://jogamp.org/deployment/archive/master/?C=M;O=D
+
+(already downloaded for linux-amd64, see m2 folder)
+
+Get a version build after Jan 12, 2021
+
+
+run impact3D.sh
