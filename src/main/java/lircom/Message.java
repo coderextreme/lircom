@@ -94,6 +94,7 @@ public class Message extends Throwable {
                     m.from = line.substring(fb+1, fe);
                 }
                 if (sb >= 0 && se >= 0) {
+		    System.err.println("Parsing long from "+line+" found "+line.substring(sb+1, se));
                     m.timestamp = Long.parseLong(line.substring(sb+1, se));
                 }
                 if (qb >= 0 && qe >= 0) {

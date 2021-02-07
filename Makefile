@@ -56,7 +56,7 @@ kanal: target/lircom-1.jar
 	java -Xmx256m -classpath "$(CLASSPATH)" lircom.MainWindow lircom.Kanal
 
 peer: target/lircom-1.jar
-	java -Xmx256m -classpath "$(CLASSPATH)" lircom.Peer 8180
+	java -Xmx256m -classpath "$(CLASSPATH)" lircom.Peer 8180 &
 
 
 target/lircom-1.jar:

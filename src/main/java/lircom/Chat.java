@@ -726,8 +726,10 @@ SwingUtilities.invokeLater(new Runnable() {
 	public void focusGained(FocusEvent fe) {
 	}
 	public void focusLost(FocusEvent fe) {
+		/*
 		tabComplete();
 		tf.requestFocus();
+		*/
 	}
 	boolean source = false;
 	public void actionPerformed(ActionEvent ae) {
