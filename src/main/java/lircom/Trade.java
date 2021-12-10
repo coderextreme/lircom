@@ -39,7 +39,7 @@ class NickThread extends Thread {
 	}
 }
 
-public class Trade extends Vector {
+public class Trade extends Vector<Object> {
 	String url = "";
 	// String ipaddress = "69.107.89.126";
 	String ipaddress = "127.0.0.1";
@@ -57,7 +57,7 @@ public class Trade extends Vector {
 		this.url = url;
 	}
 	public void add(HTMLJCheckBox jcb) {
-		super.add(jcb);
+		super.add((Object)jcb);
 	}
 	public void startTrade(String nnip, StringBuffer sb) throws Exception {
 		InputStream is = new URL(url+"trade.php?"+nnip).openStream();

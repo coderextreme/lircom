@@ -159,7 +159,7 @@ class SubLogic {
 	int rankDifference = -100;
 	int suitDifference = -100;
 	int classification = -100;
-	ArrayList elements = new ArrayList();
+	ArrayList<Element> elements = new ArrayList<Element>();
 
 	public boolean equals(SubLogic sl) {
 		return (
@@ -234,7 +234,7 @@ class SubLogic {
 		elements.add(new ToStackEmptyElement(toEmpty));
 		elements.add(new ClassificationElement(classification));
 	}
-	public ArrayList getElements() {
+	public ArrayList<Element> getElements() {
 		return elements;
 	}
 }
@@ -427,7 +427,7 @@ class SolitaireClient extends lircom.ClientOnServer {
 }
 
 public class Game extends Thread implements MouseListener, MouseMotionListener, ActionListener, WindowListener {
-	static ArrayList stacks = new ArrayList();
+	static ArrayList<Stack> stacks = new ArrayList<Stack>();
 	static void init() {
 		stacks.clear();
 	}

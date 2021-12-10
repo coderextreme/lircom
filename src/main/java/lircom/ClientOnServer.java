@@ -11,23 +11,23 @@ import java.util.*;
 import java.io.*;
 
 public class ClientOnServer extends Thread implements Errors {
-	static Hashtable errors = null;
+	static Hashtable<String,String> errors = null;
 	protected InputStream input;
 	protected PrintWriter output;
-	protected static Hashtable clients = new Hashtable();
-	Long clientno;
+	protected static Hashtable<Long,ClientOnServer> clients = new Hashtable<Long,ClientOnServer>();
+	long clientno;
 	String addressportclient;
 	static long cs = 0;
         private String clientnick = "ClientOnServer";
         PossibleConnection pcon = null;
         public ClientOnServer() throws Exception {
 	    synchronized (clients) {
-		    clientno = new Long(System.currentTimeMillis()+cs);
+		    clientno = System.currentTimeMillis()+cs;
 		    cs++;
 	    }
             clients.put(clientno, this);
             if (errors == null) {
-		errors = new Hashtable();
+		errors = new Hashtable<String,String>();
 		errors.put(K100, V100);
 		//errors.put(K101, V101);
             }
@@ -145,15 +145,15 @@ public class ClientOnServer extends Thread implements Errors {
 		// add from this client
 		String from = m.from;
 		prependFrom(m);
-		Hashtable rec = new Hashtable(); // hashtable of client #s
+		Hashtable<Long,ClientOnServer> rec = new Hashtable<Long,ClientOnServer>(); // hashtable of client #s
 		Iterator i = m.rec.keySet().iterator();
-		Hashtable newrec = new Hashtable();
+		Hashtable<String,String> newrec = new Hashtable<String,String>();
 		while (i.hasNext()) { // go through existing list
 			String to = (String)i.next();
 			if (to.equals("*")) {
 				System.err.println("Adding ALL Clients");
 				newrec.put("*", "*"); // send to who is left
-				rec = (Hashtable)clients.clone();;
+				rec = (Hashtable<Long,ClientOnServer>)(clients.clone());
 				// rec.remove(clientno);
 				break;
 			} else {
@@ -248,11 +248,11 @@ public class ClientOnServer extends Thread implements Errors {
                 System.err.println("No recipient found in message");
             }                 
         }
-        static Hashtable server_messages = new Hashtable();
-        public boolean seenMessage(Message m, Hashtable messages) {
+        static Hashtable<String, Message> server_messages = new Hashtable<String, Message>();
+        public boolean seenMessage(Message m, Hashtable<String, Message> messages) {
             String umsg = m.timestamp+","+m.sequenceno+","+m.nick;
             Iterator i = messages.keySet().iterator();
-            Vector removes = new Vector();
+            Vector<String> removes = new Vector<String>();
             while (i.hasNext()) {
                 String sumsg = (String)i.next();
                 //System.err.println("sumsg "+sumsg+" umsg "+umsg);

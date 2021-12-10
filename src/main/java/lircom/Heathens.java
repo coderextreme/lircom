@@ -41,9 +41,9 @@ public class Heathens extends Thread implements ActionListener, SendCommandInter
     String room = "1";
     String user = "0";
     WebConversation trackerconversation = new WebConversation();
-    HashMap userMap = new HashMap();
-    HashMap userColor = new HashMap();
-    HashMap roomMap = new HashMap();
+    HashMap<String,String> userMap = new HashMap<String,String>();
+    HashMap<String,String> userColor = new HashMap<String,String>();
+    HashMap<String,String> roomMap = new HashMap<String,String>();
     JFrame jf = new JFrame();
     ReceiveChatInterface chat;
     public Heathens(ReceiveChatInterface chat, String nick) throws Exception {

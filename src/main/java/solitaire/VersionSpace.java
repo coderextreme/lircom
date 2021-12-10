@@ -164,7 +164,7 @@ abstract class CardActionVersionSpace extends ActionVersionSpace {
 		Iterator i = iterator();
 		while (i.hasNext()) {
 			CardVersionSpace cvs = (CardVersionSpace)i.next();
-			hs.add(new Integer(cvs.getRank()));
+			hs.add(cvs.getRank());
 		}
 		return hs;
 	}
@@ -173,7 +173,7 @@ abstract class CardActionVersionSpace extends ActionVersionSpace {
 		Iterator i = iterator();
 		while (i.hasNext()) {
 			CardVersionSpace cvs = (CardVersionSpace)i.next();
-			hs.add(new Integer(rank - cvs.getRank()));
+			hs.add(rank - cvs.getRank());
 		}
 		return hs;
 	}
@@ -182,7 +182,7 @@ abstract class CardActionVersionSpace extends ActionVersionSpace {
 		Iterator i = iterator();
 		while (i.hasNext()) {
 			CardVersionSpace cvs = (CardVersionSpace)i.next();
-			hs.add(new Integer(cvs.getSuit()));
+			hs.add(cvs.getSuit());
 		}
 		return hs;
 	}
@@ -191,7 +191,7 @@ abstract class CardActionVersionSpace extends ActionVersionSpace {
 		Iterator i = iterator();
 		while (i.hasNext()) {
 			CardVersionSpace cvs = (CardVersionSpace)i.next();
-			hs.add(new Integer(suit - cvs.getSuit()));
+			hs.add(suit - cvs.getSuit());
 		}
 		return hs;
 	}
@@ -200,7 +200,7 @@ abstract class CardActionVersionSpace extends ActionVersionSpace {
 		Iterator i = iterator();
 		while (i.hasNext()) {
 			CardVersionSpace cvs = (CardVersionSpace)i.next();
-			hs.add(new Integer(cvs.getStackNumber()));
+			hs.add(cvs.getStackNumber());
 		}
 		return hs;
 	}
@@ -209,7 +209,7 @@ abstract class CardActionVersionSpace extends ActionVersionSpace {
 		Iterator i = iterator();
 		while (i.hasNext()) {
 			CardVersionSpace cvs = (CardVersionSpace)i.next();
-			hs.add(new Integer(cvs.getPosition()));
+			hs.add(cvs.getPosition());
 		}
 		return hs;
 	}

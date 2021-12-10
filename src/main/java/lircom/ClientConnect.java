@@ -136,16 +136,16 @@ public class ClientConnect extends javax.swing.JFrame {
         while (i.hasNext()) {
                 System.err.println("got here");
                 PossibleConnection pcon = (PossibleConnection)
-                    PossibleConnection.get(i.next());
+                    PossibleConnection.get(i.next().toString());
                 try {
                     Integer.parseInt(pcon.port);
                     Object rowobj [] = new Object [] {
                             pcon.nick,
                             pcon.host,
-                            new Integer(pcon.port),
+                            pcon.port,
                             pcon.date,
-                            new Boolean(!pcon.connected),
-                            new Boolean(pcon.connected)
+                            !pcon.connected,
+                            pcon.connected
                     };
                     tm.addRow(rowobj);
                 } catch (Exception e) {
@@ -187,8 +187,8 @@ public class ClientConnect extends javax.swing.JFrame {
                     } catch (Exception e) {
                             pcon.connected = false;
                     }
-                    tm.setValueAt(new Boolean(pcon.connected), row, CONNECTED_COL);
-                    tm.setValueAt(new Boolean(false), row, CONNECT_COL);
+                    tm.setValueAt(pcon.connected, row, CONNECTED_COL);
+                    tm.setValueAt(false, row, CONNECT_COL);
             }
         }
 	if (found) {

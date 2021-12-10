@@ -304,7 +304,7 @@ public class IRCBridge extends ClientState implements Observer, ActionListener, 
     	JTextField porttf = new JTextField();
     	JTextField roomtf = new JTextField();
 	JPasswordField passwordtf = new JPasswordField();
-	JComboBox urlcb = new JComboBox();
+	JComboBox<String> urlcb = new JComboBox<String>();
 	IRCConnection connection = null;
 	ReceiveChatInterface c;
 	MainWindow lircomwindow;

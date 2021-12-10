@@ -369,11 +369,11 @@ class WaitForOffer extends Thread {
 public class Chat extends ClientOnServer implements WindowListener, ActionListener, FocusListener, ReceiveChatInterface {
 	JEditorPane ta = null;
 	JTextField tf = null;
-	JList jp = null;
-	Vector history = new Vector();
+	JList<String> jp = null;
+	Vector<String> history = new Vector<String>();
 	int current = 0;
 	Trade t = null;
-	Vector contacts = new Vector();
+	Vector<String> contacts = new Vector<String>();
 	StringBuffer html = new StringBuffer("<html><head><title>Chat</title></head><body><h1><font color='white'>Start Chatting</font></h1><div align='left'></div></body></html>");
 	String color = "white";
 	Smiley smilies = new Smiley();
@@ -399,10 +399,10 @@ public class Chat extends ClientOnServer implements WindowListener, ActionListen
 	public void setColor(String color) {
 		this.color = color;
 	}
-	Hashtable client_messages = new Hashtable();
+	Hashtable<String, Message> client_messages = new Hashtable<String, Message>();
         public void flushContacts() {
             try {
-                DefaultListModel dlm = (DefaultListModel)jp.getModel();
+                DefaultListModel<String> dlm = (DefaultListModel<String>)jp.getModel();
                 dlm.clear();
                 contacts.clear();
             } catch (Exception e) {
@@ -410,14 +410,14 @@ public class Chat extends ClientOnServer implements WindowListener, ActionListen
             }
         }
 	public void addChatter(String path, String chatter) {
-		DefaultListModel dlm = (DefaultListModel)jp.getModel();
+                DefaultListModel<String> dlm = (DefaultListModel<String>)jp.getModel();
 		if (!dlm.contains(chatter)) {
 			contacts.add(0, path);
 			dlm.add(0, chatter);
 		}
 	}
 	public void removeChatter(String chatter) {
-		DefaultListModel dlm = (DefaultListModel)jp.getModel();
+                DefaultListModel<String> dlm = (DefaultListModel<String>)jp.getModel();
 		int index = dlm.indexOf(chatter);
 		if (index >= 0) {
 			contacts.remove(index);
@@ -457,7 +457,7 @@ public class Chat extends ClientOnServer implements WindowListener, ActionListen
 			return false;
 	        }
 	}
-	Hashtable gui_messages = new Hashtable();
+	Hashtable<String, Message> gui_messages = new Hashtable<String, Message>();
 	class ProcessCommand implements ActionListener {
             public void actionPerformed(ActionEvent ae) {
                 String line = tf.getText();
@@ -468,8 +468,8 @@ public class Chat extends ClientOnServer implements WindowListener, ActionListen
                 current = history.size();
                 int [] clino = jp.getSelectedIndices();
 		// we will fill in who the message is to below
-		Hashtable rec = new Hashtable();
-		Hashtable ircrec = new Hashtable();
+		Hashtable<String,String> rec = new Hashtable<String,String>();
+		Hashtable<String,String> ircrec = new Hashtable<String,String>();
                 for (int i = 0; i < clino.length; i++) {
 		    String contact = (String)contacts.get(clino[i]);
 		    int ircind = contact.indexOf("irc:");
@@ -587,7 +587,7 @@ SwingUtilities.invokeLater(new Runnable() {
 	    return text;
 	}
 	public void tabComplete() {
-		DefaultListModel dlm = (DefaultListModel)jp.getModel();
+                DefaultListModel<String> dlm = (DefaultListModel<String>)jp.getModel();
 		Enumeration en = dlm.elements();
 		String txt = tf.getText();
 		if (txt.trim().equals("")) {

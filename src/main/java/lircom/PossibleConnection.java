@@ -20,7 +20,7 @@ public class PossibleConnection {
         String nick;
         String date;
         boolean connected;
-	static java.util.Hashtable pcons = new java.util.Hashtable();
+	static java.util.Hashtable<Object, PossibleConnection> pcons = new java.util.Hashtable<Object, PossibleConnection>();
         ClientOnServer client;
 	public PossibleConnection(String host, String port, String nick, String date) {
 		this.host = host;
@@ -39,11 +39,11 @@ public class PossibleConnection {
         static java.util.Iterator iterator() {
                 return pcons.keySet().iterator();
         }
-        static Object get(Object str) {
+        static PossibleConnection get(Object str) {
                 return pcons.get(str);
         }
-        static Object get(String host, String port, String nick) {
-                Object o = get(host+"|"+port+"|"+nick);
+        static PossibleConnection get(String host, String port, String nick) {
+                PossibleConnection o = get(host+"|"+port+"|"+nick);
                 if (o != null) {
                     return o;
                 } else {

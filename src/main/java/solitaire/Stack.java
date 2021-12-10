@@ -302,7 +302,7 @@ public class Stack implements ActionListener, ChangeListener {
 		return icim.getPosition() == maxpos;
 	}
 	public CardItem getRandomCard() {
-		ArrayList carditems = new ArrayList();
+		ArrayList<CardItem> carditems = new ArrayList<CardItem>();
 		for (int isuit = CardItem.Hearts; isuit <= CardItem.Clubs; isuit++) {
 			for (int irank = CardItem.Ace; irank <= CardItem.King; irank++) {
 				CardItem cim = cards[irank-1][isuit];

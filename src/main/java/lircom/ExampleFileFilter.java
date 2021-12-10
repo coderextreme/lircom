@@ -70,7 +70,7 @@ public class ExampleFileFilter extends FileFilter {
     private static String TYPE_UNKNOWN = "Type Unknown";
     private static String HIDDEN_FILE = "Hidden File";
 
-    private Hashtable filters = null;
+    private Hashtable<String,ExampleFileFilter>  filters = null;
     private String description = null;
     private String fullDescription = null;
     private boolean useExtensionsInDescription = true;
@@ -82,7 +82,7 @@ public class ExampleFileFilter extends FileFilter {
      * @see #addExtension
      */
     public ExampleFileFilter() {
-	this.filters = new Hashtable();
+	this.filters = new Hashtable<String,ExampleFileFilter>();
     }
 
     /**

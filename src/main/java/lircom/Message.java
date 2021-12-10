@@ -12,7 +12,7 @@ package lircom;
  */
 public class Message extends Throwable {
     String from = "";
-    public java.util.Hashtable rec = new java.util.Hashtable();
+    public java.util.Hashtable<String,String> rec = new java.util.Hashtable<String,String>();
     long timestamp = 0; // don't want to make public, but have to so that flooding can be done
     public String nick = "";
     public String message = "";
@@ -22,7 +22,7 @@ public class Message extends Throwable {
     private static long sequencehigh = 0;
     /** Creates a new instance of Message */
 
-    public Message(java.util.Hashtable rec, String nick, String message, String lang) {
+    public Message(java.util.Hashtable<String,String> rec, String nick, String message, String lang) {
 	this.rec = rec;
         this.from = "";
         this.nick = nick;
@@ -35,8 +35,8 @@ public class Message extends Throwable {
         }
     }
     public Message(String to, String nick, String message, String lang) {
-	this((java.util.Hashtable)null, nick, message, lang);
-        rec = new java.util.Hashtable();
+	this((java.util.Hashtable<String,String>)null, nick, message, lang);
+        rec = new java.util.Hashtable<String,String>();
 	rec.put(to, to);
     }
     public Message(String to, String nick, String error, String message, String lang) {

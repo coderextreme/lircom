@@ -8,15 +8,15 @@ public class EventMiner {
 	static public void main(String arg[]) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String line;
-		Hashtable args[] = new Hashtable[TUPLESIZE];
+		Hashtable<String,String>[] args = (Hashtable<String,String>[])new Hashtable<?,?>[TUPLESIZE];
 		for (int a = 0; a < TUPLESIZE; a++) {
-			args[a] = new Hashtable();
+			args[a] = new Hashtable<String,String>();
 		}
-		Vector lines = new Vector();
+		Vector<Vector<String>> lines = new Vector<Vector<String>>();
 		while((line = br.readLine()) != null) {
 			StringTokenizer st = new StringTokenizer(line, "|");
 			int a = 0;
-			Vector v = new Vector();
+			Vector<String> v = new Vector<String>();
 			while (st.hasMoreTokens()) {
 				String token = st.nextToken();
 				args[a].put(token, token);
@@ -37,27 +37,27 @@ public class EventMiner {
 			System.out.println();
 			System.out.println();
 			System.out.println();
-		Hashtable cxr[] = new Hashtable[TUPLESIZE];
+		Hashtable<String, Hashtable<Integer, Hashtable<String,String>>>[] cxr = (Hashtable<String, Hashtable<Integer, Hashtable<String,String>>>[])new Hashtable<?,?>[TUPLESIZE];
 		for (int a = 0; a < TUPLESIZE; a++) {
-			cxr[a] = new Hashtable();
+			cxr[a] = new Hashtable<String, Hashtable<Integer, Hashtable<String,String>>>();
 		}
 		for (int i = 0; i < lines.size(); i++) {
-			Vector v = (Vector)lines.elementAt(i);
+			Vector<String> v = (Vector<String>)lines.elementAt(i);
 			String ss[] = new String[v.size()];
 			for (int j = 0; j < v.size(); j++) {
 				ss[j] = v.elementAt(j).toString();
 			}
 			for (int j = 0; j < v.size(); j++) {
 				// System.out.print(ss[j]);
-				Hashtable ht = (Hashtable)cxr[j].get(ss[j]);
+				Hashtable<Integer, Hashtable<String,String>> ht = (Hashtable<Integer, Hashtable<String,String>>)cxr[j].get(ss[j]);
 				if (ht == null) {
-					ht = new Hashtable();
+					ht = new Hashtable<Integer, Hashtable<String,String>>();
 				}
 				for (int k = 0; k < v.size(); k++) {
-					Integer l = new Integer(k);
-					Hashtable ht2 = (Hashtable)ht.get(l);
+					int l = k;
+					Hashtable<String,String> ht2 = (Hashtable<String,String>)ht.get(l);
 					if (ht2 == null) {
-						ht2 = new Hashtable();
+						ht2 = new Hashtable<String,String>();
 					}
 					// System.out.print(" ");
 					// System.out.print(ss[k]);

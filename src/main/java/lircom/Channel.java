@@ -5,8 +5,8 @@ import java.io.*;
 import java.util.regex.*;
 
 public class Channel extends Chat {
-	Hashtable subscribers = new Hashtable();
-	Hashtable subscribernicks = new Hashtable();
+	Hashtable<String,String> subscribers = new Hashtable<String,String>();
+	Hashtable<String,String> subscribernicks = new Hashtable<String,String>();
         String joincmd = "^[ \t]*enter[ \t]*$";
         String leavecmd = "^[ \t]*leave[ \t]*$";
         String helpcmd = "^[ \t]*help[ \t]*$";
@@ -35,7 +35,7 @@ public class Channel extends Chat {
 		super(is, os);
 		setNick("Channel");
 	}
-	Vector actions = new Vector();
+	Vector<Action> actions = new Vector<Action>();
 	class Action {
 		Pattern pattern;
 		int action;
@@ -128,7 +128,7 @@ public class Channel extends Chat {
 		}
 		return b;
 	}
-	public void send(Hashtable subscribers, Message m, String sender) throws Exception {
+	public void send(Hashtable<String,String> subscribers, Message m, String sender) throws Exception {
 /*
 		Iterator i = subscribers.keySet().iterator();
 		while (i.hasNext()) {
@@ -136,7 +136,7 @@ public class Channel extends Chat {
                     if (!sub.equals(sender) && !sub.equals(getAddressPortClient()) && !sender.equals(getAddressPortClient())) {
                         m.to = sub;
 */
-			Hashtable subs = (Hashtable)subscribers.clone();
+			Hashtable<String,String> subs = (Hashtable<String,String>)subscribers.clone();
 			subs.remove(sender);
 			m = new Message(subs, m.nick, m.message, m.language);
 			try {
