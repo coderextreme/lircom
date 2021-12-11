@@ -11,6 +11,34 @@
   </information>
   <resources>
    <j2se version="18"/>
+    <jar href="m2/gluegen-rt-android-natives-linux-amd64.jar"/>
+    <jar href="m2/gluegen-rt.jar"/>
+    <jar href="m2/gluegen-rt-natives-linux-amd64.jar"/>
+    <jar href="m2/htmlunit-2.55.0.jar"/>
+    <jar href="m2/httpclient-4.5.13.jar"/>
+    <jar href="m2/httpunit-1.7.3.jar"/>
+    <jar href="m2/joal-android-natives-linux-amd64.jar"/>
+    <jar href="m2/joal-natives-linux-amd64.jar"/>
+    <jar href="m2/jocl-android-natives-linux-amd64.jar"/>
+    <jar href="m2/jocl-natives-linux-amd64.jar"/>
+    <jar href="m2/jogl-all-android-natives-linux-amd64.jar"/>
+    <jar href="m2/jogl-all.jar"/>
+    <jar href="m2/jogl-all-mobile-natives-linux-amd64.jar"/>
+    <jar href="m2/jogl-all-natives-linux-amd64.jar"/>
+    <jar href="m2/jogl-all-noawt-natives-linux-amd64.jar"/>
+    <jar href="m2/jogl-cg-natives-linux-amd64.jar"/>
+    <jar href="m2/jogl-natives-linux-amd64.jar"/>
+    <jar href="m2/js-1.7R2.jar"/>
+    <jar href="m2/json-20190722.jar"/>
+    <jar href="m2/log4j-1.2.17.jar"/>
+    <jar href="m2/nativewindow-natives-linux-amd64.jar"/>
+    <jar href="m2/nekohtml-1.9.22.jar"/>
+    <jar href="m2/newt-driver-linux.jar"/>
+    <jar href="m2/newt-natives-linux-amd64.jar"/>
+    <jar href="m2/oculusvr-natives-linux-amd64.jar"/>
+    <jar href="m2/rhino-1.7R4.jar"/>
+    <jar href="m2/xercesImpl-2.11.0.jar"/>
+    <jar href="m2/xml-apis-1.4.01.jar"/>
    <jar href="m2/json-20190722.jar"/>
    <jar href="m2/jogl-natives-linux-amd64.jar"/>
    <jar href="m2/joal-android-natives-linux-amd64.jar"/>
