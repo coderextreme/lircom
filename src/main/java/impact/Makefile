@@ -1,10 +1,15 @@
 JAVAC=/usr/bin/javac
 JAVA=/usr/bin/java
 JAR=/usr/bin/jar
-# CLASSPATH=/Users/johncarlson/Downloads/jogamp-all/jogamp-all-platforms/jar/jogl-all-natives-macosx-universal.jar:/Users/johncarlson/Downloads/jogamp-all/jogamp-all-platforms/jar/jogl-all.jar:..:.:/Users/johncarlson/Downloads/jogamp-all/jogamp-all-platforms/jar/gluegen-rt.jar
-# CLASSPATH=../../../../m2/jogl-all-natives-linux-amd64.jar:../../../../m2/jogl-all.jar:../../../../m2/gluegen-rt.jar
 
-CLASSPATH=../../../../m2/joal-natives-linux-amd64.jar:../../../../m2/jocl-natives-linux-amd64.jar:../../../../m2/jogl-all-natives-linux-amd64.jar:../../../../m2/jogl-all-noawt-natives-linux-amd64.jar:../../../../m2/jogl-cg-natives-linux-amd64.jar:../../../../m2/jogl-natives-linux-amd64.jar:../../../../m2/nativewindow-natives-linux-amd64.jar:../../../../m2/newt-natives-linux-amd64.jar:../../../../m2/oculusvr-natives-linux-amd64.jar:..:.:../../../../m2/jogl-all.jar:../../../../m2/gluegen-rt.jar:../../../../m2/gluegen-rt-natives-linux-amd64.jar:../../../../m2/httpunit-1.7.3.jar
+# For Mac
+# CLASSPATH=../../../../m2/jogl-all-natives-macosx-universal.jar:..:.:../../../../m2/jogl-all.jar:..:.:../../../../m2/gluegen-rt.jar:../../../../m2/gluegen-rt-natives-macosx-universal.jar
+
+# For Windows
+# CLASSPATH=../../../../m2/jogl-all-natives-linux-amd64.jar;..;.;../../../../m2/jogl-all.jar;../../../../m2/gluegen-rt.jar;../../../../m2/gluegen-rt-natives-linux-amd64.jar
+
+# For Linux
+CLASSPATH=../../../../m2/jogl-all-natives-linux-amd64.jar:..:.:../../../../m2/jogl-all.jar:../../../../m2/gluegen-rt.jar:../../../../m2/gluegen-rt-natives-linux-amd64.jar
 
 
 all:  impact3d.jar
@@ -12,7 +17,7 @@ all:  impact3d.jar
 
 smooth:
 	$(JAVAC) -classpath $(CLASSPATH) smooth.java
-	$(JAVA) -Xmx256m -classpath $(CLASSPATH) smooth
+	$(JAVA) -Xmx256m -classpath $(CLASSPATH) impact.smooth
 
 
 compile:
