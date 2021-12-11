@@ -148,18 +148,17 @@ public class Message extends Throwable {
         System.err.println(System.currentTimeMillis()+" Sending "+sb);
         return sb.toString();
     }
-    public void translate(String targetLanguage) {
-	    System.err.println("language is "+ language);
+    public String translate(String targetLanguage) {
+	    System.err.println("language is "+ this.language);
 	    System.err.println("target language is "+ targetLanguage);
-	    System.err.println("message "+ message);
-	if (!language.equals("__") && !language.equals(targetLanguage)) {
+	    System.err.println("input message "+ this.message);
+	if (!this.language.equals("__") && !this.language.equals(targetLanguage)) {
 		try {
-			message = BabelFish.translate(message, language, targetLanguage);
-			language = targetLanguage;
+			return BabelFish.translate(message, this.language, targetLanguage);
 		} catch (Exception e) {
-			message = "Untranslated "+language+" "+message;
+			e.printStackTrace();
 		}
 	}
-	    System.err.println("translated message is "+ message);
+	return this.message;
     }
 }
