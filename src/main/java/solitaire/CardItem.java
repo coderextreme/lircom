@@ -23,7 +23,7 @@ public class CardItem extends JLabel implements ListCellRenderer, MouseListener,
 	private static Hashtable<String,String> map = new Hashtable<String,String>();
 	private static ImageIcon background = null;
 
-	static public final String cardset = "/cardset-standard/";
+	static public final String cardset = "/solitaire/cardset-standard/";
 
 	static public final int Hearts = 0;
 	static public final int Spades = 1;
