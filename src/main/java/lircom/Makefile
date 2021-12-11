@@ -35,7 +35,7 @@ Heathens: lircom.jar
 
 
 signall:
-	(for i in ../../../../{target,m2}/*jar ../*/*.jar; do jarsigner -storepass foobar -keystore $(KEYSTORE) $$i myself; done)
+	(for i in ../../../../target/*jar ../../../../m2/*jar ../*/*.jar; do jarsigner -storepass foobar -keystore $(KEYSTORE) $$i myself; done)
 
 speech: lircom.jar
 	$(JAVA) -Xmx256m -classpath "$(CLASSPATH)" lircom.Synth
