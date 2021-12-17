@@ -21,7 +21,7 @@
 	<jar href="httpunit.jar"/>
 	<jar href="nekohtml.jar"/>
 	<jar href="xercesMinimal.jar"/>
-	<jar href="log4j-1.2.14.jar"/>
+	<jar href="log4j-2.16.0.jar"/>
     </resources>
   <application-desc main-class="lircom.MainWindow">
 	<argument>lircom.Chat</argument>
