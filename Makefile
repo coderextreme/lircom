@@ -1,11 +1,11 @@
 KEYSTORE=../mykeystore
-CLASSPATH=target/lircom-2.jar:../.m2/repository/org/httpunit/httpunit/1.7.2/httpunit-1.7.2.jar:../.m2/repository/log4j/log4j/2.16.0/log4j-core-2.16.0.jar:../.m2/repository/log4j/log4j/2.16.0/log4j-api-2.16.0.jar:lib/martyr.jar:../.m2/repository/nekohtml/nekohtml/0.9.5/nekohtml-0.9.5.jar:../.m2/repository/xerces/xercesImpl/2.11.0/xercesImpl-2.11.0.jar:lib/xml-apis.jar:../.m2/repository/rhino/js/1.6R5/js-1.6R5.jar:../.m2/repository/org/json/json/20190722/json-20190722.jar
+CLASSPATH=target/lircom-2.jar:../.m2/repository/org/httpunit/httpunit/1.7.2/httpunit-1.7.2.jar:../.m2/repository/log4j/log4j/2.16.0/log4j-core-2.17.0.jar:../.m2/repository/log4j/log4j/2.16.0/log4j-api-2.17.0.jar:lib/martyr.jar:../.m2/repository/nekohtml/nekohtml/0.9.5/nekohtml-0.9.5.jar:../.m2/repository/xerces/xercesImpl/2.11.0/xercesImpl-2.11.0.jar:lib/xml-apis.jar:../.m2/repository/rhino/js/1.6R5/js-1.6R5.jar:../.m2/repository/org/json/json/20190722/json-20190722.jar
 BFCLASSPATH=target/lircom-2.jar:../.m2/repository/org/httpunit/httpunit/1.7.2/httpunit-1.7.2.jar:../.m2/repository/nekohtml/nekohtml/0.9.5/nekohtml-0.9.5.jar:../.m2/repository/xerces/xercesImpl/2.11.0/xercesImpl-2.11.0.jar:lib/xml-apis.jar:../.m2/repository/rhino/js/1.6R5/js-1.6R5.jar
 
 
-CLASSPATH2=target/lircom-2.jar:/Users/yottzumm/Applications/jogl/build/jogl.jar:/Users/yottzumm/Applications/jogl-demos/build/jogl-demos-util.jar:/Users/yottzumm/Applications/jogl/www/webstart/jogl-natives-macosx-universal.jar:../.m2/repository/log4j/log4j/2.16.0/log4j-api-2.16.0.jar:../.m2/repository/log4j/log4j/2.16.0/log4j-core-2.16.0.jar
+CLASSPATH2=target/lircom-2.jar:/Users/yottzumm/Applications/jogl/build/jogl.jar:/Users/yottzumm/Applications/jogl-demos/build/jogl-demos-util.jar:/Users/yottzumm/Applications/jogl/www/webstart/jogl-natives-macosx-universal.jar:../.m2/repository/log4j/log4j/2.16.0/log4j-api-2.17.0.jar:../.m2/repository/log4j/log4j/2.16.0/log4j-core-2.17.0.jar
 
-CLASSPATH3=lib/martyr.jar:target/lircom-2.jar:../.m2/repository/log4j/log4j/2.16.0/log4j-core-2.16.0.jar:../.m2/repository/log4j/log4j/2.16.0/log4j-api-2.16.0.jar
+CLASSPATH3=lib/martyr.jar:target/lircom-2.jar:../.m2/repository/log4j/log4j/2.16.0/log4j-core-2.17.0.jar:../.m2/repository/log4j/log4j/2.16.0/log4j-api-2.17.0.jar
 CLASSPATH4=target/lircom-2.jar:../.m2/repository/io/socket/engine.io-client/0.6.3/engine.io-client-0.6.3.jar:../.m2/repository/io/socket/socket.io-client/0.6.3/socket.io-client-0.6.3.jar:../.m2/repository/com/squareup/okhttp/okhttp/2.7.0/okhttp-2.7.0.jar:../.m2/repository/com/squareup/okhttp/okhttp-ws/2.7.0/okhttp-ws-2.7.0.jar:../.m2/repository/com/squareup/okio/okio/1.6.0/okio-1.6.0.jar:../.m2/repository/org/json/json/20190722/json-20190722.jar
 # JAVAC=/Users/yottzumm/Applications/aspectj-1.5.3/bin/ajc -1.5
 JAVA=java
@@ -62,7 +62,7 @@ peer: target/lircom-2.jar
 target/lircom-2.jar:
 	mvn package
 
-SOLCLASSPATH=../.m2/repository/xerces/xercesImpl/2.11.0/xercesImpl-2.11.0.jar:lib/xmlParserAPIs-2.6.1.jar:../.m2/repository/nekohtml/nekohtml/0.9.5/nekohtml-0.9.5.jar:target/lircom-2.jar:../.m2/repository/org/httpunit/httpunit/1.7.2/httpunit-1.7.2.jar:lib/martyr.jar:../.m2/repository/log4j/log4j/2.16.0/log4j-core-2.16.0.jar:../.m2/repository/log4j/log4j/2.16.0/log4j-api-2.16.0.jar:lib/servlet-api-2.4.jar:../.m2/repository/rhino/js/1.6R5/js-1.6R5.jar:../.m2/repository/io/socket/engine.io-client/0.6.3/engine.io-client-0.6.3.jar:../.m2/repository/io/socket/socket.io-client/0.6.3/socket.io-client-0.6.3.jar:../.m2/repository/com/squareup/okhttp/okhttp/2.7.0/okhttp-2.7.0.jar:../.m2/repository/com/squareup/okhttp/okhttp-ws/2.7.0/okhttp-ws-2.7.0.jar:../.m2/repository/com/squareup/okio/okio/1.6.0/okio-1.6.0.jar:../.m2/repository/org/json/json/20190722/json-20190722.jar
+SOLCLASSPATH=../.m2/repository/xerces/xercesImpl/2.11.0/xercesImpl-2.11.0.jar:lib/xmlParserAPIs-2.6.1.jar:../.m2/repository/nekohtml/nekohtml/0.9.5/nekohtml-0.9.5.jar:target/lircom-2.jar:../.m2/repository/org/httpunit/httpunit/1.7.2/httpunit-1.7.2.jar:lib/martyr.jar:../.m2/repository/log4j/log4j/2.16.0/log4j-core-2.17.0.jar:../.m2/repository/log4j/log4j/2.16.0/log4j-api-2.17.0.jar:lib/servlet-api-2.4.jar:../.m2/repository/rhino/js/1.6R5/js-1.6R5.jar:../.m2/repository/io/socket/engine.io-client/0.6.3/engine.io-client-0.6.3.jar:../.m2/repository/io/socket/socket.io-client/0.6.3/socket.io-client-0.6.3.jar:../.m2/repository/com/squareup/okhttp/okhttp/2.7.0/okhttp-2.7.0.jar:../.m2/repository/com/squareup/okhttp/okhttp-ws/2.7.0/okhttp-ws-2.7.0.jar:../.m2/repository/com/squareup/okio/okio/1.6.0/okio-1.6.0.jar:../.m2/repository/org/json/json/20190722/json-20190722.jar
 
 random: target/lircom-2.jar
 	java -Xmx256m -classpath "$(SOLCLASSPATH)" solitaire.Game random localhost 8180
