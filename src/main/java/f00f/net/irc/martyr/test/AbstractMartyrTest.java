@@ -9,9 +9,6 @@ import org.junit.Before;
  * */
 public class AbstractMartyrTest
 {
-	/**
-	 * Initialize log4j
-	 * */
 	@Before
 	public void initTest()
 	{

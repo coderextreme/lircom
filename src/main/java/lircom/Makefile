@@ -2,10 +2,10 @@ JAVAC=javac
 JAVA=java
 JAR=jar
 KEYSTORE=../../../../mykeystore
-CLASSPATH=../../../../target/lircom-2.jar:../../../../m2/httpclient-4.5.13.jar:../../../../m2/htmlunit-2.55.0.jar:../../../../m2/httpunit-1.7.3.jar:../../../../m2/log4j-api-2.17.0.jar:../../../../m2/log4j-core-2.17.0.jar:../../../../m2/nekohtml-1.9.22.jar:../../../../m2/xercesImpl-2.11.0.jar:../../../../m2/xml-apis-1.4.01.jar:../../../../m2/js-1.7R2.jar:../../../../m2/json-20190722.jar:..
+CLASSPATH=../../../../target/lircom-2.jar:../../../../m2/httpclient-4.5.13.jar:../../../../m2/htmlunit-2.55.0.jar:../../../../m2/httpunit-1.7.3.jar:../../../../m2/nekohtml-1.9.22.jar:../../../../m2/xercesImpl-2.11.0.jar:../../../../m2/xml-apis-1.4.01.jar:../../../../m2/js-1.7R2.jar:../../../../m2/json-20190722.jar:..
 
 BFCLASSPATH="..:../../../../m2/xercesImpl-2.11.0.jar:../../../../m2/xml-apis.1.4.01.jar:../../../../m2/js-1.7R2.jar"
-CLASSPATH3="..:lircom.jar:../../../../target/lircom-2.jar:../../../../m2/log4j-api-2.17.0.jar:../../../../m2/log4j-core-2.17.0.jar"
+CLASSPATH3="..:lircom.jar:../../../../target/lircom-2.jar"
 
 lircom: lircom.jar
 	(export JAVA_LIB_PATH=C:/Users/coderextreme/Downloads/jogamp-all-platforms/lib/windows-amd64/ ; $(JAVA) -Djava.library.path=$(JAVA_LIB_PATH) -Xmx256m -classpath "$(CLASSPATH)" lircom.MainWindow lircom.Chat belinda)

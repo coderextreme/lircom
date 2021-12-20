@@ -9,10 +9,6 @@ package f00f.net.irc.martyr;
  * better example, check out the Justin bot, included in martyr's
  * /examples directory.
  *
- * <h2>How do I get rid of all the output?</h2>
- * <p>Martyr uses log4j.
- * </p>
- *
  * <h2>How do I add socks support?</h2>
  * <p>
  * Martyr does not directly support SOCKS, but it can work with an external
