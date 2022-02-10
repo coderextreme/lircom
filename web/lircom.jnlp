@@ -20,7 +20,6 @@
 	<jar href="martyr.jar"/>
 	<jar href="httpunit.jar"/>
 	<jar href="nekohtml.jar"/>
-	<jar href="xercesMinimal.jar"/>
     </resources>
   <application-desc main-class="lircom.MainWindow">
 	<argument>lircom.Chat</argument>

@@ -24,7 +24,6 @@
    <jar href="m2/newt-natives-linux-amd64.jar"/>
    <jar href="m2/oculusvr-natives-linux-amd64.jar"/>
    <jar href="m2/rhino-1.7R4.jar"/>
-   <jar href="m2/xercesImpl-2.11.0.jar"/>
    <jar href="m2/xml-apis-1.4.01.jar"/>
    <jar href="target/lircom-2.jar"/>
   </resources>

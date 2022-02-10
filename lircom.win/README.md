@@ -2,7 +2,6 @@
 Language Independent Relay Communications
 
 Make sure your system has Java JRE, Java SE, or OpenJDK, most recent version.
-Make sure your system has wget64 and it's installed in your home folder under \bin\
 
 Host:
 

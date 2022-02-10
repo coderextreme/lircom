@@ -2,9 +2,9 @@ JAVAC=javac
 JAVA=java
 JAR=jar
 KEYSTORE=../../../../mykeystore
-CLASSPATH=../../../../target/lircom-2.jar:../../../../m2/httpclient-4.5.13.jar:../../../../m2/htmlunit-2.55.0.jar:../../../../m2/httpunit-1.7.3.jar:../../../../m2/nekohtml-1.9.22.jar:../../../../m2/xercesImpl-2.11.0.jar:../../../../m2/xml-apis-1.4.01.jar:../../../../m2/js-1.7R2.jar:../../../../m2/json-20190722.jar:..
+CLASSPATH=../../../../target/lircom-2.jar:../../../../m2/httpclient-4.5.13.jar:../../../../m2/htmlunit-2.55.0.jar:../../../../m2/httpunit-1.7.3.jar:../../../../m2/nekohtml-1.9.22.jar:../../../../m2/xml-apis-1.4.01.jar:../../../../m2/js-1.7R2.jar:../../../../m2/json-20190722.jar:..
 
-BFCLASSPATH="..:../../../../m2/xercesImpl-2.11.0.jar:../../../../m2/xml-apis.1.4.01.jar:../../../../m2/js-1.7R2.jar"
+BFCLASSPATH="..:../../../../m2/xml-apis.1.4.01.jar:../../../../m2/js-1.7R2.jar"
 CLASSPATH3="..:lircom.jar:../../../../target/lircom-2.jar"
 
 lircom: lircom.jar
