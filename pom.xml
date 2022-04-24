@@ -3,6 +3,11 @@
   <groupId>com.mycompany.app</groupId>
   <artifactId>lircom</artifactId>
   <version>2</version>
+<properties>
+    <kotlin.version>1.3.21</kotlin.version>
+    <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
+    <junit-jupiter.version>5.4.2</junit-jupiter.version>
+</properties>
   <build>
     <plugins>
       <plugin>
@@ -71,9 +76,9 @@
     <version>0.6.3</version>
   </dependency>
 <dependency>
-  <groupId>com.squareup.okhttp</groupId>
+  <groupId>com.squareup.okhttp3</groupId>
   <artifactId>okhttp</artifactId>
-  <version>2.5.0</version>
+  <version>4.9.3</version>
 </dependency>
 <!-- From: https://jogamp.org/wiki/index.php/Maven -->
   <dependency>
@@ -120,5 +125,58 @@
       <artifactId>json</artifactId>
       <version>20190722</version>
     </dependency>
+<!-- https://mvnrepository.com/artifact/net.dv8tion/JDA -->
+<dependency>
+    <groupId>net.dv8tion</groupId>
+    <artifactId>JDA</artifactId>
+    <version>5.0.0-alpha.10</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+<dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>slf4j-api</artifactId>
+    <version>1.7.36</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 -->
+<dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-collections4</artifactId>
+    <version>4.4</version>
+</dependency>
+    <dependency>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-stdlib</artifactId>
+        <version>${kotlin.version}</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.neovisionaries/nv-websocket-client -->
+<dependency>
+    <groupId>com.neovisionaries</groupId>
+    <artifactId>nv-websocket-client</artifactId>
+    <version>2.14</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/net.sf.trove4j/trove4j -->
+<dependency>
+    <groupId>net.sf.trove4j</groupId>
+    <artifactId>trove4j</artifactId>
+    <version>3.0.3</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+    <version>2.13.2</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-core</artifactId>
+    <version>2.13.2</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations -->
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-annotations</artifactId>
+    <version>2.13.2</version>
+</dependency>
   </dependencies>
 </project>
