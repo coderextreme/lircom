@@ -183,7 +183,7 @@ public class Impact3D implements GLEventListener, MouseListener, MouseMotionList
           System.exit(0);
         }
       });
-    frame.setVisible(true);
+    frame.show();
     try {
     	animator.start();
     } catch (GLException e) {

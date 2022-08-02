@@ -45,5 +45,4 @@ https://jogamp.org/deployment/archive/master/?C=M;O=D
 
 Get a version build after Jan 12, 2021
 
-
-run impact3D.sh
+run impact3d.sh

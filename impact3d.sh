@@ -1,8 +1,13 @@
 #!/bin/bash -x
-make peer &
+# make target/lircom-2.jar
+mvn clean install
+# make target/Impact.jar
+ant
 sleep 1
 export DIR=`pwd`
-export JARS="${DIR}/m2"
+export DWN=/C/Users/john/Downloads
+export LIB=${DWN}/jogamp-all-platforms/lib/windows-amd64
 
-java -Xmx256m -cp "${DIR}/target/lircom-2.jar:${JARS}/joal-android-natives-linux-amd64.jar:${JARS}/joal-natives-linux-amd64.jar:${JARS}/jocl-android-natives-linux-amd64.jar:${JARS}/jocl-natives-linux-amd64.jar:${JARS}/jogl-all-android-natives-linux-amd64.jar:${JARS}/jogl-all.jar:${JARS}/jogl-all-mobile-natives-linux-amd64.jar:${JARS}/jogl-all-natives-linux-amd64.jar:${JARS}/jogl-all-noawt-natives-linux-amd64.jar:${JARS}/jogl-cg-natives-linux-amd64.jar:${JARS}/jogl-natives-linux-amd64.jar:${JARS}/gluegen-rt-android-natives-linux-amd64.jar:${JARS}/gluegen-rt.jar:${JARS}/gluegen-rt-natives-linux-amd64.jar" impact.Impact3D
+${DIR}/peer.sh &
 
+java -Xmx256m --add-exports java.base/java.lang=ALL-UNNAMED --add-exports java.desktop/sun.awt=ALL-UNNAMED --add-exports java.desktop/sun.java2d=ALL-UNNAMED -Djava.library.path=${LIB} -Xmx256m -cp ${DIR}/target/Impact.jar impact.Impact3D

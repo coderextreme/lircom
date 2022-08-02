@@ -1,10 +1,9 @@
 set DIR=C:\Users\john\lircom
 set JARS=%DIR%\m2
 set DWN=C:\Users\john\Downloads
+set M2=m2
+set LIB=C:\Users\john\Downloads\jogamp-all-platforms\lib\windows-amd64
 
 %DIR%\peer.sh
 
-java -Xmx256m -cp %DIR%\target\lircom-2.jar;%DWN%\gluegen-rt.jar;%DWN%\jogl-all.jar;%DWN%\gluegen-rt-natives-windows-amd64.jar;%DWN%\jogl-all-natives-windows-amd64.jar impact.Impact3D
-
-
-
+java -Xmx256m --add-exports java.base/java.lang=ALL-UNNAMED --add-exports java.desktop/sun.awt=ALL-UNNAMED --add-exports java.desktop/sun.java2d=ALL-UNNAMED -Djava.library.path=%LIB% -Xmx256m -cp %DIR%\target\Impact.jar impact.Impact3D
