@@ -4,6 +4,8 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.KeyCode;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -24,7 +26,9 @@ import javafx.stage.Stage;
 import javafx.scene.image.Image;
  
 public class HTMLEditorSample extends Application {
-    private final String INITIAL_TEXT = "Start typing here";
+    private final String INITIAL_TEXT = "Start typing here, then hit Enter to send";
+    private final HTMLEditor htmlEditor = new HTMLEditor();
+    private WebEngine webEngine = null;
  
     @Override
     public void start(Stage stage) {
@@ -39,14 +43,27 @@ public class HTMLEditorSample extends Application {
         root.setSpacing(5);
         root.setAlignment(Pos.BOTTOM_LEFT);
  
-        final HTMLEditor htmlEditor = new HTMLEditor();
         htmlEditor.setPrefHeight(245);
         htmlEditor.setHtmlText(INITIAL_TEXT);
 	htmlEditor.setBackground(new Background(new BackgroundImage(new Image(getClass().getResourceAsStream("/lircom/Space_Tears_II.jpg")), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+	htmlEditor.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override public void handle(KeyEvent evt) {
+	    	if (evt.getCode() == KeyCode.ENTER) {
+		    appendText();
+		}
+	    }
+	});
+	htmlEditor.setOnKeyReleased(new EventHandler<KeyEvent>() {
+            @Override public void handle(KeyEvent evt) {
+	    	if (evt.getCode() == KeyCode.ENTER) {
+		    htmlEditor.requestFocus();
+		}
+	    }
+	});
         
         final WebView browser = new WebView();
 	browser.setPageFill(Color.TRANSPARENT);
-        final WebEngine webEngine = browser.getEngine();
+        webEngine = browser.getEngine();
 	webEngine.setUserStyleSheetLocation(getClass().getResource("/lircom/image.css").toString());
      
         ScrollPane scrollPane = new ScrollPane();
@@ -55,31 +72,39 @@ public class HTMLEditorSample extends Application {
         scrollPane.setFitToWidth(true);
         scrollPane.setPrefHeight(180);
  
+	/*
         Button showHTMLButton = new Button("Load Content in Browser");
-        root.setAlignment(Pos.CENTER);
         showHTMLButton.setOnAction(new EventHandler<ActionEvent>() {
-	    java.lang.StringBuffer buf = new java.lang.StringBuffer();
             @Override public void handle(ActionEvent arg0) {
-		String htmlText = htmlEditor.getHtmlText();
-		if (!"<html dir='ltr'><head></head><body contenteditable='true'></body></html>".replace("'", "\"").equals(htmlText)) {
-			buf.append("&lt;yottzumm&gt;");
-			Pattern pattern = Pattern.compile("<[^>]*>");
-			Matcher matcher = pattern.matcher(htmlText);
-			while(matcher.find()) {
-			    matcher.appendReplacement(buf, " ");
-			}
-			matcher.appendTail(buf);
-			buf.append("<br>");
-			webEngine.loadContent(buf.toString());
-		}
-  		htmlEditor.setHtmlText("");
+	    	appendText();
             }
         });
+	*/
         
-        root.getChildren().addAll(scrollPane, htmlEditor, showHTMLButton);
+        root.setAlignment(Pos.CENTER);
+        root.getChildren().addAll(scrollPane, htmlEditor);
         scene.setRoot(root);
         stage.setScene(scene);
         stage.show();
+    }
+
+    java.lang.StringBuffer buf = new java.lang.StringBuffer();
+
+    private void appendText() {
+	String htmlText = htmlEditor.getHtmlText();
+	if (!"<html dir='ltr'><head></head><body contenteditable='true'></body></html>".replace("'", "\"").equals(htmlText)) {
+		buf.append("&lt;yottzumm&gt;");
+		Pattern pattern = Pattern.compile("<[^>]*>");
+		Matcher matcher = pattern.matcher(htmlText);
+		while(matcher.find()) {
+		    matcher.appendReplacement(buf, " ");
+		}
+		matcher.appendTail(buf);
+		buf.append("<br>");
+		webEngine.loadContent(buf.toString());
+	}
+	htmlEditor.setHtmlText("");
+	htmlEditor.requestFocus();
     }
  
     public static void main(String[] args) {
