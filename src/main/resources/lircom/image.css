@@ -1,0 +1,18 @@
+.scroll-pane {
+-fx-background-image: url('/lircom/Space_Tears_II.jpg');
+-fx-background-color: transparent;
+color: white
+}
+.viewport {
+-fx-background-image: url('/lircom/Space_Tears_II.jpg');
+-fx-background-color: transparent;
+color: white
+}
+.webview {
+-fx-background-image: url('/lircom/Space_Tears_II.jpg');
+-fx-background-color: transparent;
+color: white
+}
+body {
+    color: white;
+}
