@@ -177,7 +177,7 @@ public class Impact3D implements GLEventListener, MouseListener, MouseMotionList
 		}
 		if (objects.selectedSize() > 0) {
 			//System.err.println("x= "+x+" y= "+y+" z= "+z);
-			translateSelection(x, y, z);
+			translateSelection(x*5, y*5, z*5);
 		} else {
 			//System.err.println("vx= "+view_posx+" vy= "+view_posy+" vz= "+view_posz);
 			view_posx += x;

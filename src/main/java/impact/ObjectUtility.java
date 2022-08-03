@@ -59,18 +59,32 @@ public class ObjectUtility<T extends GraphObject> {
 		}
 	}
 	boolean select(GraphObject obj) {
+		boolean found = false;
 		if (Impact3D.control) {
 			if (selected.contains(obj)) {
 				selected.remove(obj);
 			} else {
 				selected.add(obj);
+				found = true;
 			}
 		} else {
 			if (!selected.contains(obj)) {
 				selected.add(obj);
+				found = true;
 			}
 		}
-		return true;
+		Iterator<GraphObject> k = obj.getGraphObjects().iterator();
+		boolean oneFound = false;
+		while (k.hasNext()) {
+			GraphObject point = k.next();
+			if (point instanceof Point && select(point)) {
+				oneFound = true;
+			}
+		}
+		if (oneFound) {
+			found = true;
+		}
+		return found;
 	}
 	boolean select(int nm) {
 		boolean found = false;
@@ -107,6 +121,7 @@ public class ObjectUtility<T extends GraphObject> {
   	void translateSelection(float x, float y, float z) {
 		Iterator<GraphObject> i = selected.iterator();
 		while (i.hasNext()) {
+			System.err.println("Shifting selection "+x+" "+y+" "+z);
 			GraphObject obj = i.next();
 			((GraphObject)obj).translateSelection(x, y, z);
 		}
