@@ -2,7 +2,6 @@ package lircom;
 import org.w3c.dom.Document;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.KeyCode;
@@ -24,17 +23,14 @@ import javafx.scene.web.WebView;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
+
+import java.io.InputStream;
  
-public class HTMLEditorSample extends Application {
+public class HTMLEditorSample extends ClientOnServer implements ReceiveChatInterface {
     private final String INITIAL_TEXT = "Start typing here, then hit Enter to send";
     private final HTMLEditor htmlEditor = new HTMLEditor();
     private WebEngine webEngine = null;
- 
-    @Override
-    public void start(Stage stage) {
-        stage.setTitle("LIRCom Chat");
-        stage.setWidth(500);
-        stage.setHeight(500);
+    public HTMLEditorSample(Stage stage) throws Exception {
         Scene scene = new Scene(new Group());
 	scene.getStylesheets().addAll(this.getClass().getResource("/lircom/image.css").toExternalForm());
     
@@ -85,7 +81,6 @@ public class HTMLEditorSample extends Application {
         root.getChildren().addAll(scrollPane, htmlEditor);
         scene.setRoot(root);
         stage.setScene(scene);
-        stage.show();
     }
 
     java.lang.StringBuffer buf = new java.lang.StringBuffer();
@@ -107,7 +102,21 @@ public class HTMLEditorSample extends Application {
 	htmlEditor.requestFocus();
     }
  
+	public void receive(String from, String message, String color) { }
+	public void receive(String from, String message) { }
+	public boolean processLine(String message) throws Exception { return false; }
+	public void receive(String from, InputStream file) { }
+	public void receiveAction(String from, String message) { }
+	public void receiveJoin(String network, String room, String person) { }
+	public void receivePresence(String network, String room, String person) { }
+	public void receiveLeave(String room, String person) { }
+	public void receiveQuit(String party) { }
+	public void setSendCommandInterface(SendCommandInterface send) throws Exception  { }
+	public void receiveRoom(String network, String room, int numUsers, String topic) { }
+	public void receiveNick(String network, String oldnick, String newnick) { }
+        public String getLanguage() {
+		return "en";
+	}
     public static void main(String[] args) {
-        launch(args);
     }
 }

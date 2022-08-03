@@ -218,6 +218,23 @@ public class Lircom extends JFrame {
                 hyperlinkHandler = new Hyperactive();
                 chat_Info_Area.addHyperlinkListener(hyperlinkHandler);
     }
+    public void init(HTMLEditorSample chat) throws Exception {
+		FromGUI fg = new FromGUI();
+		FromServer fs = new FromServer();
+		chat.setInputStream(fg);
+		chat.setOutputStream(fs);
+		// fs.setChat(chat);
+                //chat.connect(remoteServer, remotePort); 
+                System.err.println("Channel id is "+chat.clientno);
+                
+                // chat.jp = getMember_List();
+                // chat.tf = getChat_Text_Field();
+                // chat.ta = getChat_Info_Area();
+                // chat.init();
+                chat.start();
+                hyperlinkHandler = new Hyperactive();
+                chat_Info_Area.addHyperlinkListener(hyperlinkHandler);
+    }
     public Chat chat;
 	private JEditorPane chat_Info_Area = null;
 	private JTextField chat_Text_Field = null;

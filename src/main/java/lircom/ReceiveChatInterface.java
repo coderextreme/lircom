@@ -15,5 +15,5 @@ public interface ReceiveChatInterface {
 	void setSendCommandInterface(SendCommandInterface send) throws Exception ;
 	void receiveRoom(String network, String room, int numUsers, String topic);
 	void receiveNick(String network, String oldnick, String newnick);
-        public String getLanguage();
+        String getLanguage();
 }
