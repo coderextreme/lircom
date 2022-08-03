@@ -58,6 +58,20 @@ public class ObjectUtility<T extends GraphObject> {
 			selected.add(obj);
 		}
 	}
+	boolean select(GraphObject obj) {
+		if (Impact3D.control) {
+			if (selected.contains(obj)) {
+				selected.remove(obj);
+			} else {
+				selected.add(obj);
+			}
+		} else {
+			if (!selected.contains(obj)) {
+				selected.add(obj);
+			}
+		}
+		return true;
+	}
 	boolean select(int nm) {
 		boolean found = false;
 		synchronized(shown) {
@@ -65,18 +79,8 @@ public class ObjectUtility<T extends GraphObject> {
 			while (k.hasNext()) {
 				GraphObject obj = k.next();
 				if (((GraphObject)obj).getName() == nm) {
+					select(obj);
 					found = true;
-					if (Impact3D.control) {
-						if (selected.contains(obj)) {
-							selected.remove(obj);
-						} else {
-							selected.add(obj);
-						}
-					} else {
-						if (!selected.contains(obj)) {
-							selected.add(obj);
-						}
-					}
 				}
 			}
 		}

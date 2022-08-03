@@ -73,6 +73,27 @@ public class Impact3D implements GLEventListener, MouseListener, MouseMotionList
 		newPolygon();
 	}
     });
+    MenuItem newTriangle = new MenuItem("New Triangle", new MenuShortcut(KeyEvent.VK_T));
+    file.add(newTriangle);
+    newTriangle.addActionListener(new ActionListener() {
+	public void actionPerformed(ActionEvent ae) {
+		objects.select(newPoint());
+		objects.select(newPoint());
+		objects.select(newPoint());
+		newPolygon();
+	}
+    });
+    MenuItem newQuadrilateral = new MenuItem("New Quadrilateral", new MenuShortcut(KeyEvent.VK_Q));
+    file.add(newQuadrilateral);
+    newQuadrilateral.addActionListener(new ActionListener() {
+	public void actionPerformed(ActionEvent ae) {
+		objects.select(newPoint());
+		objects.select(newPoint());
+		objects.select(newPoint());
+		objects.select(newPoint());
+		newPolygon();
+	}
+    });
     Menu edit = new Menu("Edit");
     menubar.add(edit);
 
@@ -230,14 +251,18 @@ public class Impact3D implements GLEventListener, MouseListener, MouseMotionList
     static final int NOTHING = 0, UPDATE = 1, SELECT = 2;
     static int cmd = UPDATE;
 
-  public void newPolygon() {
+  public Polygon newPolygon() {
 	cmd = UPDATE;
 	Polygon arc = new Polygon(Impact3D.name++, objects.selected, true);
 	objects.add(arc);
+	objects.selected.clear();
+	return arc;
   }
-  public void newPoint() {
+  public Point newPoint() {
+    Point point;
     cmd = UPDATE;
-    objects.add(new Point(Impact3D.name++, true));
+    objects.add(point = new Point(Impact3D.name++, true));
+    return point;
   }
   public void resetView() {
     cmd = UPDATE;
@@ -258,16 +283,17 @@ public class Impact3D implements GLEventListener, MouseListener, MouseMotionList
 
     //gl.setSwapInterval(1);
 
+
     float pos[] = { 5.0f, 5.0f, 10.0f, 0.0f };
 
 /*
-    gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, pos, 0);
-    // gl.glEnable(GL.GL_CULL_FACE);
-    gl.glEnable(GL.GL_LIGHTING);
-    gl.glEnable(GL.GL_LIGHT0);
-    gl.glEnable(GL.GL_DEPTH_TEST);
-    gl.glEnable(GL.GL_NORMALIZE);
+    gl.glEnable(GL2.GL_LIGHTING);
+    gl.glEnable(GL2.GL_LIGHT0);
+    gl.glEnable(GL2.GL_NORMALIZE);
+    gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, pos, 0);
+    gl.glEnable(GL2.GL_CULL_FACE);
 */
+    gl.glEnable(GL2.GL_DEPTH_TEST);
     gl.glShadeModel(GL2.GL_SMOOTH);
                 
     ((ComponentEvents)drawable).addMouseListener(this);
@@ -288,6 +314,7 @@ public class Impact3D implements GLEventListener, MouseListener, MouseMotionList
     //System.err.println("GL_VERSION: " + gl.glGetString(GL.GL_VERSION));
 
     gl.glLoadIdentity();
+    // glu.gluPerspective(45.0, (float) width / (float) height, 1.0, 600.0);
     gl.glFrustum(-1.0f, 1.0f, -asp, asp, 5.0f, 600.0f);
 
     gl.glMatrixMode(GL2.GL_MODELVIEW);
@@ -305,10 +332,12 @@ public class Impact3D implements GLEventListener, MouseListener, MouseMotionList
         ((GLJPanel) drawable).shouldPreserveColorBufferIfTranslucent()) {
       gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
     } else {
-      gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-    }
 */
+      gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+/*
+    }
     gl.glClear(GL.GL_COLOR_BUFFER_BIT);
+*/
             
             
     gl.glPushMatrix();
@@ -350,8 +379,10 @@ public class Impact3D implements GLEventListener, MouseListener, MouseMotionList
           gl.glPushMatrix();
           gl.glLoadIdentity();
           gl.glGetIntegerv(GL.GL_VIEWPORT, viewPort, 0);
+
           glu.gluPickMatrix(x, (double) viewPort[3] - y, 0.5, 0.5, viewPort, 0);
           //glu.gluOrtho2D(0.0d, 1.0d, 0.0d, 1.0d);
+    	  // glu.gluPerspective(45.0, 1/asp, 1.0, 600.0);
           gl.glFrustum(-1.0f, 1.0f, -asp, asp, 5.0f, 600.0f);
           drawScene(drawable);
           gl.glMatrixMode(GL2.GL_PROJECTION);

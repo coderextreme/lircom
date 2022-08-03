@@ -30,7 +30,7 @@ public class Point extends GraphObject {
 	        Proxy.getProxy().update(this);
 	    }
 	}
-    public int getName() {
+	public int getName() {
 		return this.name;
 	}
 	public void draw(GL2 gl) {
