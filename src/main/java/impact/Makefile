@@ -1,31 +1,12 @@
-JAVAC=/usr/bin/javac
-JAVA=/usr/bin/java
-JAR=/usr/bin/jar
-
-# For Mac
-# CLASSPATH=../../../../m2/jogl-all-natives-macosx-universal.jar:..:.:../../../../m2/jogl-all.jar:..:.:../../../../m2/gluegen-rt.jar:../../../../m2/gluegen-rt-natives-macosx-universal.jar
-
-# For Windows
-# CLASSPATH=../../../../m2/jogl-all-natives-linux-amd64.jar;..;.;../../../../m2/jogl-all.jar;../../../../m2/gluegen-rt.jar;../../../../m2/gluegen-rt-natives-linux-amd64.jar
-
-# For Linux
-CLASSPATH=../../../../m2/jogl-all-natives-linux-amd64.jar:..:.:../../../../m2/jogl-all.jar:../../../../m2/gluegen-rt.jar:../../../../m2/gluegen-rt-natives-linux-amd64.jar
+DIR=../../../..
+DWN=C:/Users/john/Downloads
+LIB=${DWN}/jogamp-all-platforms/lib/windows-amd64
+CLASSPATH="${DIR}/target/lircom-2.jar;${DIR}/target/Impact.jar"
 
 
-all:  impact3d.jar
-	(cd ../../../..; ./impact3d.sh)
-
-smooth:
-	$(JAVAC) -classpath $(CLASSPATH) smooth.java
-	$(JAVA) -Xmx256m -classpath $(CLASSPATH) impact.smooth
-
-
-compile:
-	$(JAVAC) -classpath $(CLASSPATH) *.java
-
-impact3d.jar : compile
-	($(JAR) -cmf ../../../../impact3d.manifest impact3d.jar *.class *.java)
-
-picking:
-	$(JAVAC) -classpath $(CLASSPATH) Picking.java
-	$(JAVA) -classpath $(CLASSPATH) impact.Picking
+all:
+	(cd ../../../..; mvn clean install)
+	(cd ../../../..; ant)
+	(java -Xmx256m --add-exports java.base/java.lang=ALL-UNNAMED --add-exports java.desktop/sun.awt=ALL-UNNAMED --add-exports java.desktop/sun.java2d=ALL-UNNAMED -Djava.library.path=${LIB} -Xmx256m -cp ${CLASSPATH} lircom.Peer 8180 & echo $!)
+	sleep 1
+	java -Xmx256m -Djava.library.path=${LIB} --add-exports java.base/java.lang=ALL-UNNAMED --add-exports java.desktop/sun.awt=ALL-UNNAMED --add-exports java.desktop/sun.java2d=ALL-UNNAMED -Djava.library.path=${LIB} -Xmx256m -cp ${CLASSPATH} impact.Impact3D
