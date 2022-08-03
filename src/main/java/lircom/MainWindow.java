@@ -720,12 +720,12 @@ public class MainWindow extends javax.swing.JFrame implements java.awt.event.Win
     }
     public void startSolitaire(String mode) throws Exception {
             solitaire.Game g = new solitaire.Game();
-//            try {
-//                g.startGame(mode, heathens, nickname);
-//                return;
-//            } catch (Exception ex) {
-//                ex.printStackTrace();
-//            }
+            try {
+                // g.startGame(mode, heathens, nickname);
+                // return;
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             java.util.Iterator i = PossibleConnection.iterator();
 
             while (i.hasNext()) {
