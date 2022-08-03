@@ -284,12 +284,12 @@ public class Impact3D implements GLEventListener, MouseListener, MouseMotionList
     //gl.setSwapInterval(1);
 
 
-    float pos[] = { 5.0f, 5.0f, 10.0f, 0.0f };
-
 /*
     gl.glEnable(GL2.GL_LIGHTING);
     gl.glEnable(GL2.GL_LIGHT0);
     gl.glEnable(GL2.GL_NORMALIZE);
+    float pos[] = { 5.0f, 5.0f, 10.0f, 0.0f };
+
     gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, pos, 0);
     gl.glEnable(GL2.GL_CULL_FACE);
 */
@@ -314,8 +314,8 @@ public class Impact3D implements GLEventListener, MouseListener, MouseMotionList
     //System.err.println("GL_VERSION: " + gl.glGetString(GL.GL_VERSION));
 
     gl.glLoadIdentity();
-    // glu.gluPerspective(45.0, (float) width / (float) height, 1.0, 600.0);
-    gl.glFrustum(-1.0f, 1.0f, -asp, asp, 5.0f, 600.0f);
+    glu.gluPerspective(45.0, (float) width / (float) height, 1.0, 600.0);
+    // gl.glFrustum(-1.0f, 1.0f, -asp, asp, 5.0f, 600.0f);
 
     gl.glMatrixMode(GL2.GL_MODELVIEW);
     gl.glLoadIdentity();
@@ -382,8 +382,8 @@ public class Impact3D implements GLEventListener, MouseListener, MouseMotionList
 
           glu.gluPickMatrix(x, (double) viewPort[3] - y, 0.5, 0.5, viewPort, 0);
           //glu.gluOrtho2D(0.0d, 1.0d, 0.0d, 1.0d);
-    	  // glu.gluPerspective(45.0, 1/asp, 1.0, 600.0);
-          gl.glFrustum(-1.0f, 1.0f, -asp, asp, 5.0f, 600.0f);
+    	  glu.gluPerspective(45.0, 1/asp, 1.0, 600.0);
+          // gl.glFrustum(-1.0f, 1.0f, -asp, asp, 5.0f, 600.0f);
           drawScene(drawable);
           gl.glMatrixMode(GL2.GL_PROJECTION);
           gl.glPopMatrix();
