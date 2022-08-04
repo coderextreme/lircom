@@ -7,6 +7,9 @@ set KEYSTORE=mykeystore
 set M2=m2
 set CLASSPATH="%DIR%/target/lircom-2.jar;%DIR%/target/Impact.jar;%DIR%/m2/httpunit-1.7.3.jar;%DIR%/m2/nekohtml-1.9.22.jar;%DIR%/m2/rhino-1.7R4.jar;%DIR%/m2/json-20190722.jar"
 set LIB=%DWN%/jogamp-all-platforms/lib/windows-amd64
+set KEYSTORE=mykeystore
+
+keytool -genkeypair -keyalg DSA -keysize 1024 -keystore %KEYSTORE% -alias myself -storepass foobar 
 
 mvn install
 ant
