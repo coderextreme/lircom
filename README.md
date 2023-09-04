@@ -1,6 +1,8 @@
 # lircom
 Language Independent Relay Communications
 
+For a grand tour, configure and run all.sh
+
 Host:
 
 Go to command prompt folder where you unpacked lircom, called lircom.

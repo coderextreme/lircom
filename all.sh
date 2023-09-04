@@ -18,6 +18,8 @@ ant
 ${JAVA} -Xmx256m --add-exports java.base/java.lang=ALL-UNNAMED --add-exports java.desktop/sun.awt=ALL-UNNAMED --add-exports java.desktop/sun.java2d=ALL-UNNAMED -Djava.library.path=${LIB} -Xmx256m -cp ${CLASSPATH} lircom.Peer 8180 &
 echo $!
 sleep 1
-${JAVA} -Xmx256m -cp ${CLASSPATH} lircom.MainWindow lircom.Chat &
+${JAVA} -Xmx256m -cp ${CLASSPATH} lircom.MainWindow lircom.Chat Christoph &
+${JAVA} -Xmx256m -cp ${CLASSPATH} lircom.MainWindow lircom.Chat John &
 ${JAVA} -Xmx256m -cp ${CLASSPATH} solitaire.Game dealer &
+${JAVA} -Xmx256m -Djava.library.path=${LIB} --add-exports java.base/java.lang=ALL-UNNAMED --add-exports java.desktop/sun.awt=ALL-UNNAMED --add-exports java.desktop/sun.java2d=ALL-UNNAMED -Djava.library.path=${LIB} -Xmx256m -cp ${CLASSPATH} impact.Impact3D &
 ${JAVA} -Xmx256m -Djava.library.path=${LIB} --add-exports java.base/java.lang=ALL-UNNAMED --add-exports java.desktop/sun.awt=ALL-UNNAMED --add-exports java.desktop/sun.java2d=ALL-UNNAMED -Djava.library.path=${LIB} -Xmx256m -cp ${CLASSPATH} impact.Impact3D &
