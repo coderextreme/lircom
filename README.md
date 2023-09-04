@@ -1,7 +1,12 @@
 # lircom
 Language Independent Relay Communications
 
-For a grand tour, configure and run all.sh
+For a grand tour, edit configure, and run all.sh
+
+Buf first, do
+
+$ mvn clean
+$ mvn install
 
 Host:
 

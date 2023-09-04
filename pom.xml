@@ -111,28 +111,34 @@ vulnerability -->
       <version>1.7.3</version>
     </dependency>
     <!-- https://mvnrepository.com/artifact/net.sourceforge.htmlunit/htmlunit -->
+    <!--
     <dependency>
 	<groupId>net.sourceforge.htmlunit</groupId>
 	<artifactId>htmlunit</artifactId>
 	<version>2.55.0</version>
     </dependency>
+	    -->
     <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
     <dependency>
         <groupId>org.apache.httpcomponents</groupId>
         <artifactId>httpclient</artifactId>
         <version>4.5.13</version>
     </dependency>
+    <!--
     <dependency>
       <groupId>org.json</groupId>
       <artifactId>json</artifactId>
       <version>20190722</version>
     </dependency>
+    -->
     <!-- https://mvnrepository.com/artifact/org.glassfish/javax.json -->
+    <!--
 <dependency>
     <groupId>org.glassfish</groupId>
     <artifactId>javax.json</artifactId>
     <version>1.1.4</version>
 </dependency>
+    -->
 <!-- https://mvnrepository.com/artifact/net.dv8tion/JDA -->
 <dependency>
     <groupId>net.dv8tion</groupId>
@@ -176,23 +182,29 @@ vulnerability -->
     <version>3.0.3</version>
 </dependency>
 <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+<!--
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-databind</artifactId>
     <version>2.13.4.1</version>
 </dependency>
+-->
 <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
+<!--
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-core</artifactId>
     <version>2.13.2</version>
 </dependency>
+-->
 <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations -->
+<!--
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-annotations</artifactId>
     <version>2.13.2</version>
 </dependency>
+-->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
