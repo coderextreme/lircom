@@ -14,8 +14,11 @@ public class Point extends GraphObject {
 	Vect trans;
   	float [] white = new float[] { 1.0f, 1.0f, 1.0f, 1.0f };
 	float color[];
-	Point(int name, boolean useProxy) {
-        super(name);
+	Point(String name, boolean useProxy) {
+            super(name);
+	    if (nameToNumber.get(name) == null) {
+		nameToNumber.put(name, Integer.parseInt(name));
+	    }
    	    paths = new Vect();
    	    if (useProxy) {
 		    paths.x = Impact3D.random.nextFloat()*10-5;
@@ -30,7 +33,7 @@ public class Point extends GraphObject {
 	        Proxy.getProxy().update(this);
 	    }
 	}
-	public int getName() {
+	public String getName() {
 		return this.name;
 	}
 	public void draw(GL2 gl) {
@@ -40,7 +43,7 @@ public class Point extends GraphObject {
 	   // System.out.println("x2= "+x2+" y2= "+y2+" z2= "+z2);
 	   gl.glPushMatrix();
 	   gl.glTranslated(x2, y2, z2);
-	   gl.glPushName(name);
+	   gl.glPushName(nameToNumber.get(name));
 	   if (Impact3D.objects.selected.contains(this)) {
 		   gl.glColor4f(white[0], white[1], white[2], white[3]);
 	   } else {
@@ -51,7 +54,10 @@ public class Point extends GraphObject {
 	   gl.glPopMatrix();
 	}
 	public Object clone() {
-		Point node = new Point(Impact3D.name++, true);
+		Integer ni = Impact3D.name++;
+		String nm = ni.toString();
+		nameToNumber.put(nm, ni);
+		Point node = new Point(nm, true);
 		node.paths = (Vect)paths.clone();
 		node.trans = (Vect)trans.clone();
 		node.color[0] = color[0];
@@ -108,12 +114,22 @@ public class Point extends GraphObject {
 		// System.err.println(params[2]);
 		boolean found = false;
 		if (params[2].startsWith("UPDATE")) {
-			int nm = Integer.parseInt(params[1]);
+			String nm = params[1];
+			Integer ni = -1;
+			try {
+				ni = Integer.parseInt(nm);
+				if (ni >= Impact3D.name) {
+					Impact3D.name = ni+1;
+				}
+			} catch (Exception e) {
+				ni = Impact3D.name++;
+			}
+			nameToNumber.put(nm, ni);
 			synchronized (Impact3D.objects.shown) {
 		   		Iterator<GraphObject> n = Impact3D.objects.shown.iterator();
 				while (n.hasNext()) {
 					GraphObject obj = n.next();
-					if (obj.name == nm) {
+					if (obj.name.equals(nm)) {
 						if (obj instanceof Point) {
 							Point node = (Point)obj;
 							node.setColor(params);
@@ -126,33 +142,42 @@ public class Point extends GraphObject {
 			// if the object being updated wasn't found, insert it!
 			if (!found) {
 				// System.err.println("From Server "+Impact3D.name);
-				if (nm >= Impact3D.name) {
-					Impact3D.name = nm+1;
+				if (ni >= Impact3D.name) {
+					Impact3D.name = ni+1;
 				}
+				nameToNumber.put(nm, ni);
 				Point node = new Point(nm, false);
 				node.setColor(params);
 				node.setPosition(params);
 				Impact3D.objects.add(node);
 			}
 		} else if (params[2].startsWith("INSERT")) {
-			int nm = Integer.parseInt(params[1]);
-			// System.err.println("From Server "+Impact3D.name);
-			if (nm >= Impact3D.name) {
-				Impact3D.name = nm+1;
+			Point node = null;
+			String nm = params[1];
+			Integer ni = -1;
+			try {
+				ni = Integer.parseInt(nm);
+				if (ni >= Impact3D.name) {
+					Impact3D.name = ni+1;
+				}
+			} catch (Exception e) {
+				ni = Impact3D.name++;
 			}
-			Point node = new Point(nm, false);
+			nameToNumber.put(nm, ni);
+			node = new Point(nm, false);
 			Impact3D.objects.add(node);
 		} else if (params[2].startsWith("DELETE")) {
-			int nm = Integer.parseInt(params[1]);
+			String nm = params[1];
 			synchronized (Impact3D.objects.shown) {
 		   		Iterator<GraphObject> n = Impact3D.objects.shown.iterator();
 				while (n.hasNext()) {
 					GraphObject node = n.next();
-					if (node.name == nm) {
+					if (node.name.equals(nm)) {
 						n.remove();
 						node.getGraphObjects().clear();
 					}
 				}
+				nameToNumber.remove(nm);
 			}
 		} else if (params[2].startsWith("SELECT")) {
 			synchronized (Impact3D.objects.shown) {

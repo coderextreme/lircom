@@ -108,7 +108,7 @@ public class ClientOnServer extends Thread implements Errors {
                                     if (line.trim().equals("")) {
                                         continue;
                                     }
-                                    System.err.println(getNick()+" received "+line);
+                                    // System.err.println(getNick()+" received in ClientOnServer "+line);
 				    processLine(line);
                                 } catch (ClientException ce) {
                                     ce.printStackTrace();

@@ -92,7 +92,7 @@ public class ObjectUtility<T extends GraphObject> {
 			Iterator<GraphObject> k = shown.iterator();
 			while (k.hasNext()) {
 				GraphObject obj = k.next();
-				if (((GraphObject)obj).getName() == nm) {
+				if (obj.isNumber(nm)) {
 					select(obj);
 					found = true;
 				}

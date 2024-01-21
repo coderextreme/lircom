@@ -41,7 +41,7 @@ public class Sender extends Thread {
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
 		while((line = br.readLine()) != null) {
 			if (line.length() > 0) {
-				System.out.println(line);
+				System.out.println("Sending in Sender "+line);
 				Proxy.getProxy().receive(line);
 			}
 		}

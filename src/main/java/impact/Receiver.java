@@ -37,7 +37,7 @@ public class Receiver extends Thread {
 					if (gt >= 0) {
 						line = line.substring(gt+1);
 						if (line.length() > 0) {
-							// System.err.println("receiving "+line);
+							// System.err.println("receiving in Receiver "+line);
 							Proxy.getProxy().receive(line);
 						}
 					}

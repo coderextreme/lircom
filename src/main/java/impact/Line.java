@@ -7,15 +7,15 @@ import com.jogamp.opengl.util.*;
 import com.jogamp.opengl.util.gl2.*;
 import com.jogamp.common.nio.Buffers;
 
-public  class Polygon extends GraphObject {
+public  class Line extends GraphObject {
   	float [] white = new float[] { 1.0f, 1.0f, 1.0f, 1.0f };
-	Polygon(String name, List<GraphObject> nodes, boolean useProxy) {
+	Line(String name, List<GraphObject> nodes, boolean useProxy) {
             super(name);
 	    if (nameToNumber.get(name) == null) {
 		nameToNumber.put(name, Integer.parseInt(name));
 	    }
 	    for (GraphObject node : nodes) {
-			// arcs connect nodes
+			// segments connect nodes
 		    if (node instanceof Point) {
 			    addGraphObject(node);
 			    node.addGraphObject(this);
@@ -31,7 +31,7 @@ public  class Polygon extends GraphObject {
 	public void draw(GL2 gl) {
 	
 	   gl.glPushName(nameToNumber.get(name));
-	   gl.glBegin(gl.GL_POLYGON);
+	   gl.glBegin(gl.GL_LINES);
 	   List<GraphObject> objs = getGraphObjects();
 	   int size = objs.size(); 
 	   for (int i = 0; i < size; i++) {
@@ -56,13 +56,13 @@ public  class Polygon extends GraphObject {
 		Integer ni = Impact3D.name++;
 		String nm = ni.toString();
 		nameToNumber.put(nm, ni);
-		Polygon arc = new Polygon(nm, getGraphObjects(), true);
-		Proxy.getProxy().update(arc);
-		return arc;
+		Line segment = new Line(nm, getGraphObjects(), true);
+		Proxy.getProxy().update(segment);
+		return segment;
 	}
 	public void insert(Proxy p) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("ARC|"+name+"|INSERT");
+		sb.append("SEGMENT|"+name+"|INSERT");
 	   	List<GraphObject> objs = getGraphObjects();
 	        int size = objs.size(); 
 	        for (int i = 0; i < size; i++) {
@@ -75,14 +75,14 @@ public  class Polygon extends GraphObject {
 		receive(sb.toString());
 	}
 	public void remove(Proxy p) {
-		String line = "ARC|"+name+"|DELETE";
+		String line = "SEGMENT|"+name+"|DELETE";
 		p.send(line);
 		receive(line);
 	}
 	// update updates connection relationships, and is same as insert
 	public void update(Proxy p) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("ARC|"+name+"|UPDATE");
+		sb.append("SEGMENT|"+name+"|UPDATE");
 	   	List<GraphObject> objs = getGraphObjects();
 	        int size = objs.size(); 
 	        for (int i = 0; i < size; i++) {
@@ -116,8 +116,8 @@ public  class Polygon extends GraphObject {
 				Impact3D.name = ni+1;
 			}
 			nameToNumber.put(nm, ni);
-			Polygon arc = new Polygon(nm, nodes, false);
-			Impact3D.objects.add(arc);
+			Line segment = new Line(nm, nodes, false);
+			Impact3D.objects.add(segment);
 		 } else if (params[2].startsWith("UPDATE")) {
 			boolean found = false;
 			String nm = params[1];
@@ -144,18 +144,18 @@ public  class Polygon extends GraphObject {
 				while (ni.hasNext()) {
 					GraphObject obj = ni.next();
 					if (obj.name.equals(nm)) {
-						if (obj instanceof Polygon) {
-							Polygon arc = (Polygon)obj;
+						if (obj instanceof Line) {
+							Line segment = (Line)obj;
 							found = true;
-							arc.setGraphObjects(nodes);
+							segment.setGraphObjects(nodes);
 						}
 					}
 				}
 			}
 			if (!found) {
 				nameToNumber.put(nm, n);
-				Polygon arc = new Polygon(nm, nodes, false);
-				Impact3D.objects.add(arc);
+				Line segment = new Line(nm, nodes, false);
+				Impact3D.objects.add(segment);
 			}
 		} else if (params[2].startsWith("DELETE")) {
 			int nm = Integer.parseInt(params[1]);
@@ -173,7 +173,7 @@ public  class Polygon extends GraphObject {
 		   		Iterator<GraphObject> i = Impact3D.objects.shown.iterator();
 				while (i.hasNext()) {
 					GraphObject obj = i.next();
-					if (obj instanceof Polygon) {
+					if (obj instanceof Line) {
 						Proxy.getProxy().insert(obj);
 						Proxy.getProxy().update(obj);
 					}
