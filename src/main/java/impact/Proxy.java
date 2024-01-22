@@ -3,7 +3,8 @@ package impact;
 import java.net.Socket;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Hashtable;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 class Proxy implements LineHandler {
         static Proxy proxy = new Proxy();
@@ -83,7 +84,7 @@ class Proxy implements LineHandler {
 		String from;
 		String to;
 	}
-	class Bones extends Hashtable<String, Bone> {
+	class Bones extends ArrayList<Bone> {
 		// map from to joint to from joint
 	}
 	class Joint {
@@ -93,7 +94,7 @@ class Proxy implements LineHandler {
 		Double y;
 		Double z;
 	}
-	class Joints extends Hashtable<String, Joint> {
+	class Joints extends HashMap<String, Joint> {
 		// map from to joint to from joint
 	}
 	public void receive(String line) {
@@ -113,20 +114,27 @@ class Proxy implements LineHandler {
 			Joints joints = new Joints();
 			for (int c = 0; c < data.length; c++) {
 				String command = data[c];
-				// System.err.println("Command in proxy is "+command);
+				if (command.length() <= 2) {
+					continue;
+				}
 				String args = command.substring(2);
 				if (command.startsWith("F:")) {
+					// System.err.println("Command in Proxy is "+command);
 					bone = new Bone();
 					bone.from = args;
+					bones.add(bone);
 				} else if (command.startsWith("T:")) {
+					// System.err.println("Command in Proxy is "+command);
 					bone.to = args;
-					bones.put(bone.to, bone);
+					bones.add(bone);
 
 				} else if (command.startsWith("J:")) {
+					// System.err.println("Command in Proxy is "+command);
 					joint = new Joint();
 					joint.jointName = args;
 					joints.put(joint.jointName, joint);
 				} else if (command.startsWith("L:")) {
+					// System.err.println("Command in Proxy is "+command);
 					joint.jointId = joint.jointName.substring(0,1)+args;
 					joints.put(joint.jointId, joint);
 				} else if (command.startsWith("X:")) {
@@ -135,20 +143,16 @@ class Proxy implements LineHandler {
 					joint.y = 10*Double.valueOf(args);
 				} else if (command.startsWith("Z:")) {
 					joint.z = 10*Double.valueOf(args);
-					bone = bones.get(joint.jointId);
-					if (bone != null) {
-						// System.err.println("Found bone "+bone.from+" -> "+bone.to);
-					}
 					joint = joints.get(joint.jointId);
 					if (joint != null) {
 						// System.err.println("Found joint "+joint.jointId+" -> ("+joint.x+", "+joint.y+", "+joint.z+")");
 					}
 				}
 			}
-			Iterator<String> boneIterator = bones.keySet().iterator();
+			Iterator<Bone> boneIterator = bones.iterator();
 			int bone_segment = bones.size() + 1;
 			while (boneIterator.hasNext()) {
-				bone = bones.get(boneIterator.next());
+				bone = boneIterator.next();
 				// System.err.println("Dump bone "+bone.from+" -> "+bone.to);
 				Joint jointFrom = joints.get(bone.from);
 				Joint jointTo = joints.get(bone.to);
@@ -162,7 +166,7 @@ class Proxy implements LineHandler {
 					// System.err.println(line);
 					Point.receive(line);
 					line = "SEGMENT|"+bone_segment+"|INSERT|"+bone.from+"|"+bone.to;
-					System.err.println(line);
+					// System.err.println(line);
 					Line.receive(line);
 					bone_segment++;
 				}
@@ -177,10 +181,10 @@ class Proxy implements LineHandler {
 					Point.receive(line);
 				}
 			}
-			boneIterator = bones.keySet().iterator();
+			boneIterator = bones.iterator();
 			bone_segment = bones.size() + 1;
 			while (boneIterator.hasNext()) {
-				bone = bones.get(boneIterator.next());
+				bone = boneIterator.next();
 				line = "SEGMENT|"+bone_segment+"|UPDATE|"+bone.from+"|"+bone.to;
 				// System.err.println(line);
 				Line.receive(line);

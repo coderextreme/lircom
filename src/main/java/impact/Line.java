@@ -95,7 +95,11 @@ public  class Line extends GraphObject {
 	}
 	static public void receive(String line) {
 		String [] params = line.split("\\|");
-		 if (params[2].startsWith("INSERT")) {
+		if (params.length < 3) {
+			return;
+		}
+		// System.err.println("Receive in Line "+line);
+		if (params[2].startsWith("INSERT")) {
 			String nm = params[1];
 			List<GraphObject> nodes = new ArrayList<GraphObject>();
 			for (int i = 3; i < params.length; i++) {
@@ -118,7 +122,7 @@ public  class Line extends GraphObject {
 			nameToNumber.put(nm, ni);
 			Line segment = new Line(nm, nodes, false);
 			Impact3D.objects.add(segment);
-		 } else if (params[2].startsWith("UPDATE")) {
+		} else if (params[2].startsWith("UPDATE")) {
 			boolean found = false;
 			String nm = params[1];
 			List<GraphObject> nodes = new ArrayList<GraphObject>();

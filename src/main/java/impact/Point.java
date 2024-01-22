@@ -107,7 +107,7 @@ public class Point extends GraphObject {
 		receive(line);
 	}
 	static public void receive(String line) {
-		System.err.println("parsing "+line);
+		// System.err.println("parsing "+line);
 		String [] params = line.split("\\|");
 		// System.err.println(params[0]);
 		// System.err.println(params[1]);
