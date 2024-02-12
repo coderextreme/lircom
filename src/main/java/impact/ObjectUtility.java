@@ -12,13 +12,15 @@ public class ObjectUtility<T extends GraphObject> {
 	List<GraphObject> selected = new Vector<GraphObject>();
 	List<GraphObject> clipboard = new Vector<GraphObject>();
 	void paste() {
-		Iterator<GraphObject> i = clipboard.iterator();
-		while (i.hasNext()) {
-			GraphObject obj = i.next();
-			if (!shown.contains(obj)) {
-				shown.add(obj);
-				selected.add(obj);
-				Proxy.getProxy().insert(obj);
+		synchronized (shown) {
+			Iterator<GraphObject> i = clipboard.iterator();
+			while (i.hasNext()) {
+				GraphObject obj = i.next();
+				if (!shown.contains(obj)) {
+					shown.add(obj);
+					selected.add(obj);
+					Proxy.getProxy().insert(obj);
+				}
 			}
 		}
 	}
@@ -31,16 +33,18 @@ public class ObjectUtility<T extends GraphObject> {
 		}
 	}
 	void cut() {
-		clipboard.clear();
-		Iterator<GraphObject> i = selected.iterator();
-		while (i.hasNext()) {
-			GraphObject obj = i.next();
-			clipboard.add(obj);
-			shown.remove(obj);
-			i.remove();
-			Proxy.getProxy().remove(obj);
+		synchronized (shown) {
+			clipboard.clear();
+			Iterator<GraphObject> i = selected.iterator();
+			while (i.hasNext()) {
+				GraphObject obj = i.next();
+				clipboard.add(obj);
+				shown.remove(obj);
+				i.remove();
+				Proxy.getProxy().remove(obj);
+			}
+			selected.clear();
 		}
-		selected.clear();
 	}
 	void selectAll() {
 		synchronized(shown) {
@@ -136,7 +140,9 @@ public class ObjectUtility<T extends GraphObject> {
 		}
 	}
 	void add(GraphObject obj) {
-		shown.add(obj);
+		synchronized (shown) {
+			shown.add(obj);
+		}
 	}
 	void addAll(List<GraphObject> objs) {
 		selected.addAll(objs);
