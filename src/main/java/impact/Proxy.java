@@ -423,27 +423,38 @@ class Proxy implements LineHandler {
 		}
 	}
 	public void receive(String line) {
-		receive("", line);
+		receive("Impact", line);
+	}
+	public void receiveImpact(String line) {
+		String[] data = line.split(" ");
+		// System.err.println(line);
+		for (int c = 0; c < data.length; c++) {
+			String command = data[c];
+			if (command.indexOf("NODE") >= 0) {
+				// System.err.println(command);
+				Point.receive(command);
+			} else if (command.indexOf("SEGMENT") >= 0) {
+				// System.err.println(command);
+				Line.receive(command);
+			} else if (command.indexOf("ARC") >= 0) {
+				// System.err.println(command);
+				Polygon.receive(command);
+			}
+		}
 	}
 	public void receive(String nick, String line) {
 		Impact3D.cmd = Impact3D.UPDATE;
-		if (line.startsWith("ARC")) {
-			Polygon.receive(line);
-		} else if (line.startsWith("SEGMENT")) {
-			Line.receive(line);
-		} else if (line.startsWith("NODE")) {
-			Point.receive(line);
-		} else {
-			try {
-				if (nick.startsWith("Mocap")) {
-					receiveMocap(line);
-					receiveMocapSpewBVH(line, new FileWriter("MOCAP.bvh"));
-				} else if (nick.startsWith("Cppon")) {
-					receiveCppon(line);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
+		try {
+			if (nick.startsWith("Impact")) {
+				receiveImpact(line);
+			} else if (nick.startsWith("Mocap")) {
+				receiveMocap(line);
+				receiveMocapSpewBVH(line, new FileWriter("MOCAP.bvh"));
+			} else if (nick.startsWith("Cppon")) {
+				receiveCppon(line);
 			}
+		} catch (Exception e) {
+			e.printStackTrace(System.err);
 		}
 	}
 }

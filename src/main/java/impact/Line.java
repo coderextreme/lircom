@@ -101,6 +101,10 @@ public  class Line extends GraphObject {
 		// System.err.println("Receive in Line "+line);
 		if (params[2].startsWith("INSERT")) {
 			String nm = params[1];
+			int underscore = nm.indexOf("_");  // TODO left and right are the same number
+			if (underscore > 0) {
+				nm = nm.substring(0, underscore);
+			}
 			List<GraphObject> nodes = new ArrayList<GraphObject>();
 			for (int i = 3; i < params.length; i++) {
 				String nodenm = params[i];
@@ -125,6 +129,10 @@ public  class Line extends GraphObject {
 		} else if (params[2].startsWith("UPDATE")) {
 			boolean found = false;
 			String nm = params[1];
+			int underscore = nm.indexOf("_");  // TODO left and right are the same number
+			if (underscore > 0) {
+				nm = nm.substring(0, underscore);
+			}
 			List<GraphObject> nodes = new ArrayList<GraphObject>();
 			for (int i = 3; i < params.length; i++) {
 				String nodenm = params[i];
@@ -139,7 +147,7 @@ public  class Line extends GraphObject {
 					}
 				}
 			}
-			int n = Integer.parseInt(params[1]);
+			int n = Integer.parseInt(nm);
 			if (n >= Impact3D.name) {
 				Impact3D.name = n+1;
 			}
@@ -162,12 +170,17 @@ public  class Line extends GraphObject {
 				Impact3D.objects.add(segment);
 			}
 		} else if (params[2].startsWith("DELETE")) {
-			int nm = Integer.parseInt(params[1]);
+			String nm = params[1];
+			int underscore = nm.indexOf("_");  // TODO left and right are the same number
+			if (underscore > 0) {
+				nm = nm.substring(0, underscore);
+			}
+			int ni = Integer.parseInt(nm);
 			synchronized (Impact3D.objects.shown) {
 		   		Iterator<GraphObject> a = Impact3D.objects.shown.iterator();
 				while (a.hasNext()) {
 					GraphObject obj = a.next();
-					if (obj.name.equals(nm)) {
+					if (obj.name.equals(ni)) {
 						a.remove();
 					}
 				}				

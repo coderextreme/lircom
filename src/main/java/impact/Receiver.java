@@ -38,7 +38,7 @@ public class Receiver extends Thread {
 						line = line.substring(gt+1);
 						if (line.length() > 0) {
 							// System.err.println("receiving in Receiver "+line);
-							Proxy.getProxy().receive("", line);
+							Proxy.getProxy().receive("Impact", line);
 						}
 					}
 				}
