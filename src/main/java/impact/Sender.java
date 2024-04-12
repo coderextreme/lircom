@@ -42,7 +42,7 @@ public class Sender extends Thread {
 		while((line = br.readLine()) != null) {
 			if (line.length() > 0) {
 				System.out.println("Sending in Sender "+line);
-				Proxy.getProxy().receive(line);
+				Proxy.getProxy().receive("", line);
 			}
 		}
 		is.close();

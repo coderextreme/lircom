@@ -225,6 +225,7 @@ class Proxy implements LineHandler {
 			if (command.length() <= 2) {
 				continue;
 			}
+			System.err.println(command);
 			String args = command.substring(2);
 			if (command.startsWith("F:")) {
 				// System.err.println("Command in Proxy is "+command);
@@ -299,7 +300,120 @@ class Proxy implements LineHandler {
 			bone_segment++;
 		}
 	}
+	public void receiveCppon(String line) {
+		// System.err.println("Received "+line);
+		String[] data = line.split(";");
+		Bones bones = new Bones();
+		Bone bone = null;
+		Joint joint = null;
+		Joints joints = new Joints();
+		for (int c = 0; c < data.length; c++) {
+			String command = data[c];
+			String args = command;
+			System.err.println(command);
+			if (command.indexOf("=") >= 0) {
+			} else if (command.indexOf("setFrom") >= 0) {
+				bone = new Bone();
+				int firstQuote = args.indexOf('"')+1;
+				int lastQuote = args.lastIndexOf('"');
+				bone.from = args.substring(firstQuote, lastQuote);
+				bones.add(bone);
+			} else if (command.indexOf("setTo") >= 0) {
+				int firstQuote = args.indexOf('"')+1;
+				int lastQuote = args.lastIndexOf('"');
+				bone.to = args.substring(firstQuote, lastQuote);
+				// bones.add(bone);  // No duplicates
+
+			} else if (command.indexOf("setDEF") >= 0) {
+				int firstQuote = args.indexOf('"')+1;
+				int lastQuote = args.lastIndexOf('"');
+				int firstDot = args.indexOf('.');
+				int firstUnderscore = args.indexOf('_');
+				//System.err.println("Command in Proxy is "+command+" dot "+firstDot);
+				String id = command.substring(firstUnderscore+1, firstUnderscore+2)+command.substring(6, firstUnderscore);
+				joint = new Joint();
+				joint.jointName = args.substring(firstQuote, lastQuote);
+				//System.err.println("PUT id: "+id);
+				joint.jointId = id;
+				//System.err.println("PUT Name: "+joint.jointName+" id: "+joint.jointId);
+				joints.put(joint.jointName, joint);
+				joints.put(joint.jointId, joint);
+			} else if (command.indexOf("setPoint") >= 0) {
+				int firstDot = args.indexOf('.');
+				int firstUnderscore = args.indexOf('_');
+				//System.err.println("Command in Proxy is "+command+" dot "+firstDot);
+				String id = command.substring(firstUnderscore+1, firstUnderscore+2)+command.substring(6, firstUnderscore);
+				//System.err.println("GET id: "+id);
+				joint = joints.get(id);
+				//System.err.println("GET Name: "+joint.jointName+" id: "+joint.jointId);
+				int firstBrace = args.indexOf('{')+1;
+				int lastBrace = args.lastIndexOf('}')-1;
+				String xyz = args.substring(firstBrace, lastBrace);
+				String[] xyzarray = xyz.split(",");
+
+				joint.x = 10*Double.valueOf(xyzarray[0])-5;
+				joint.y = 10*Double.valueOf(xyzarray[1])-5;
+				joint.z = 10*Double.valueOf(xyzarray[2]);
+			}
+		}
+		Iterator<Bone> boneIterator = bones.iterator();
+		int bone_segment = bones.size() + 1;
+		while (boneIterator.hasNext()) {
+			bone = boneIterator.next();
+			// System.err.println("Dump bone "+bone.from+" -> "+bone.to);
+			Joint jointFrom = joints.get(bone.from);
+			Joint jointTo = joints.get(bone.to);
+			line = "";
+			if (initialized) {
+				line = "NODE|"+bone.from+"|DELETE";
+				// System.err.println(line);
+				Point.receive(line);
+				line = "NODE|"+bone.to+"|DELETE";
+				// System.err.println(line);
+				Point.receive(line);
+				line = "SEGMENT|"+bone_segment+"|DELETE|"+bone.from+"|"+bone.to;
+				// System.err.println(line);
+				Line.receive(line);
+				bone_segment++;
+			}
+			if (!initialized) {
+				initialized = true;
+				line = "NODE|"+bone.from+"|INSERT";
+				// System.err.println(line);
+				Point.receive(line);
+				line = "NODE|"+bone.to+"|INSERT";
+				// System.err.println(line);
+				Point.receive(line);
+				line = "SEGMENT|"+bone_segment+"|INSERT|"+bone.from+"|"+bone.to;
+				// System.err.println(line);
+				Line.receive(line);
+				bone_segment++;
+			}
+			if (jointFrom != null) {
+				line = "NODE|"+bone.from+"|UPDATE|1|1|1|1|"+jointFrom.x+"|"+-jointFrom.y+"|"+jointFrom.z+"|0.0|0.0|0.0";
+				// System.err.println(line);
+				Point.receive(line);
+			}
+			if (jointTo != null) {
+				line = "NODE|"+bone.to+"|UPDATE|1|1|1|1|"+jointTo.x+"|"+-jointTo.y+"|"+jointTo.z+"|0.0|0.0|0.0";
+				// System.err.println(line);
+				Point.receive(line);
+			}
+		}
+		boneIterator = bones.iterator();
+		bone_segment = bones.size() + 1;
+		while (boneIterator.hasNext()) {
+			bone = boneIterator.next();
+			line = "SEGMENT|"+bone_segment+"|UPDATE|"+bone.from+"|"+bone.to;
+			// System.err.println(line);
+			Line.receive(line);
+			bone_segment++;
+		}
+	}
 	public void receive(String line) {
+		receive("", line);
+	}
+	public void receive(String nick, String line) {
 		Impact3D.cmd = Impact3D.UPDATE;
 		if (line.startsWith("ARC")) {
 			Polygon.receive(line);
@@ -309,8 +423,12 @@ class Proxy implements LineHandler {
 			Point.receive(line);
 		} else {
 			try {
-				receiveMocap(line);
-				receiveMocapSpewBVH(line, new FileWriter("MOCAP.bvh"));
+				if (nick.startsWith("Mocap")) {
+					receiveMocap(line);
+					receiveMocapSpewBVH(line, new FileWriter("MOCAP.bvh"));
+				} else if (nick.startsWith("Cppon")) {
+					receiveCppon(line);
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
