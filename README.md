@@ -3,10 +3,9 @@ Language Independent Relay Communications
 
 For a grand tour, edit configure, and run all.sh
 
-Buf first, do
+But first, do
 
-$ mvn clean
-$ mvn install
+$ mvn clean; mvn install; ant
 
 Host:
 

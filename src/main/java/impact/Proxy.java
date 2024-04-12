@@ -266,6 +266,18 @@ class Proxy implements LineHandler {
 			Joint jointFrom = joints.get(bone.from);
 			Joint jointTo = joints.get(bone.to);
 			line = "";
+			if (initialized) {
+				line = "NODE|"+bone.from+"|DELETE";
+				// System.err.println(line);
+				Point.receive(line);
+				line = "NODE|"+bone.to+"|DELETE";
+				// System.err.println(line);
+				Point.receive(line);
+				line = "SEGMENT|"+bone_segment+"|DELETE|"+bone.from+"|"+bone.to;
+				// System.err.println(line);
+				Line.receive(line);
+				bone_segment++;
+			}
 			if (!initialized) {
 				initialized = true;
 				line = "NODE|"+bone.from+"|INSERT";
