@@ -300,12 +300,12 @@ class Proxy implements LineHandler {
 				bone_segment++;
 			}
 			if (jointFrom != null) {
-				line = "NODE|"+bone.from+"|UPDATE|1|1|1|1|"+jointFrom.x+"|"+-jointFrom.y+"|"+jointFrom.z+"|0.0|0.0|0.0";
+				line = "NODE|"+bone.from+"|UPDATE|1|0|0|1|"+jointFrom.x+"|"+-jointFrom.y+"|"+jointFrom.z+"|0.0|0.0|0.0";
 				// System.err.println(line);
 				Point.receive(line);
 			}
 			if (jointTo != null) {
-				line = "NODE|"+bone.to+"|UPDATE|1|1|1|1|"+jointTo.x+"|"+-jointTo.y+"|"+jointTo.z+"|0.0|0.0|0.0";
+				line = "NODE|"+bone.to+"|UPDATE|0|1|0|1|"+jointTo.x+"|"+-jointTo.y+"|"+jointTo.z+"|0.0|0.0|0.0";
 				// System.err.println(line);
 				Point.receive(line);
 			}
@@ -410,12 +410,12 @@ class Proxy implements LineHandler {
 				bone_segment++;
 			}
 			if (jointFrom != null) {
-				line = "NODE|"+bone.from+"|UPDATE|1|1|1|1|"+jointFrom.x+"|"+-jointFrom.y+"|"+jointFrom.z+"|0.0|0.0|0.0";
+				line = "NODE|"+bone.from+"|UPDATE|0|0|1|1|"+jointFrom.x+"|"+-jointFrom.y+"|"+jointFrom.z+"|0.0|0.0|0.0";
 				// System.err.println(line);
 				Point.receive(line);
 			}
 			if (jointTo != null) {
-				line = "NODE|"+bone.to+"|UPDATE|1|1|1|1|"+jointTo.x+"|"+-jointTo.y+"|"+jointTo.z+"|0.0|0.0|0.0";
+				line = "NODE|"+bone.to+"|UPDATE|1|0|1|1|"+jointTo.x+"|"+-jointTo.y+"|"+jointTo.z+"|0.0|0.0|0.0";
 				// System.err.println(line);
 				Point.receive(line);
 			}
