@@ -153,8 +153,12 @@ class Proxy implements LineHandler {
 				bones.add(bone);
 			} else if (command.startsWith("T:")) {
 				// System.err.println("Command in Proxy is "+command);
-				bone.to = args;
-				bones.add(bone);  // duplicates
+				if (bone != null) {
+					bone.to = args;
+					bones.add(bone);  // this will have no from
+				} else {
+					System.err.println("Bone is null, "+command);
+				}
 
 			} else if (command.startsWith("J:")) {
 				// System.err.println("Command in Proxy is "+command);
@@ -225,7 +229,7 @@ class Proxy implements LineHandler {
 			if (command.length() <= 2) {
 				continue;
 			}
-			System.err.println(command);
+			// System.err.println(command);
 			String args = command.substring(2);
 			if (command.startsWith("F:")) {
 				// System.err.println("Command in Proxy is "+command);
@@ -234,17 +238,21 @@ class Proxy implements LineHandler {
 				bones.add(bone);
 			} else if (command.startsWith("T:")) {
 				// System.err.println("Command in Proxy is "+command);
-				bone.to = args;
-				// bones.add(bone);  // No duplicates
-
+				if (bone != null) {
+					bone.to = args;
+					bones.add(bone);  // this will have no from
+				} else {
+					System.err.println("Bone is null, "+command);
+				}
 			} else if (command.startsWith("J:")) {
 				// System.err.println("Command in Proxy is "+command);
 				joint = new Joint();
 				joint.jointName = args;
 				joints.put(joint.jointName, joint);
 			} else if (command.startsWith("L:")) {
-				// System.err.println("Command in Proxy is "+command);
-				joint.jointId = joint.jointName.substring(0,1)+args;
+				//System.err.println("Command in Proxy is "+command);
+				joint.jointId = args;
+				//System.err.println("id is "+joint.jointId);
 				joints.put(joint.jointId, joint);
 			} else if (command.startsWith("X:")) {
 				joint.x = 10*Double.valueOf(args)-5;
@@ -322,7 +330,7 @@ class Proxy implements LineHandler {
 		for (int c = 0; c < data.length; c++) {
 			String command = data[c];
 			String args = command;
-			System.err.println(command);
+			// System.err.println(command);
 			if (command.indexOf("=") >= 0) {
 			} else if (command.indexOf("setFrom") >= 0) {
 				bone = new Bone();
@@ -449,7 +457,7 @@ class Proxy implements LineHandler {
 				receiveImpact(line);
 			} else if (nick.startsWith("Mocap")) {
 				receiveMocap(line);
-				receiveMocapSpewBVH(line, new FileWriter("MOCAP.bvh"));
+				// receiveMocapSpewBVH(line, new FileWriter("MOCAP.bvh"));
 			} else if (nick.startsWith("Cppon")) {
 				receiveCppon(line);
 			}
