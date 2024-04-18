@@ -3,6 +3,9 @@
    <target name="all">
     <jar jarfile="target/Impact.jar" manifest="impact3d.manifest" compress="true">
       <fileset dir="target/classes"/>
+      <!--
+      <zipfileset src="jar/jogamp-fat.jar"     includes="jogamp/**/*,com/**/*"/>
+      -->
       <zipfileset src="jar/gluegen-rt.jar"     includes="jogamp/**/*,com/**/*"/>
       <zipfileset src="jar/gluegen-rt-natives-windows-i586.jar"     includes="*.dll"    prefix="natives/windows-i586"/>
       <zipfileset src="jar/gluegen-rt-natives-windows-amd64.jar"    includes="*.dll"    prefix="natives/windows-amd64"/>
