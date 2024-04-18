@@ -406,7 +406,7 @@ public class IRCConnection {
 
     /**
      * @param command Command we will send
-     * @deprecated Use <code>sendCommand( OutCommand cmd )</code> instead.
+     * @Deprecated Use <code>sendCommand( OutCommand cmd )</code> instead.
      * @throws ClassCastException if command is not an OutCommand.
      * */
     public void sendCommand( Command command )
@@ -444,7 +444,7 @@ public class IRCConnection {
     /**
      * @return "localhost"
      *
-     * @deprecated Pending removal due to unspecified behaviour, use
+     * @Deprecated Pending removal due to unspecified behaviour, use
      * getLocalAddress instead.
      *
      * */

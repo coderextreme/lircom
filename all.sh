@@ -1,4 +1,6 @@
 #!/bin/bash
+export PATH_TO_FX=openjfx-22_windows-x64_bin-sdk/javafx-sdk-22/lib
+export PATH_TO_FX_MOD=javafx-jmods-22
 export JAVAC=javac
 export DIR=.
 export DWN=C:/Users/john/Downloads

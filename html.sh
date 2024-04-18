@@ -1,3 +1,5 @@
+export PATH_TO_FX=openjfx-22_windows-x64_bin-sdk/javafx-sdk-22/lib
+export PATH_TO_FX_MOD=javafx-jmods-22
 pushd src/main/java
 javac --module-path C:/Users/john/Downloads/openjfx-18.0.2_windows-x64_bin-sdk/javafx-sdk-18.0.2/lib --add-modules javafx.controls,javafx.fxml --add-exports java.base/jdk.internal.misc=ALL-UNNAMED -cp "c:/Users/john/Downloads/openjfx-18.0.2_windows-x64_bin-sdk/javafx-sdk-18.0.2/lib/javafx.base.jar;c:/Users/john/Downloads/openjfx-18.0.2_windows-x64_bin-sdk/javafx-sdk-18.0.2/lib/javafx.controls.jar;c:/Users/john/Downloads/openjfx-18.0.2_windows-x64_bin-sdk/javafx-sdk-18.0.2/lib/javafx.fxml.jar;c:/Users/john/Downloads/openjfx-18.0.2_windows-x64_bin-sdk/javafx-sdk-18.0.2/lib/javafx.graphics.jar;c:/Users/john/Downloads/openjfx-18.0.2_windows-x64_bin-sdk/javafx-sdk-18.0.2/lib/javafx.media.jar;c:/Users/john/Downloads/openjfx-18.0.2_windows-x64_bin-sdk/javafx-sdk-18.0.2/lib/javafx.swing.jar;c:/Users/john/Downloads/openjfx-18.0.2_windows-x64_bin-sdk/javafx-sdk-18.0.2/lib/javafx.web.jar;c:/Users/john/Downloads/openjfx-18.0.2_windows-x64_bin-sdk/javafx-sdk-18.0.2/lib/javafx-swt.jar;." lircom/HTMLEditorSample.java
 echo done compiling

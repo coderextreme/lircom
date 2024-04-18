@@ -1,8 +1,7 @@
 #!/bin/bash
-# make target/lircom-2.jar
-# mvn clean install
-# make target/Impact.jar
-# ant
+export PATH_TO_FX=openjfx-22_windows-x64_bin-sdk/javafx-sdk-22/lib
+export PATH_TO_FX_MOD=javafx-jmods-22
+mvn clean install; ant
 export DIR=`pwd`
 export DWN=/c/Users/john/Downloads
 export LIB=${DWN}/jogamp-all-platforms/lib/windows-amd64

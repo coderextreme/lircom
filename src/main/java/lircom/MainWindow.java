@@ -360,7 +360,7 @@ public class MainWindow extends javax.swing.JFrame implements java.awt.event.Win
         });
         languageMenu.add(pt);
 
-        ru.setText("русский язык");
+        ru.setText("Russian (sorry, IntelliJ doesn't handle Cyrillic");
         ru.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ruActionPerformed(evt);
@@ -412,7 +412,7 @@ public class MainWindow extends javax.swing.JFrame implements java.awt.event.Win
 
     private void warmChickenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_warmChickenActionPerformed
             try {
-		heathens = new Heathens(chat, nickname);
+		// heathens = new Heathens(chat, nickname);
 	    } catch (Exception e) {
 	    }
     }//GEN-LAST:event_warmChickenActionPerformed
@@ -475,7 +475,7 @@ public class MainWindow extends javax.swing.JFrame implements java.awt.event.Win
 
     private void flashchatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_flashchatActionPerformed
 	    try {
-		Runestone r = new Runestone(chat, nickname);
+		// Runestone r = new Runestone(chat, nickname);
 	    } catch (Exception e) {
 	    }
     }//GEN-LAST:event_flashchatActionPerformed
@@ -759,7 +759,7 @@ public void 	windowOpened(java.awt.event.WindowEvent e) {}
     private ClientConnect clientConnect;
     private IRCBridge bridge;
     public Chat chat;
-    private Heathens heathens;
+    // private Heathens heathens;
     private java.awt.Color currentTextColor;
     private java.io.File currentDirectory;
     // Variables declaration - do not modify//GEN-BEGIN:variables

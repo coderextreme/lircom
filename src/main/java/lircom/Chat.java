@@ -507,11 +507,15 @@ public class Chat extends ClientOnServer implements WindowListener, ActionListen
 							sci.msgSend(line, (String)irci.next());
 						}
 					} else {
+						/*
 							if (sci instanceof Heathens) {
 								sci.msgSend(m.generate());
 							} else {
+							*/
 								sci.msgSend(line);
+								/*
 							}
+							*/
 					}
 				}
 				say(from, "says", line, color);
