@@ -60,13 +60,6 @@ wikispeak: lircom.jar
 babelfish: lircom.jar
 	$(JAVA) -cp $(BFCLASSPATH) lircom.BabelFish "thank you"
 
-runestone: lircom.jar
-	$(JAVA) -Xmx256m -cp $(CLASSPATH) lircom.Runestone
-
-Heathens: lircom.jar
-	$(JAVA) -Xmx256m -cp $(CLASSPATH) lircom.Heathens
-
-
 signall:
 	(for i in ../../../../target/*jar ../../../../m2/*jar ../*/*.jar; do jarsigner -storepass foobar -keystore $(KEYSTORE) $$i myself; done)
 
