@@ -1,7 +1,7 @@
 # lircom
 Language Independent Relay Communications
 
-For a grand tour, edit configure, and run all.sh
+For a grand tour, edit the configuration in env.sh, and run all.sh
 
 But first, do
 
@@ -25,7 +25,7 @@ Menu > Advertise Service
 
 Pick a server nick and hit advertise button.
 
-Wait for parties to john.
+Wait for parties to join.
 
 Guest:
 
