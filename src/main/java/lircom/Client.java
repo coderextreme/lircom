@@ -7,9 +7,9 @@ class ClientImpl extends ClientOnServer {
 	public ClientImpl(InputStream is, OutputStream os) throws Exception {
 		super(is, os);
 	}
-	public boolean processLine(String line) throws Exception {
-		Message m = Message.parse(line);
-		return true;
+	public Message processLine(String line) throws Exception {
+		// Message m = Message.parse(line);
+		return super.processLine(line);
 	}
 }
 

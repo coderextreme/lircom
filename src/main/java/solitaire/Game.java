@@ -410,7 +410,7 @@ class SolitaireClient extends lircom.ClientOnServer {
 		setNick("Solitaire"+nick);
 	}
 	public Hashtable client_messages = new Hashtable();
-	public boolean processLine(String line) throws Exception {
+	public lircom.Message processLine(String line) throws Exception {
 		lircom.Message m = lircom.Message.parse(line);
 		if (m.nick.startsWith("Solitaire") && !m.nick.equals(getNick()) && !seenMessage(m, client_messages)) {
 			System.err.println("Processing "+m.message);
@@ -419,9 +419,9 @@ class SolitaireClient extends lircom.ClientOnServer {
 			GameMiner.processLine(m.message);
 			Log.enabled = true;
 			System.err.println("Log enabled is "+Log.enabled);
-			return true;
+			return m;
 		} else {
-			return false;
+			return null;
 		}
 	}
 }

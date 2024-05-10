@@ -6,6 +6,18 @@
 
 package lircom;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.core.JsonEncoding;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
+import java.io.ByteArrayOutputStream;
+
 /**
  *
  * @author carlsonj
@@ -21,6 +33,9 @@ public class Message extends Throwable {
     long sequenceno = 0;
     private static long sequencehigh = 0;
     /** Creates a new instance of Message */
+    private static void log(String message) {
+	    System.err.println("Message: "+message);
+    }
 
     public Message(java.util.Hashtable<String,String> rec, String nick, String message, String lang) {
 	this.rec = rec;
@@ -56,9 +71,22 @@ public class Message extends Throwable {
 	}
     }
     private Message() {
+        this.timestamp = System.currentTimeMillis();
     }
     static public Message parse(String line) {
-                // System.err.println("Receiving "+line);
+	try {
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode node = mapper.readTree(line);
+		Message m = Message.parse(node);
+		return m;
+	} catch (JsonProcessingException e) {
+		e.printStackTrace(System.err);
+		return null;
+	}
+    }
+    /*
+    static public Message parse(String line) {
+                // log("Receiving "+line);
                 Message m = new Message();
                 //to 
         	int tb = line.indexOf("{");
@@ -94,7 +122,7 @@ public class Message extends Throwable {
                     m.from = line.substring(fb+1, fe);
                 }
                 if (sb >= 0 && se >= 0) {
-		    // System.err.println("Parsing long from "+line+" found "+line.substring(sb+1, se));
+		    // log("Parsing long from "+line+" found "+line.substring(sb+1, se));
                     m.timestamp = Long.parseLong(line.substring(sb+1, se));
                 }
                 if (qb >= 0 && qe >= 0) {
@@ -145,13 +173,14 @@ public class Message extends Throwable {
         sb.append(nick);
         sb.append("}");
         sb.append(message);
-        System.err.println(System.currentTimeMillis()+" Sending "+sb);
+        log(System.currentTimeMillis()+" Sending "+sb);
         return sb.toString();
     }
+    */
     public String translate(String targetLanguage) {
-	    System.err.println("language is "+ this.language);
-	    System.err.println("target language is "+ targetLanguage);
-	    System.err.println("input message "+ this.message);
+	    log("language is "+ this.language);
+	    log("target language is "+ targetLanguage);
+	    log("input message "+ this.message);
 	if (!this.language.equals("__") && !this.language.equals(targetLanguage)) {
 		try {
 			return BabelFish.translate(message, this.language, targetLanguage);
@@ -160,5 +189,57 @@ public class Message extends Throwable {
 		}
 	}
 	return this.message;
+    }
+    static public Message parse(JsonNode node) {
+	if (node != null && !"".equals(node.toString().trim())) {
+		if (node.isArray()) {
+		    log(node.toString());
+		    // recipients
+		    Message message = new Message();
+		    message.rec = new java.util.Hashtable<String,String>();
+		    for (JsonNode recNode : node.get(0)) {
+			message.rec.put(recNode.asText(), recNode.asText());
+			log(recNode.asText());
+		    }
+		    message.from = node.get(1).asText();
+		    message.timestamp = node.get(2).asLong();
+		    message.sequenceno = node.get(3).asLong();
+		    message.error = node.get(4).asText();
+		    message.language = node.get(5).asText();
+		    message.nick = node.get(6).asText();
+		    message.message = node.get(7).asText();
+		    log(message.toString());
+		    return message;
+		}
+	}
+	return null;
+    }
+    public String generate() {
+	ByteArrayOutputStream stream = new ByteArrayOutputStream();
+	try {
+		JsonFactory factory = new JsonFactory();
+		JsonGenerator generator = factory.createGenerator(stream);
+		generator.writeStartArray();
+		generator.writeStartArray();
+		java.util.Iterator<String> i = this.rec.keySet().iterator();
+		while (i.hasNext()) {
+			String to = i.next();
+			generator.writeString(to);
+		}
+		generator.writeEndArray();
+		generator.writeString(this.from);
+		generator.writeNumber(this.timestamp);
+		generator.writeNumber(this.sequenceno);
+		generator.writeString(this.error);
+		generator.writeString(this.language);
+		generator.writeString(this.nick);
+		// generator.writeNumber(this.sequencehigh);
+		generator.writeString(this.message);
+		generator.writeEndArray();
+		generator.close();
+	} catch (IOException e) {
+		e.printStackTrace(System.err);
+	}
+	return stream.toString();
     }
 }

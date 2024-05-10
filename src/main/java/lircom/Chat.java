@@ -424,9 +424,10 @@ public class Chat extends ClientOnServer implements WindowListener, ActionListen
 			dlm.remove(index);
 		}
 	}
-	public boolean processLine(String line) throws Exception {
-		Message m = Message.parse(line);
-	        if (!seenMessage(m, client_messages)) {
+	public Message processLine(String line) throws Exception {
+		Message m = super.processLine(line);
+		// Message m = Message.parse(line);
+	        if (m != null && !seenMessage(m, client_messages)) {
 			if (m.error.equals(K100)) {
 				System.err.println("Found error "+m.error+" in message "+m.message+" from "+m.from);
 				String chatter = m.message.intern();
@@ -452,9 +453,9 @@ public class Chat extends ClientOnServer implements WindowListener, ActionListen
 					messageException(msge);
 				}
 			}
-			return true;
+			return m;
 		} else {
-			return false;
+			return null;
 	        }
 	}
 	Hashtable<String, Message> gui_messages = new Hashtable<String, Message>();

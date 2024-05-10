@@ -115,18 +115,18 @@ public class Channel extends Chat {
 			}
 		}
 	}
-	public boolean processLine(String line) throws Exception {
+	public Message processLine(String line) throws Exception {
 		// System.err.println(getNick()+" received "+line);
                 // super.receive(line);
-		boolean b = super.processLine(line);
-		if (b) {
+		Message m = super.processLine(line);
+		if (m != null) {
 			System.err.println("Processing "+line);
 			Message receivedMessage = Message.parse(line);
 			fireActions(receivedMessage);
 		} else {
 			System.err.println("Message found");
 		}
-		return b;
+		return m;
 	}
 	public void send(Hashtable<String,String> subscribers, Message m, String sender) throws Exception {
 /*

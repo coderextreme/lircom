@@ -10,6 +10,9 @@ import java.net.*;
 import java.util.*;
 import java.io.*;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class ClientOnServer extends Thread implements Errors {
 	static Hashtable<String,String> errors = null;
 	protected InputStream input;
@@ -20,6 +23,9 @@ public class ClientOnServer extends Thread implements Errors {
 	static long cs = 0;
         private String clientnick = "ClientOnServer";
         PossibleConnection pcon = null;
+	private void log(String message) {
+		System.err.println(getNick()+": "+message);
+	}
         public ClientOnServer() throws Exception {
 	    synchronized (clients) {
 		    clientno = System.currentTimeMillis()+cs;
@@ -94,7 +100,7 @@ public class ClientOnServer extends Thread implements Errors {
                                 }
 				if (c != '\n') {
 					sb.append((char)c);
-                                        System.err.println((int)c+"_____________"+sb);
+                                        log((int)c+"_____________"+sb);
                                         System.err.flush();
 					continue;
 				}
@@ -102,13 +108,30 @@ public class ClientOnServer extends Thread implements Errors {
 				line = sb.toString();
                                 sb = new StringBuffer();
                          */
+			/*
+			JsonNode node = null;
+			do {
+				ObjectMapper mapper = new ObjectMapper();
+				try {
+					node = mapper.readTree(input);
+				} catch (SocketException disc) {
+					disc.printStackTrace(System.err);
+					// reconnect();
+					node = null;
+				}
+				if (node != null && !"".equals(node.toString().trim())) {
+					log(node.toString());
+					processNode(node);
+				}
+			} while (node != null);
+			*/
                         BufferedReader br = new BufferedReader(new InputStreamReader(input));
                         while ((line = br.readLine()) != null) {
                                 try {
                                     if (line.trim().equals("")) {
                                         continue;
                                     }
-                                    // System.err.println(getNick()+" received in ClientOnServer "+line);
+                                    log("received in ClientOnServer "+line);
 				    processLine(line);
                                 } catch (ClientException ce) {
                                     ce.printStackTrace();
@@ -126,18 +149,41 @@ public class ClientOnServer extends Thread implements Errors {
 		}
 		clients.remove(this.clientno);
 	}
-	public boolean processLine(String line) throws Exception {
-		Message m = Message.parse(line);
+	public Message processNode(JsonNode node) throws Exception {
+		if (node != null) {
+			log("processing node "+node);
+			Message m = Message.parse(node);
+			return processMessage(m);
+		} else {
+			return null;
+		}
+	}
+	public Message processLine(String line) throws Exception {
+		if (line != null) {
+			log("processing line "+line);
+			/*
+			ObjectMapper mapper = new ObjectMapper();
+			JsonNode node = mapper.readTree(line);
+			return processNode(node);
+			*/
+			Message m = Message.parse(line);
+			return processMessage(m);
+		} else {
+			return null;
+		}
+	}
+	public Message processMessage(Message m) throws Exception {
 		if (!seenMessage(m, server_messages)) {
+			log("processing message "+m.message);
 			try {
 				Hashtable rec = prepareToSend(m);
 				send(m, rec);
 			} catch (Message msge) {
 				messageException(msge);
 			}
-			return true;
+			return m;
 		} else {
-			return false;
+			return null;
 		}
 	}
         
@@ -151,18 +197,18 @@ public class ClientOnServer extends Thread implements Errors {
 		while (i.hasNext()) { // go through existing list
 			String to = (String)i.next();
 			if (to.equals("*")) {
-				System.err.println("Adding ALL Clients");
+				log("Adding ALL Clients");
 				newrec.put("*", "*"); // send to who is left
 				rec = (Hashtable<Long,ClientOnServer>)(clients.clone());
 				// rec.remove(clientno);
 				break;
 			} else {
-			    System.err.println("Not broadcast");
+			    log("Not broadcast");
 			    String recstr = to;
 			    int aftercomma = 0;
 			    String left = to;
 			    do {
-				//System.err.println("recstr is "+recstr);
+				//log("recstr is "+recstr);
 				int comma = to.indexOf(",", aftercomma);
 				
 				if (comma > aftercomma) {
@@ -175,9 +221,9 @@ public class ClientOnServer extends Thread implements Errors {
 				    break;
 				}
 			    } while (recstr.equals(getAddressPortClient()));
-			    System.err.println("Someone left "+left);
+			    log("Someone left "+left);
 			    newrec.put(left, left); // send to who is left
-			    System.err.println("recstr is "+recstr);
+			    log("recstr is "+recstr);
 			    int colon = recstr.lastIndexOf(":");
 			    if (colon >= 0) {
 			    	recstr = recstr.substring(colon+1);
@@ -185,13 +231,13 @@ public class ClientOnServer extends Thread implements Errors {
 			    if (recstr.trim().equals("")) {
 			    	return new Hashtable();
 			    }
-			    System.err.println("recstr is "+recstr);
+			    log("recstr is "+recstr);
 			    ClientOnServer r = (ClientOnServer)clients.get(Long.valueOf(recstr));
 			    if (r != null) {
-			    	System.err.println("Recipient is "+recstr);
+			    	log("Recipient is "+recstr);
 			    	rec.put(r.clientno, r);
 			    } else {
-			    	System.err.println("Recipient not found "+recstr);
+			    	log("Recipient not found "+recstr);
 			    }
 			}
 		}
@@ -208,19 +254,19 @@ public class ClientOnServer extends Thread implements Errors {
             }
         }
 	public void send(String line) throws Exception {
-		//System.err.println("Receiving in core client on server "+line);
+		//log("Receiving in core client on server "+line);
                 try {
                     if (output != null) {
                         output.println(line);
                         output.flush();
                     } else {
-                        System.err.println("output is null..."+line);
+                        log("output is null..."+line);
                     }
                 } catch (Exception e) {
                     try {
                         close();
                     } catch (Exception ex) {
-                            System.err.println("Error closing "+ex.getMessage());
+                            log("Error closing "+ex.getMessage());
                     }
                     throw e;
                 }
@@ -233,7 +279,7 @@ public class ClientOnServer extends Thread implements Errors {
                         Long ci = (Long)i.next();
                         ClientOnServer c = (ClientOnServer)clients.get(ci);
                         try {
-                            //System.err.println("Official send:");
+                            //log("Official send:");
 			    if (c != this) {
 				    send(m, c);
 			    }
@@ -245,19 +291,22 @@ public class ClientOnServer extends Thread implements Errors {
                         throw ce;
                 }
             } else {
-                System.err.println("No recipient found in message");
+                log("No recipient found in message");
             }                 
         }
         static Hashtable<String, Message> server_messages = new Hashtable<String, Message>();
         public boolean seenMessage(Message m, Hashtable<String, Message> messages) {
-            String umsg = m.timestamp+","+m.sequenceno+","+m.nick;
+	    if (m == null) {
+		    throw new NullPointerException("Message m is null in seenMessage");
+	    }
+            String umsg = m.timestamp+","+m.sequenceno+","+m.nick+","+getNick();
             Iterator i = messages.keySet().iterator();
             Vector<String> removes = new Vector<String>();
             while (i.hasNext()) {
                 String sumsg = (String)i.next();
-                //System.err.println("sumsg "+sumsg+" umsg "+umsg);
+                //log("sumsg "+sumsg+" umsg "+umsg);
                 if (umsg.equals(sumsg)) {
-                    System.err.println("Found "+umsg+" on "+addressportclient+"  already not sending");
+                    log("Found "+umsg+" on "+addressportclient+"  already not sending");
                     return true;
                 }
                 int comma = sumsg.indexOf(",");
@@ -269,18 +318,19 @@ public class ClientOnServer extends Thread implements Errors {
             i = removes.iterator();
             while (i.hasNext()) {
                 String sumsg = (String)i.next();
-                // System.err.println("Removing "+sumsg);
+                log("Removing "+sumsg);
                 messages.remove(sumsg);
             }
+            log("Saving "+umsg);
             messages.put(umsg, m);
             return false;
         }
         public synchronized void send(Message m) throws Exception {
-		// System.err.println(getNick()+" sending to server "+m.generate());
+		// log("sending to server "+m.generate());
 		send(m.generate());
 	}
         public synchronized void send(Message m, ClientOnServer c) throws Exception {
-	    // System.err.println(getNick()+" writing to "+c.getNick()+" "+m.generate());
+	    // log("writing to "+c.getNick()+" "+m.generate());
             c.send(m.generate());
         }
         public String getLocation() throws Exception {
