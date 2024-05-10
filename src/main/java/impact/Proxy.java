@@ -93,7 +93,7 @@ class Proxy implements LineHandler {
 	}
 	public void send(String line) {
 		try {
-			lircom.Message m = new lircom.Message("*", chat.getNick(), line, "__");
+			lircom.Message m = new lircom.Message("*", chat.getNick(), line, "__", "Impact");
 			chat.send(m);
 		} catch (Exception e) {
 			e.printStackTrace();

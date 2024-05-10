@@ -408,11 +408,12 @@ class SolitaireClient extends lircom.ClientOnServer {
 	public SolitaireClient(java.net.Socket s, String nick) throws Exception {
 		super(s);
 		setNick("Solitaire"+nick);
+		lircom.Message.thisApplication = "Cards";
 	}
 	public Hashtable client_messages = new Hashtable();
 	public lircom.Message processLine(String line) throws Exception {
 		lircom.Message m = lircom.Message.parse(line);
-		if (m.nick.startsWith("Solitaire") && !m.nick.equals(getNick()) && !seenMessage(m, client_messages)) {
+		if (m != null && m.nick.startsWith("Solitaire") && !m.nick.equals(getNick()) && !seenMessage(m, client_messages)) {
 			System.err.println("Processing "+m.message);
 			Log.enabled = false;
 			System.err.println("Log.enabled is "+Log.enabled);
@@ -421,6 +422,7 @@ class SolitaireClient extends lircom.ClientOnServer {
 			System.err.println("Log enabled is "+Log.enabled);
 			return m;
 		} else {
+			System.err.print("Ignoring message "+line);
 			return null;
 		}
 	}
@@ -442,6 +444,7 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 	SolitaireClient cos = null;
 
 	static public void main(String args[]) throws Exception {
+		lircom.Message.thisApplication = "Cards";
 		Game g = new Game();
                 String mode = "random";
                 String host = "localhost";

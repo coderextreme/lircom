@@ -428,30 +428,30 @@ public class Chat extends ClientOnServer implements WindowListener, ActionListen
 		Message m = super.processLine(line);
 		// Message m = Message.parse(line);
 	        if (m != null && !seenMessage(m, client_messages)) {
+			/*
 			if (m.error.equals(K100)) {
 				System.err.println("Found error "+m.error+" in message "+m.message+" from "+m.from);
 				String chatter = m.message.intern();
 				removeChatter(chatter);
 			} else {
-				System.err.println("No error, adding "+m.from);
-				String path = m.from.intern();
-				String chatter = path;
-				chatter = m.nick.intern();
-				addChatter(path, chatter);
+			*/
+			String path = m.from.intern();
+			String chatter = path;
+			chatter = m.nick.intern();
+			addChatter(path, chatter);
 
-				// System.err.println("Displaying "+m.message);
-				displayToScreen(m);
-				// receive(line); // for channel
-				jp.invalidate();
-				jp.validate();
-				jp.repaint();
-				// if the client is also a server
-				try {
-					Hashtable rec = prepareToSend(m);
-					send(m, rec);
-				} catch (Message msge) {
-					messageException(msge);
-				}
+			// System.err.println("Displaying "+m.message);
+			displayToScreen(m);
+			// receive(line); // for channel
+			jp.invalidate();
+			jp.validate();
+			jp.repaint();
+			// if the client is also a server
+			try {
+				Hashtable rec = prepareToSend(m);
+				send(m, rec);
+			} catch (Message msge) {
+				messageException(msge);
 			}
 			return m;
 		} else {

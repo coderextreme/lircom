@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.ByteArrayOutputStream;
 
 /**
@@ -28,21 +29,25 @@ public class Message extends Throwable {
     long timestamp = 0; // don't want to make public, but have to so that flooding can be done
     public String nick = "";
     public String message = "";
-    public String error = "";
+    public long error = 0;
     public String language = "en";
+    public String application = "Chat";
+    public static String thisApplication = null;
     long sequenceno = 0;
     private static long sequencehigh = 0;
     /** Creates a new instance of Message */
+    static private PrintStream logStream = System.err;
     private static void log(String message) {
-	    System.err.println("Message: "+message);
+	    logStream.println("Message: "+message);
     }
-
+    private static void log(Exception e) {
+	    e.printStackTrace(logStream);
+    }
     public Message(java.util.Hashtable<String,String> rec, String nick, String message, String lang) {
 	this.rec = rec;
         this.from = "";
         this.nick = nick;
 	this.message = message;
-	this.stripCRNL();
         this.timestamp = System.currentTimeMillis();
         this.language = lang;
         synchronized (getClass()) {
@@ -54,21 +59,13 @@ public class Message extends Throwable {
         rec = new java.util.Hashtable<String,String>();
 	rec.put(to, to);
     }
-    public Message(String to, String nick, String error, String message, String lang) {
+    public Message(String to, String nick, long error, String message, String lang) {
 	this(to, nick, message, lang);
 	this.error = error;
     }
-    public void stripCRNL() {
-	// don't process messages with newlines, remove everything following the
-	// newline
-	int nl = message.indexOf("\n");
-	if (nl >= 0) {
-		message = this.message.substring(0, nl);
-	}
-	int cr = message.indexOf("\r");
-	if (cr >= 0) {
-		message = message.substring(0, cr);
-	}
+    public Message(String to, String nick, String message, String lang, String application) {
+	this(to, nick, 0L, message, lang);
+	this.application = application;
     }
     private Message() {
         this.timestamp = System.currentTimeMillis();
@@ -78,105 +75,17 @@ public class Message extends Throwable {
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode node = mapper.readTree(line);
 		Message m = Message.parse(node);
+		if (m != null && m.application != null && thisApplication != null && !m.application.equals(thisApplication)) {
+			log("Filter: "+thisApplication);
+			log("Message application: "+m.application);
+			return null;
+		}
 		return m;
 	} catch (JsonProcessingException e) {
-		e.printStackTrace(System.err);
+		log(e);
 		return null;
 	}
     }
-    /*
-    static public Message parse(String line) {
-                // log("Receiving "+line);
-                Message m = new Message();
-                //to 
-        	int tb = line.indexOf("{");
-		int toe = tb;
-		int tob = line.indexOf("{", toe+1);
-		while (toe+1 == tob) {
-		    toe = line.indexOf("}", tob+1);
-		    String to = line.substring(tob+1,toe);
-		    m.rec.put(to, to);
-		    tob = line.indexOf("{", toe);
-                }
-		int te = line.indexOf("}", toe+1);
-                //from
-		int fb = line.indexOf("{", te+1);
-		int fe = line.indexOf("}", fb+1);
-		// timestamp
-		int sb = line.indexOf("{", fe+1);
-		int se = line.indexOf("}", sb+1);
-                // sequence no
-                int qb = line.indexOf("{", se+1);
-                int qe = line.indexOf("}", qb+1);
-		// error
-		int eb = line.indexOf("{", qe+1);
-		int ee = line.indexOf("}", eb+1);
-                // language
-                int lb = line.indexOf("{", ee+1);
-                int le = line.indexOf("}", lb+1);
-		// nick
-		int nb = line.indexOf("{", le+1);
-		int ne = line.indexOf("}", nb+1);
-                // TODO handle nicks with braces in them
-                if (fb >= 0 && fe >= 0) {
-                    m.from = line.substring(fb+1, fe);
-                }
-                if (sb >= 0 && se >= 0) {
-		    // log("Parsing long from "+line+" found "+line.substring(sb+1, se));
-                    m.timestamp = Long.parseLong(line.substring(sb+1, se));
-                }
-                if (qb >= 0 && qe >= 0) {
-                    m.sequenceno = Long.parseLong(line.substring(qb+1, qe));
-                }
-                if (eb >= 0 && ee >= 0) {
-                    m.error = line.substring(eb+1, ee);
-                }
-                if (lb >= 0 && le >= 0) {
-                    m.language = line.substring(lb+1, le);
-                }
-                if (nb >= 0 && ne >= 0) {
-                    m.nick = line.substring(nb+1, ne);
-                }
-                if (ne >= 0) {
-                    m.message = line.substring(ne+1);
-                }
-		m.stripCRNL();
-                return m;
-    }
-    public String generate() {
-        StringBuffer sb = new StringBuffer();
-        sb.append("{");
-	java.util.Iterator i = rec.keySet().iterator();
-	while (i.hasNext()) {
-		String to = (String)i.next();
-		sb.append("{");
-		sb.append(to);
-		sb.append("}");
-	}
-        sb.append("}");
-        sb.append("{");
-        sb.append(from);
-        sb.append("}");
-        sb.append("{");
-        sb.append(timestamp);
-        sb.append("}");
-        sb.append("{");
-        sb.append(sequenceno);
-        sb.append("}");
-        sb.append("{");
-        sb.append(error);
-        sb.append("}");
-        sb.append("{");
-        sb.append(language);
-        sb.append("}");
-        sb.append("{");
-        sb.append(nick);
-        sb.append("}");
-        sb.append(message);
-        log(System.currentTimeMillis()+" Sending "+sb);
-        return sb.toString();
-    }
-    */
     public String translate(String targetLanguage) {
 	    log("language is "+ this.language);
 	    log("target language is "+ targetLanguage);
@@ -185,7 +94,7 @@ public class Message extends Throwable {
 		try {
 			return BabelFish.translate(message, this.language, targetLanguage);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log(e);
 		}
 	}
 	return this.message;
@@ -193,22 +102,22 @@ public class Message extends Throwable {
     static public Message parse(JsonNode node) {
 	if (node != null && !"".equals(node.toString().trim())) {
 		if (node.isArray()) {
-		    log(node.toString());
 		    // recipients
 		    Message message = new Message();
 		    message.rec = new java.util.Hashtable<String,String>();
 		    for (JsonNode recNode : node.get(0)) {
 			message.rec.put(recNode.asText(), recNode.asText());
-			log(recNode.asText());
+			log("Recipient: "+recNode.asText());
 		    }
 		    message.from = node.get(1).asText();
 		    message.timestamp = node.get(2).asLong();
 		    message.sequenceno = node.get(3).asLong();
-		    message.error = node.get(4).asText();
+		    message.error = node.get(4).asLong();
 		    message.language = node.get(5).asText();
 		    message.nick = node.get(6).asText();
-		    message.message = node.get(7).asText();
-		    log(message.toString());
+		    message.application = node.get(7).asText();
+		    message.message = node.get(8).asText();
+		    log("Incoming: "+node.toString());
 		    return message;
 		}
 	}
@@ -230,15 +139,16 @@ public class Message extends Throwable {
 		generator.writeString(this.from);
 		generator.writeNumber(this.timestamp);
 		generator.writeNumber(this.sequenceno);
-		generator.writeString(this.error);
+		generator.writeNumber(this.error);
 		generator.writeString(this.language);
 		generator.writeString(this.nick);
 		// generator.writeNumber(this.sequencehigh);
+		generator.writeString(this.application);
 		generator.writeString(this.message);
 		generator.writeEndArray();
 		generator.close();
 	} catch (IOException e) {
-		e.printStackTrace(System.err);
+		log(e);
 	}
 	return stream.toString();
     }

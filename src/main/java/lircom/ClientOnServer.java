@@ -14,7 +14,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ClientOnServer extends Thread implements Errors {
-	static Hashtable<String,String> errors = null;
 	protected InputStream input;
 	protected PrintWriter output;
 	protected static Hashtable<Long,ClientOnServer> clients = new Hashtable<Long,ClientOnServer>();
@@ -23,8 +22,9 @@ public class ClientOnServer extends Thread implements Errors {
 	static long cs = 0;
         private String clientnick = "ClientOnServer";
         PossibleConnection pcon = null;
+	private PrintStream logStream = System.err;
 	private void log(String message) {
-		System.err.println(getNick()+": "+message);
+		logStream.println(getNick()+": "+message);
 	}
         public ClientOnServer() throws Exception {
 	    synchronized (clients) {
@@ -32,11 +32,6 @@ public class ClientOnServer extends Thread implements Errors {
 		    cs++;
 	    }
             clients.put(clientno, this);
-            if (errors == null) {
-		errors = new Hashtable<String,String>();
-		errors.put(K100, V100);
-		//errors.put(K101, V101);
-            }
             addressportclient = getLocation();
         }
         public String getAddressPortClient() {
@@ -101,7 +96,7 @@ public class ClientOnServer extends Thread implements Errors {
 				if (c != '\n') {
 					sb.append((char)c);
                                         log((int)c+"_____________"+sb);
-                                        System.err.flush();
+                                        logStream.flush();
 					continue;
 				}
 				
@@ -115,7 +110,7 @@ public class ClientOnServer extends Thread implements Errors {
 				try {
 					node = mapper.readTree(input);
 				} catch (SocketException disc) {
-					disc.printStackTrace(System.err);
+					disc.printStackTrace(logStream);
 					// reconnect();
 					node = null;
 				}
@@ -131,7 +126,7 @@ public class ClientOnServer extends Thread implements Errors {
                                     if (line.trim().equals("")) {
                                         continue;
                                     }
-                                    log("received in ClientOnServer "+line);
+                                    // log("received in ClientOnServer "+line);
 				    processLine(line);
                                 } catch (ClientException ce) {
                                     ce.printStackTrace();
@@ -160,7 +155,7 @@ public class ClientOnServer extends Thread implements Errors {
 	}
 	public Message processLine(String line) throws Exception {
 		if (line != null) {
-			log("processing line "+line);
+			// log("processing line "+line);
 			/*
 			ObjectMapper mapper = new ObjectMapper();
 			JsonNode node = mapper.readTree(line);
@@ -174,7 +169,7 @@ public class ClientOnServer extends Thread implements Errors {
 	}
 	public Message processMessage(Message m) throws Exception {
 		if (!seenMessage(m, server_messages)) {
-			log("processing message "+m.message);
+			log("not seen message "+m.message);
 			try {
 				Hashtable rec = prepareToSend(m);
 				send(m, rec);
@@ -297,7 +292,8 @@ public class ClientOnServer extends Thread implements Errors {
         static Hashtable<String, Message> server_messages = new Hashtable<String, Message>();
         public boolean seenMessage(Message m, Hashtable<String, Message> messages) {
 	    if (m == null) {
-		    throw new NullPointerException("Message m is null in seenMessage");
+		    log("Message m is null in seenMessage");
+		    return true;
 	    }
             String umsg = m.timestamp+","+m.sequenceno+","+m.nick+","+getNick();
             Iterator i = messages.keySet().iterator();

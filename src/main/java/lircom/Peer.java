@@ -6,6 +6,7 @@ public class Peer extends Thread {
 	private int port = 0;
 	private ServerSocket ss;
 	static public void main(String args[]) throws Exception {
+		lircom.Message.thisApplication = null;
 		if (args.length != 1) {
 			System.err.println("Usage: java Peer localport");
 		}

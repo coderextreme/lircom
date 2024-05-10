@@ -632,6 +632,7 @@ public class MainWindow extends javax.swing.JFrame implements java.awt.event.Win
      */
     static String[] args;
     public static void main(String chatargs[]) {
+	lircom.Message.thisApplication = "Chat";
 	try {
 	  //UIManager.setLookAndFeel(
 	    //UIManager.getCrossPlatformLookAndFeelClassName());

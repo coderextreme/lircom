@@ -6,6 +6,7 @@ public class ImpactClient extends lircom.ClientOnServer {
 	public ImpactClient(java.net.Socket s, String nick) throws Exception {
 		super(s);
 		setNick("Impact"+nick);
+		lircom.Message.thisApplication = "Impact";
 	}
 	public Hashtable client_messages = new Hashtable();
 	public lircom.Message processLine(String line) throws Exception {

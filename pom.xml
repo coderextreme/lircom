@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.coderextreme</groupId>
   <artifactId>lircom</artifactId>
-  <version>2</version>
+  <version>3</version>
 <properties>
     <kotlin.version>1.6.0</kotlin.version>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>

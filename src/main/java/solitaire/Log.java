@@ -29,7 +29,7 @@ public class Log {
 			if (enabled) {
 				if (cos !=  null) {
 					synchronized(cos) {
-						lircom.Message m = new lircom.Message("*", cos.getNick(), msg, "__");
+						lircom.Message m = new lircom.Message("*", cos.getNick(), msg, "__", "Cards");
 						// System.err.println("writing "+msg);
 						cos.send(m);
 						// cos.receive(m.generate());

@@ -30,6 +30,7 @@ public class IRCClient extends ClientState implements Observer {
 	private static List<MyAutoJoin> channels = new ArrayList<MyAutoJoin>();
 	private IRCConnection connection;
 	public static void main(String args[]) {
+		lircom.Message.thisApplication = "Chat";
 		for (int a = 0; a < args.length; a++) {
 			try {
 				IRCClient clientState = new IRCClient(args[a]);

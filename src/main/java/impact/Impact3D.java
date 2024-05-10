@@ -40,6 +40,7 @@ public class Impact3D implements GLEventListener, MouseListener, MouseMotionList
   static boolean control = false;
   private boolean cut = false;
   public static void main(String[] args) {
+	lircom.Message.thisApplication = "Impact";
 	try {
 		Proxy.getProxy();
 		new Impact3D();
