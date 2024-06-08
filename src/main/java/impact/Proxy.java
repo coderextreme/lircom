@@ -10,8 +10,7 @@ import java.io.PrintWriter;
 import java.io.IOException;
 
 class Proxy implements LineHandler {
-        static Proxy proxy = new Proxy();
-
+	static Proxy proxy = null;
 	ImpactClient chat = null;
 	class Joint {
 		String jointId;
@@ -37,59 +36,60 @@ class Proxy implements LineHandler {
 	Bones bones = new Bones();
 	boolean initialized = false;
 	boolean bvhJointsInitialized = false;
-	private Proxy() {
+	public Proxy(String host, int port) {
 		try {
-			chat = new ImpactClient(new Socket("localhost", 8180), Long.toString(System.currentTimeMillis()));
+			chat = new ImpactClient(this, new Socket(host, port), Long.toString(System.currentTimeMillis()));
 			chat.start();
-			select(this);
+			select();
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.err.println("Problems instantiating communications");
 		}
+		proxy = this;
 	}
 	synchronized static public Proxy getProxy() {
 		return proxy;
 	}
 	public void insert(Line segment) {
-		segment.insert(proxy);
+		segment.insert(this);
 	}
 	public void insert(Polygon arc) {
-		arc.insert(proxy);
+		arc.insert(this);
 	}
 	public void insert(Point node) {
-		node.insert(proxy);
+		node.insert(this);
 	}
 	public void insert(GraphObject obj) {
-		obj.insert(proxy);
+		obj.insert(this);
 	}
 	public void remove(Line segment) {
-		segment.remove(proxy);
+		segment.remove(this);
 	}
 	public void remove(Polygon arc) {
-		arc.remove(proxy);
+		arc.remove(this);
 	}
 	public void remove(Point node) {
-		node.remove(proxy);
+		node.remove(this);
 	}
 	public void remove(GraphObject obj) {
-		obj.remove(proxy);
+		obj.remove(this);
 	}
 	public void update(Line segment) {
-		segment.update(proxy);
+		segment.update(this);
 	}
 	public void update(Polygon arc) {
-		arc.update(proxy);
+		arc.update(this);
 	}
 	public void update(Point node) {
-		node.update(proxy);
+		node.update(this);
 	}
 	public void update(GraphObject obj) {
-		obj.update(proxy);
+		obj.update(this);
 	}
-        public void select(Proxy proxy) {
-		proxy.send("NODE||SELECT");
-		proxy.send("ARC||SELECT");
-		proxy.send("SEGMENT||SELECT");
+        public void select() {
+		this.send("NODE||SELECT");
+		this.send("ARC||SELECT");
+		this.send("SEGMENT||SELECT");
 	}
 	public void send(String line) {
 		try {
@@ -117,7 +117,7 @@ class Proxy implements LineHandler {
 		}
 	}
 	public void printHierarchy(Joint joint, Writer w, int indent) throws IOException {
-		System.err.println("got here");
+		//  System.err.println("got here");
 		w.write("\t".repeat(indent)+(indent == 0 ? "ROOT " : "JOINT ")+joint.jointId+"\n");
 		w.write("\t".repeat(indent)+"{\n");
 		w.write("\t".repeat(indent+1)+"\tOFFSET "+joint.x+" "+-joint.y+" "+joint.z+"\n");

@@ -6,6 +6,7 @@
 
 package lircom;
 import javax.swing.UIManager;
+import java.io.PrintStream;
 
 /**
  *
@@ -22,6 +23,10 @@ public class MainWindow extends javax.swing.JFrame implements java.awt.event.Win
 	//Orbit2 canvas = new Orbit2();
         //jLayeredPane2.add(canvas, javax.swing.JLayeredPane.PALETTE_LAYER);
 	addWindowListener(this);
+    }
+    private static PrintStream logStream = System.err;
+    public static void log(Exception e) {
+	    e.printStackTrace(logStream);
     }
     
     /** This method is called from within the constructor to
@@ -488,7 +493,7 @@ public class MainWindow extends javax.swing.JFrame implements java.awt.event.Win
         try {
             startSolitaire("random");
         } catch (Exception e) {
-            e.printStackTrace();
+            log(e);
         }
     }//GEN-LAST:event_randomPlayerActionPerformed
 
@@ -496,7 +501,7 @@ public class MainWindow extends javax.swing.JFrame implements java.awt.event.Win
         try {
             startSolitaire("dealer");
         } catch (Exception e) {
-            e.printStackTrace();
+            log(e);
         }
     }//GEN-LAST:event_dealSolitaireActionPerformed
 
@@ -504,7 +509,7 @@ public class MainWindow extends javax.swing.JFrame implements java.awt.event.Win
         try {
             startSolitaire("methodical");
         } catch (Exception e) {
-            e.printStackTrace();
+            log(e);
         }
     }//GEN-LAST:event_methodicalPlayerActionPerformed
 
@@ -520,7 +525,7 @@ public class MainWindow extends javax.swing.JFrame implements java.awt.event.Win
         try {
             startSolitaire("display");
         } catch (Exception e) {
-            e.printStackTrace();
+            log(e);
         }
     }//GEN-LAST:event_watchSolitaireActionPerformed
 
@@ -540,7 +545,7 @@ public class MainWindow extends javax.swing.JFrame implements java.awt.event.Win
 		newChannel.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 		// newChannel.bridge = new IRCBridge(newChannel.chat, newChannel.nickname);
         } catch (Exception e) {
-            e.printStackTrace();
+            log(e);
         }
     }//GEN-LAST:event_addChannelActionPerformed
 
@@ -663,17 +668,14 @@ public class MainWindow extends javax.swing.JFrame implements java.awt.event.Win
 			}
 			lircomwindow.setTitle(lircomwindow.nickname);
 			lircomwindow.setChat(classname, lircomwindow.nickname);
-			/*
-			String url = "irc://irc.ircstorm.net:6667/schizophrenia";
 			if (args.length > 2) {
-				url = args[2];
-			} else {
-				url = javax.swing.JOptionPane.showInputDialog("Enter url:", url);
+				for (int a = 2; a < args.length; a++) {
+					System.out.println(args[a]);
+					System.out.flush();
+					String hostPort [] = args[a].trim().split(":");
+    					lircomwindow.connect(hostPort[0], hostPort[1]);
+				}
 			}
-			if (url == null) {
-				System.exit(0);
-			}
-			*/
 
                         lircomwindow.setVisible(true);
                         lircomwindow.selectConnectionsActionPerformed(null);
@@ -683,7 +685,7 @@ public class MainWindow extends javax.swing.JFrame implements java.awt.event.Win
  
                 } catch (Exception e) {
 			System.err.println("Died");
-			e.printStackTrace();
+			log(e);
 		}
                 
             }
@@ -697,6 +699,9 @@ public class MainWindow extends javax.swing.JFrame implements java.awt.event.Win
 		}
 		chat.setNick(nickname);
 		init(chat);
+    }
+    public void connect(String server, String port) throws Exception {
+	    this.connect(server, Integer.valueOf(port));
     }
     public void connect(String server, int port) throws Exception {
 		ClientOnServer client = new ClientOnServer(server, port);
@@ -720,12 +725,11 @@ public class MainWindow extends javax.swing.JFrame implements java.awt.event.Win
                 chat_Info_Area.addHyperlinkListener(hyperlinkHandler);
     }
     public void startSolitaire(String mode) throws Exception {
-            solitaire.Game g = new solitaire.Game();
             try {
                 // g.startGame(mode, heathens, nickname);
                 // return;
             } catch (Exception ex) {
-                ex.printStackTrace();
+                log(ex);
             }
             java.util.Iterator i = PossibleConnection.iterator();
 
@@ -734,10 +738,10 @@ public class MainWindow extends javax.swing.JFrame implements java.awt.event.Win
                     PossibleConnection.get(i.next());
                 if (pcon.connected) {
                     try {
-                        g.startGame(mode, pcon.host, Integer.parseInt(pcon.port), nickname);
+            		solitaire.Game g = new solitaire.Game(mode, pcon.host, Integer.parseInt(pcon.port), nickname);
                         return;
                     } catch (Exception ex) {
-                        ex.printStackTrace();
+                	log(ex);
                         pcon.connected = false;
                     }
                 }

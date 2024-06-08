@@ -75,11 +75,13 @@ public class Message extends Throwable {
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode node = mapper.readTree(line);
 		Message m = Message.parse(node);
+		/*
 		if (m != null && m.application != null && thisApplication != null && !m.application.equals(thisApplication)) {
 			log("Filter: "+thisApplication);
 			log("Message application: "+m.application);
 			return null;
 		}
+		*/
 		return m;
 	} catch (JsonProcessingException e) {
 		log(e);

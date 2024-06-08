@@ -39,16 +39,22 @@ public class Impact3D implements GLEventListener, MouseListener, MouseMotionList
   static boolean shifting = false;
   static boolean control = false;
   private boolean cut = false;
+  private Proxy proxy = null;
   public static void main(String[] args) {
 	lircom.Message.thisApplication = "Impact";
 	try {
-		Proxy.getProxy();
-		new Impact3D();
+		for (int a = 0; a < args.length; a++) {
+			System.out.println(args[a]);
+			System.out.flush();
+			String hostPort [] = args[a].trim().split(":");
+			new Impact3D(hostPort[0], Integer.valueOf(hostPort[1]));
+		}
 	} catch (Throwable t) {
 		t.printStackTrace();
 	}
   }
-  public Impact3D() {
+  public Impact3D(String host, int port) {
+    proxy = new Proxy(host, port);
     Frame frame = new Frame("Impact 3D");
     MenuBar menubar = new MenuBar();
     Menu file = new Menu("File");
@@ -210,7 +216,7 @@ public class Impact3D implements GLEventListener, MouseListener, MouseMotionList
                 animator.stop();
               }
             }).start();
-	   Proxy.getProxy().close();
+	   proxy.close();
           System.exit(0);
         }
       });

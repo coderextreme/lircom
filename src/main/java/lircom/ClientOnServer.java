@@ -26,6 +26,9 @@ public class ClientOnServer extends Thread implements Errors {
 	private void log(String message) {
 		logStream.println(getNick()+": "+message);
 	}
+	private void log(Exception e) {
+		e.printStackTrace(logStream);
+	}
         public ClientOnServer() throws Exception {
 	    synchronized (clients) {
 		    clientno = System.currentTimeMillis()+cs;
@@ -79,9 +82,13 @@ public class ClientOnServer extends Thread implements Errors {
                     output.close();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+		log("Error closing socket");
+                log(e);
             }
-            clients.remove(clientno);
+            clients.remove(this.clientno);
+	    if (clients.size() == 0) {
+		System.exit(0);
+	    }
         }
 	public void run() {
 		try {
@@ -110,7 +117,7 @@ public class ClientOnServer extends Thread implements Errors {
 				try {
 					node = mapper.readTree(input);
 				} catch (SocketException disc) {
-					disc.printStackTrace(logStream);
+					log(disc);
 					// reconnect();
 					node = null;
 				}
@@ -129,20 +136,25 @@ public class ClientOnServer extends Thread implements Errors {
                                     // log("received in ClientOnServer "+line);
 				    processLine(line);
                                 } catch (ClientException ce) {
-                                    ce.printStackTrace();
+                                    log(ce);
                                 }
 			
 			}
-			if (input != null) {
-				input.close();
-			}
-			if (output != null) {
-				output.close();
-			}
+		} catch (SocketException e) {
+			log("SocketException while reading");
+			log(e);
+		} catch (IOException e) {
+			log("IOException while reading");
+			log(e);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log("Exception while reading");
+			log(e);
 		}
-		clients.remove(this.clientno);
+	    	try {
+			this.close();
+	    	} catch (Exception ex) {
+		    	log("Error closing "+ex.getMessage());
+	    	}
 	}
 	public Message processNode(JsonNode node) throws Exception {
 		if (node != null) {
@@ -350,9 +362,9 @@ public class ClientOnServer extends Thread implements Errors {
 			Hashtable rec = prepareToSend(m);
 			send(m, rec);
 		} catch (Message msge) {
-			msge.printStackTrace();
+			log(msge.generate());
 		} catch (Exception e) {
-			e.printStackTrace();
+			log(e);
 		}
 	}
 }

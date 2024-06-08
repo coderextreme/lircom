@@ -2,5 +2,6 @@
 
 . env.sh
 
-${JAVA_OPTS} lircom.Peer 8180 &
+${JAVA_OPTS} lircom.Peer 8180 8181 &
 echo $!
+sleep 1

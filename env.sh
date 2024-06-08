@@ -12,10 +12,8 @@ export DWN=/c/Users/john/Downloads
 export LIB=${DWN}/jogamp-all-platforms/lib/windows-amd64
 export MEMORY=-Xmx256m
 export JAVA_OPTS="java ${MEMORY} -Djava.library.path=${LIB} --add-exports java.base/java.lang=ALL-UNNAMED --add-exports java.desktop/sun.awt=ALL-UNNAMED --add-exports java.desktop/sun.java2d=ALL-UNNAMED"
+export PORTS="8180 8181"
+export NUM_PORTS=2
 
 rm target/*.jar
 mvn clean install; ant
-
-${JAVA_OPTS} lircom.Peer 8180 &
-echo $!
-sleep 1

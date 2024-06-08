@@ -436,19 +436,19 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 	JFrame jf = new JFrame("Write your own solitaire");
 	Random r = new Random();
 	Stack picked = null;
+	Stack deck = null;
+	Stack shuffledDeck = null;
 	boolean randomrun = false;
 	boolean methodicalrun = false;
 	boolean stop = false;
-	boolean stopped = false;
+	boolean stopped = true;
 	boolean logic = false;
 	boolean dealer = false;
 	SolitaireClient cos = null;
 
 	static public void main(String args[]) throws Exception {
 		lircom.Message.thisApplication = "Cards";
-                String mode = "random";
-                String host = "localhost";
-                int port = 8180;
+		String mode = "display";
                 if (args.length > 0) {
                         mode = args[0];
                 }
@@ -457,7 +457,9 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 				System.out.println(args[a]);
 				System.out.flush();
 				String hostPort [] = args[a].trim().split(":");
-				Game g = new Game(mode, hostPort[0], Integer.valueOf(hostPort[1]), null);
+				String host = hostPort[0];
+				Integer port = Integer.valueOf(hostPort[1]);
+				Game g = new Game(mode, host, port, null);
 			}
 		}
 	}
@@ -466,7 +468,7 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 	}
 	public void startGame(String mode, String server, int port, String nick) throws Exception {
 		GameMiner.game = this;
-		GameMiner.jf = jf;
+		GameMiner.jf = this.jf;
 		if (nick == null) {
 			nick = javax.swing.JOptionPane.showInputDialog(this.jf, "Enter player name:");
 		}
@@ -484,47 +486,47 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 			System.err.println("Couldn't connect to "+server+":"+port);
 		}
 		if (mode.equals("display")) {
-			dealer = false;
-			jf.setTitle("Watch Solitaire being played");
+			this.dealer = false;
+			this.jf.setTitle("Watch Solitaire being played");
 		} else if (mode.equals("random")) {
 			randomrun = true;
-			dealer = true;
-			jf.setTitle("Random Player");
+			this.dealer = true;
+			this.jf.setTitle("Random Player");
 		} else if (mode.equals("methodical")) {
 			methodicalrun = true;
-			dealer = true;
-			jf.setTitle("Methodical Player");
+			this.dealer = true;
+			this.jf.setTitle("Methodical Player");
 		} else if (mode.equals("dealer")) {
-			dealer = true;
-			jf.setTitle("You are the solitaire dealer");
+			this.dealer = true;
+			this.jf.setTitle("You are the solitaire dealer");
 		} else {
-			dealer = false;
+			this.dealer = false;
 		}
-		deal(dealer);
 
-		jf.setSize(800,600);
+		this.jf.setSize(800,600);
 		JMenuBar jmb = new JMenuBar();
-		jf.setJMenuBar(jmb);
+		this.jf.setJMenuBar(jmb);
 		JMenu file = new JMenu("File");
 		jmb.add(file);
 
 		JMenuItem dumpLogic = new JMenuItem("Dump Logic");
 		file.add(dumpLogic);
 		dumpLogic.addActionListener(this);
-
-		JMenuItem dealRandom = new JMenuItem("Deal");
-		file.add(dealRandom);
-		dealRandom.addActionListener(new ActionListener() {
+		JMenuItem deal = new JMenuItem("Deal");
+		file.add(deal);
+		deal.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
          			java.awt.EventQueue.invokeLater(() -> {            
 					System.err.println("Dealing");
 					Game.this.stop = false;
-					Game.this.dealer = true;
-					deal(Game.this.dealer);
+				 	Game.this.randomrun = false;
+					deal(true);
+					Game.this.jf.getContentPane().invalidate();
+					Game.this.jf.getContentPane().validate();
+					Game.this.jf.getContentPane().repaint();
 				});
 			}
 		});
-
 		JMenuItem startRandom = new JMenuItem("Start Computer Player");
 		file.add(startRandom);
 		startRandom.addActionListener(new ActionListener() {
@@ -533,10 +535,10 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 					System.err.println("Starting Computer Player");
 					Game.this.stop = false;
 					Game.this.randomrun = true;
+				 	Game.this.dealer = false;
 				});
 			}
 		});
-
 		JMenuItem stopItem = new JMenuItem("Stop Computer Player");
 		file.add(stopItem);
 		stopItem.addActionListener(new ActionListener() {
@@ -546,37 +548,20 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 			}
 		});
 
-		JMenuItem quitItem = new JMenuItem("Quit");
-		file.add(quitItem);
-		quitItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				System.err.println("Quitting");
-				stopped = true;
-                		System.exit(0);
-			}
-		});
-
-		jf.addWindowListener(this);
-		jf.setVisible(true);
-		jf.getContentPane().setLayout(null);
-		jf.addMouseListener(this);
-		if (dealer) {
-			Stack waste = new Stack(0, 130, 0, StackLayout.Y, jf, this);
-			for (int st = 0; st < 7; st++) { // working stacks
-				Stack nw = new Stack(st*80+150, 130, 20, StackLayout.Y, jf, this);
-			}
-			for (int st = 0; st < 4; st++) { // final stacks
-				Stack nw = new Stack(st*80+270, 0, 0, StackLayout.Y, jf, this);
-			}
-			moveToStacks(1, 9);
-			topCardFaceUp(9);
-		}
-		picked = new Stack(14, 0, 400, 20, StackLayout.Y, jf, this);
-
-		jf.getContentPane().invalidate();
-		jf.getContentPane().validate();
-		jf.getContentPane().repaint();
+		this.jf.addWindowListener(this);
+		this.jf.setVisible(true);
+		this.jf.getContentPane().setLayout(null);
+		this.jf.addMouseListener(this);
+		this.jf.getContentPane().invalidate();
+		this.jf.getContentPane().validate();
+		this.jf.getContentPane().repaint();
 		java.awt.EventQueue.invokeLater(() -> {            
+			if (Game.this.dealer) {
+				deal(true);
+				Game.this.jf.getContentPane().invalidate();
+				Game.this.jf.getContentPane().validate();
+				Game.this.jf.getContentPane().repaint();
+			}
 			Game.this.start();
 		});
 	}
@@ -650,45 +635,57 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 		System.err.println("Didn't find stack, oops "+i);
 		return null;
 	}
-	public Stack deal(boolean dealer) {
-		// System.err.println("initializing");
-		{
-		        for (int v = CardItem.Ace; v <= CardItem.King; v++) {
-			    for (int s = CardItem.Hearts; s <= CardItem.Clubs; s++) {
-			        CardItem d = Stack.cards[v-1][s];
-			        d.setGame(this);
-			        d.setFaceUp(false);
-			    }
-		        }
+	public void initialize() {
+		Stack waste = new Stack(0, 130, 0, StackLayout.Y, this.jf, this);
+		for (int st = 0; st < 7; st++) { // working stacks
+			Stack nw = new Stack(st*80+150, 130, 20, StackLayout.Y, this.jf, this);
 		}
-		if (dealer) {
+		for (int st = 0; st < 4; st++) { // final stacks
+			Stack nw = new Stack(st*80+270, 0, 0, StackLayout.Y, this.jf, this);
+		}
+		moveToStacks(1, 9);
+		topCardFaceUp(9);
+		picked = new Stack(14, 0, 400, 20, StackLayout.Y, this.jf, this);
+		this.deck = new Stack(80, 0, 0, StackLayout.X, this.jf, this);
+		this.shuffledDeck = new Stack(0, 0, 0, StackLayout.X, this.jf, this);
+	}
+	public void shuffle() {
+		for (int v = CardItem.Ace; v <= CardItem.King; v++) {
+		    for (int s = CardItem.Hearts; s <= CardItem.Clubs; s++) {
+			CardItem d = Stack.cards[v-1][s];
+			d.setGame(this);
+			d.setFaceUp(false);
+		    }
+		}
+		int pos = 0;
+		// create deck
+		for (int v = CardItem.Ace; v <= CardItem.King; v++) {
+		    for (int s = CardItem.Hearts; s <= CardItem.Clubs; s++) {
+			CardItem d = Stack.cards[v-1][s];
+			deck.insertElementAt(d, pos);
+			pos++;
+		    }
+		}
+		// System.err.println("Done initializing, shuffling");
+		    // shuffle the cards
+		while (deck.size() > 0) {
+			int crd = r.nextInt(deck.size());
+			CardItem d = (CardItem)deck.elementAt(crd);
+			moveCard(deck.stack_no, shuffledDeck.stack_no, d, 0, 11);
+		}
+		// System.err.println("done shuffling");
+	}
+	public void deal(boolean dealer) {
+		Game.this.dealer = dealer;
+		// System.err.println("initializing");
+		if (Game.this.dealer) {
 		    try {
-		        Stack deck = new Stack(80, 0, 0, StackLayout.X, jf, this);
-		        Stack shuffledDeck = new Stack(0, 0, 0, StackLayout.X, jf, this);
-		        int pos = 0;
-		        // create deck
-		        for (int v = CardItem.Ace; v <= CardItem.King; v++) {
-			    for (int s = CardItem.Hearts; s <= CardItem.Clubs; s++) {
-			        CardItem d = Stack.cards[v-1][s];
-			        deck.insertElementAt(d, pos);
-			        pos++;
-			    }
-		        }
-			// System.err.println("Done initializing, shuffling");
-			    // shuffle the cards
-			while (deck.size() > 0) {
-				int crd = r.nextInt(deck.size());
-				CardItem d = (CardItem)deck.elementAt(crd);
-				moveCard(deck.stack_no, shuffledDeck.stack_no, d, 0, 11);
-			}
-			// System.err.println("done shuffling");
-			return shuffledDeck;
-		
+			initialize();
+			shuffle();
 		    } catch (Exception e) {
 		        e.printStackTrace();
 		    }
 		}
-		return null;
 	}
 	MouseEvent olde;
 	public void 	mouseClicked(MouseEvent me) {
@@ -720,12 +717,12 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 					CardItem s = (CardItem)picked.elementAt(picked.size()-1);
 					moveCard(picked.stack_no, flippy.stack_no, s, 0, 13);
 				}
-				jf.getContentPane().invalidate();
-				jf.getContentPane().validate();
+				this.jf.getContentPane().invalidate();
+				this.jf.getContentPane().validate();
 				flippy.gui.invalidate();
 				flippy.gui.validate();
 				flippy.gui.repaint();
-				jf.getContentPane().repaint();
+				this.jf.getContentPane().repaint();
 			}
 	        } else if (c instanceof CardItem) {
 			CardItem ci = (CardItem)c;
@@ -764,16 +761,16 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 			}
 		} else {
 			// create a whole new stack with the cards
-			Stack nw = new Stack(me.getX(), me.getY(), 20, StackLayout.Y, jf, this);
+			Stack nw = new Stack(me.getX(), me.getY(), 20, StackLayout.Y, this.jf, this);
 			while (picked != null && nw != picked && picked.size() > 0) {
 				CardItem cipick = (CardItem)picked.elementAt(picked.size()-1);
 				moveCard(picked.stack_no, nw.stack_no, cipick, 0, 18);
 			}
-			jf.getContentPane().add(nw.gui);
+			this.jf.getContentPane().add(nw.gui);
 		}
-		jf.getContentPane().invalidate();
-		jf.getContentPane().validate();
-		jf.getContentPane().repaint();
+		this.jf.getContentPane().invalidate();
+		this.jf.getContentPane().validate();
+		this.jf.getContentPane().repaint();
 	}
 	public void 	mouseEntered(MouseEvent e) {
 	}
@@ -896,9 +893,9 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 			} else if (f < 1.0) { // ZI
 			}
 */
-			jf.getContentPane().invalidate();
-			jf.getContentPane().validate();
-			jf.getContentPane().repaint();
+			this.jf.getContentPane().invalidate();
+			this.jf.getContentPane().validate();
+			this.jf.getContentPane().repaint();
 			}
 			}
 		}
@@ -907,21 +904,14 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 		}
 	}
 	public void run() {
-		while (!stopped) {
-			if (randomrun) {
-				// stopped = false;
-				randomrun();
-				// stopped = true;
-			} else if (methodicalrun) {
-				// stopped = false;
-				methodicalrun();
-				// stopped = true;
-			}
-			try {
-				Thread.sleep(1000);
-			} catch (Exception e) {
-				System.err.println("Close window to exit");
-			}
+		if (randomrun) {
+			stopped = false;
+			randomrun();
+			stopped = true;
+		} else if (methodicalrun) {
+			stopped = false;
+			methodicalrun();
+			stopped = true;
 		}
 	}
 	public void randomrun() {
@@ -1075,9 +1065,9 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 					flipOver(fromStack, toStack, false, 9);
 				}
 			}
-			jf.getContentPane().invalidate();
-			jf.getContentPane().validate();
-			jf.getContentPane().repaint();
+			this.jf.getContentPane().invalidate();
+			this.jf.getContentPane().validate();
+			this.jf.getContentPane().repaint();
 		}
 		if (logic) {
 			Logic.print();
