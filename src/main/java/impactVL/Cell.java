@@ -138,7 +138,7 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 			if (pClass.equals("impactVL.Module")) {
 				setModulePersonalities(x, y);
 				System.err.println("Setting Module "+x+","+y);
-			} else if (x+Common.startx > 0 && y+Common.starty > 0 && x+Common.startx < Common.PMAXX-1 && y+Common.starty < Common.PMAXY-1) {
+			} else if (x+Common.startx >= 0 && y+Common.starty >= 0 && x+Common.startx < Common.PMAXX && y+Common.starty < Common.PMAXY) {
 				Personality p = (Personality)(Class.forName(pClass).getDeclaredConstructor().newInstance());
 				Common.personalities[x+Common.startx][y+Common.starty] = p;
 				System.err.println("Setting "+(x+Common.startx)+","+(y+Common.starty)+" to "+pClass);
@@ -838,6 +838,7 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 		tools.add(adv);
 		tools.add(new JLabel("Number of steps"));
 		numTimes.setColumns(3);
+		numTimes.setText("100");
 		tools.add(numTimes);
 		tools.add(intr);
 		tools.add(new JLabel("Pause interval"));
@@ -1138,9 +1139,11 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 				}
 				Common.color = true;
 			}
+			/*
 			if (!Common.changed) {
 				break;
 			}
+			*/
 			try {
 				for (y = 0; y < Common.PMAXY; y++) {
 					for (x = 0; x < Common.PMAXX; x++) {
