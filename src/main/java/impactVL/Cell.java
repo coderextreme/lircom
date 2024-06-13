@@ -28,9 +28,9 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 	public static JFrame stopdlg = null;
 	public static JPanel jp = new JPanel();
 	public static JLabel jlx = new JLabel("Width w/o buffers");
-	public static JTextField jtfx = new JTextField(" 9");
+	public static JTextField jtfx = new JTextField(" 1");
 	public static JLabel jly = new JLabel("Height w/o buffers");
-	public static JTextField jtfy = new JTextField(" 8");
+	public static JTextField jtfy = new JTextField(" 1");
 	public static JButton ok = new JButton("OK");
 	public static JButton cancel = new JButton("Cancel");
 	Personality p = null;

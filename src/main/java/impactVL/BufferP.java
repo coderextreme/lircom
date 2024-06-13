@@ -31,11 +31,11 @@ public class BufferP extends Personality {
 	}
 	public void paint(Graphics g) {
 		if (in != null) {
-			g.drawString(in.toString(), SX, 2*M-SY);
+			g.drawString("in:"+in.toString(), SX, 2*M-SY);
 		}
 		g.drawString("Buffer", SX, 3*M-SY);
 		if (out != null) {
-			g.drawString(out.toString(), SX, 4*M-SY);
+			g.drawString("out:"+out.toString(), SX, 4*M-SY);
 		}
 	}
 	public String getIn() {
