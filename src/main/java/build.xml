@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Impact" default="default" basedir=".">
+    <description>Builds, tests, and runs the ImpactVL project.</description>
+    <property name="fork"                value="true"/>
+    <!--
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+    -->
+    <property name="impact.jar"     value="impact.jar"/>
+    <property name="javac.verbose"              value="false"/>
+    <property name="java.classes.dir"        value="net"/>
+    <target name="all" depends="default,impact"/>
+
+    <target name="default">
+	    <mkdir dir="build"/>
+
+	    <javac  srcdir="impactVL"
+			   destdir="build"
+	    		   classpath="build;.;impact.jar"
+		 	   includeantruntime="false"
+			   verbose="${javac.verbose}"
+			   fork="${fork}">
+		</javac>
+
+		<jar destfile="${impact.jar}" duplicate="fail" strict="warn">
+            <!-- http://docs.oracle.com/javase/8/docs/technotes/guides/deploy/manifest.html -->
+            <manifest id="ClassesJarManifest">
+                <attribute name="Built-By" value="${user.name.build}"/>
+                <attribute name="Implementation-Vendor" value="John Carlson"/>
+                <attribute name="Implementation-Title" value="ImpactVL"/>
+                <attribute name="Implementation-Version" value="2.0"/>
+                <attribute name="Main-Class" value="impactVL.Impact"/>
+                <attribute name="Sealed" value="true"/>
+            </manifest>
+	    <fileset dir="../resources/impactVL">
+		    <include name="**/sort*"/>
+            </fileset>
+	    <fileset dir="impactVL">
+		    <include name="**/*.class"/>
+		    <include name="**/*.java"/>
+            </fileset>
+	    <fileset dir="../resources/impactVL">
+		    <include name="**/*.gif"/>
+            </fileset>
+	 </jar>
+	 <echo>Now run `ant impact`, `ant Cell` and `ant Cell4x4`</echo>
+    </target>
+    <target name="impact" depends="default">
+        <java classname="impactVL.Impact" classpath="build;impact.jar;../resources/" fork="${fork}">
+	</java>
+    </target>
+    <target name="impact.jar" depends="default">
+        <java classname="impactVL.Impact" classpath="build;impact.jar;../resources/" fork="${fork}">
+	</java>
+    </target>
+    <target name="Cell" depends="default">
+	<java classname="impactVL.Cell" classpath="build;impact.jar;../resources/" fork="${fork}">
+	</java>
+    </target>
+    <target name="Cell4x4" depends="default">
+	    <java classname="impactVL.Cell" classpath="build;impact.jar;../resources/" fork="${fork}">
+		<arg value="4x4"/>
+	</java>
+    </target>
+</project>

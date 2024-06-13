@@ -1,4 +1,4 @@
-package net.coderextreme.impactVL;
+package impactVL;
 import java.awt.*;
 
 abstract public class Personality {

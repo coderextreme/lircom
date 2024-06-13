@@ -1,10 +1,20 @@
-package net.coderextreme.impactVL;
+package impactVL;
 import javax.swing.*;
 import java.awt.image.*;
 import java.awt.event.*;
 import java.awt.*;
 import java.io.*;
 import java.util.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.InputSource;                                                                                         import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.ParserConfigurationException;
+import java.lang.reflect.InvocationTargetException;
 
 public class Cell extends Component implements MouseMotionListener, MouseListener, KeyListener, Runnable {
 	public static int M = Common.M;
@@ -23,16 +33,17 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 	public static JButton ok = new JButton("OK");
 	public static JButton cancel = new JButton("Cancel");
 	Personality p = null;
-	public static String pClass = "net.coderextreme.impactVL.EmptyP";
+	public static String pClass = "impactVL.EmptyP";
 	int x = 0;
 	int y = 0;
 
 	public Cell(int x, int y) {
-		super();
+		this();
 		this.x = x;
 		this.y = y;
 	}
 	public Cell() {
+		super();
 		super.setBackground(Color.white);
 		addKeyListener(this);
 		addMouseMotionListener(this);
@@ -121,20 +132,25 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 		}
 	}
 	public void mouseClicked(MouseEvent e) {
+		System.err.println("Click "+x+","+y);
 		try {
-			if (pClass.equals("net.coderextreme.impactVL.Module")) {
+			if (pClass.equals("impactVL.Module")) {
 				setModulePersonalities(x, y);
+				System.err.println("Setting Module "+x+","+y);
 			} else if (x+Common.startx > 0 && y+Common.starty > 0 && x+Common.startx < Common.PMAXX-1 && y+Common.starty < Common.PMAXY-1) {
 				Personality p = (Personality)(Class.forName(pClass).getDeclaredConstructor().newInstance());
 				Common.personalities[x+Common.startx][y+Common.starty] = p;
+				System.err.println("Setting "+(x+Common.startx)+","+(y+Common.starty)+" to "+pClass);
 				setPersonality(p);
 				repaint();
 			} else {
 				if (p instanceof BufferP) {
 					int b = e.getButton();
 					if (b == e.BUTTON1) {
+						System.err.println(1);
 						((BufferP)p).addToInBuffer('1');
 					} else if (b == e.BUTTON3) {
+						System.err.println(0);
 						((BufferP)p).addToInBuffer('0');
 					}
 					repaint();
@@ -452,26 +468,6 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 			}
 		});
 		jm.add(jmi);
-		jmi = new JMenuItem("Save Node As...");
-		jmi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				JFileChooser jfc = new JFileChooser(System.getProperty("user.dir"));
-				int rv = jfc.showSaveDialog(cellsView);
-				if (rv != JFileChooser.APPROVE_OPTION) {
-					return;
-				}
-				try {
-					FileOutputStream fos = new FileOutputStream(jfc.getSelectedFile());
-					PrintStream oos = new PrintStream(fos);
-					saveModule(oos);
-					oos.close();
-					fos.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-		jm.add(jmi);
 		jmi = new JMenuItem("Save Inputs As...");
 		jmi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
@@ -485,6 +481,26 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 					FileOutputStream fos = new FileOutputStream(jfc.getSelectedFile());
 					PrintStream oos = new PrintStream(fos);
 					saveInputs(oos);
+					oos.close();
+					fos.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		jm.add(jmi);
+		jmi = new JMenuItem("Save Node As...");
+		jmi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				JFileChooser jfc = new JFileChooser(System.getProperty("user.dir"));
+				int rv = jfc.showSaveDialog(cellsView);
+				if (rv != JFileChooser.APPROVE_OPTION) {
+					return;
+				}
+				try {
+					FileOutputStream fos = new FileOutputStream(jfc.getSelectedFile());
+					PrintStream oos = new PrintStream(fos);
+					saveModule(oos);
 					oos.close();
 					fos.close();
 				} catch (Exception e) {
@@ -514,6 +530,120 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 			}
 		});
 		jm.add(jmi);
+
+		DefaultHandler mh = new DefaultHandler() {
+		    String currentPersonality = "impactVL.EmptyP";
+		    int x = 0;
+		    int maxY = 0;
+		    int maxX = 0;
+		    ArrayList<ArrayList<String>> rows = new ArrayList<ArrayList<String>>();
+		    ArrayList<String> currentRow = new ArrayList<String>();
+		    @Override
+		    public void endElement(String uri, String localName, String qName) throws SAXException {
+			switch (qName.toLowerCase()) {
+			    case "table" -> {
+				System.err.println("Parsing "+qName+" "+maxX+" "+maxY);
+				Common.startx = 0;
+				Common.starty = 0;
+				Common.PMAXX = maxX;
+				Common.PMAXY = maxY;
+				Common.MMAXX = maxX - 2;
+				Common.MMAXY = maxY - 2;
+
+				cellsView.setLayout(new GridLayout(Common.PMAXY,Common.PMAXX));
+				Common.cells = new Cell[Common.PMAXX][Common.PMAXY];
+				Common.personalities = new Personality[Common.PMAXX][Common.PMAXY];
+				for (int py = 0; py < Common.PMAXY; py++) {
+					for (int px = 0; px < Common.PMAXX; px++) {
+						try {
+							String curper = rows.get(py).get(px);
+							System.err.println("instantiating "+px+" "+py+" "+curper);
+							Class curperClass = Class.forName("impactVL."+curper+"P");
+
+							Personality p = (Personality)(curperClass.getDeclaredConstructor().newInstance());
+							Common.personalities[px+Common.startx][py+Common.starty] = p;
+						} catch (InvocationTargetException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InstantiationException e) {
+							e.printStackTrace(System.err);
+						}
+					}
+				}
+				cellsView.removeAll();
+				addCells();
+				cellsView.invalidate();
+				cellsView.validate();
+				cellsView.repaint();
+				ask.setVisible(false);
+				currentPersonality = "impactVL.EmptyP";
+				x = 0;
+				maxY = 0;
+				maxX = 0;
+				rows = new ArrayList<ArrayList<String>>();
+				currentRow = new ArrayList<String>();
+			    }
+			    case "tr" -> {
+				// System.err.println("Parsing "+qName);
+				rows.add(currentRow);
+		    		currentRow = new ArrayList<String>();
+				x = 0;
+				maxY++;
+			    }
+			    case "td" -> {
+				// System.err.println("Parsing "+qName+" "+currentPersonality);
+				currentRow.add(currentPersonality);
+				x++;
+				if (x > maxX) {
+					maxX = x;
+			    	}
+			    }
+			    case "th" -> {
+			    }
+			}
+		    }
+
+		    @Override
+		    public void characters(char[] ch, int start, int length) throws SAXException {
+		    	if (length > 0) {
+				currentPersonality = new String(ch, start, length);
+				System.err.println("GOT "+currentPersonality);
+			}
+		    }
+		};
+
+		jmi = new JMenuItem("Import Module from Clipboard");
+		jmi.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent evt) {
+				java.awt.EventQueue.invokeLater(() -> {
+				    try {
+					Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+					String html = (String)clipboard.getData(DataFlavor.allHtmlFlavor);
+					html = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"+html.substring(html.indexOf("<"));
+					InputSource is = new InputSource(new StringReader(html));
+					SAXParserFactory parserFactory = SAXParserFactory.newInstance();
+					SAXParser parser = parserFactory.newSAXParser();
+					XMLReader reader = parser.getXMLReader();
+					reader.setContentHandler(mh);
+					reader.parse(is);
+				    } catch (SAXException | IOException | ParserConfigurationException | UnsupportedFlavorException e) {
+					e.printStackTrace(System.err);
+				    }
+				});
+			}
+		});
+		jm.add(jmi);
+		jmi = new JMenuItem("Export Module to Clipboard");
+		jmi.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+				StringBuffer sb = new StringBuffer();
+				Cell.saveMachine(sb);
+				clipboard.setContents(new HtmlSelection(sb.toString()), null);
+
+			}
+		});
+		jm.add(jmi);
+
 		jmi = new JMenuItem("Exit");
 		jmi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
@@ -537,7 +667,7 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 		bg.add(jmi);
 		jmi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				pClass = "net.coderextreme.impactVL.Module";
+				pClass = "impactVL.Module";
 			}
 		});
 		jm.add(jmi);
@@ -545,7 +675,7 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 		bg.add(jmi);
 		jmi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				pClass = "net.coderextreme.impactVL.PassP";
+				pClass = "impactVL.PassP";
 			}
 		});
 		jm.add(jmi);
@@ -553,7 +683,7 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 		bg.add(jmi);
 		jmi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				pClass = "net.coderextreme.impactVL.LeftTurnP";
+				pClass = "impactVL.LeftTurnP";
 			}
 		});
 		jm.add(jmi);
@@ -561,7 +691,7 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 		bg.add(jmi);
 		jmi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				pClass = "net.coderextreme.impactVL.RightTurnP";
+				pClass = "impactVL.RightTurnP";
 			}
 		});
 		jm.add(jmi);
@@ -569,7 +699,7 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 		bg.add(jmi);
 		jmi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				pClass = "net.coderextreme.impactVL.LeftShiftP";
+				pClass = "impactVL.LeftShiftP";
 			}
 		});
 		jm.add(jmi);
@@ -577,7 +707,7 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 		bg.add(jmi);
 		jmi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				pClass = "net.coderextreme.impactVL.RightShiftP";
+				pClass = "impactVL.RightShiftP";
 			}
 		});
 		jm.add(jmi);
@@ -585,7 +715,7 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 		bg.add(jmi);
 		jmi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				pClass = "net.coderextreme.impactVL.CopyP";
+				pClass = "impactVL.CopyP";
 			}
 		});
 		jm.add(jmi);
@@ -593,7 +723,7 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 		bg.add(jmi);
 		jmi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				pClass = "net.coderextreme.impactVL.AndP";
+				pClass = "impactVL.AndP";
 			}
 		});
 		jm.add(jmi);
@@ -601,7 +731,7 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 		bg.add(jmi);
 		jmi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				pClass = "net.coderextreme.impactVL.MultAdderP";
+				pClass = "impactVL.MultAdderP";
 			}
 		});
 		jm.add(jmi);
@@ -609,7 +739,7 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 		bg.add(jmi);
 		jmi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				pClass = "net.coderextreme.impactVL.BitAdderP";
+				pClass = "impactVL.BitAdderP";
 			}
 		});
 		jm.add(jmi);
@@ -617,7 +747,7 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 		bg.add(jmi);
 		jmi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				pClass = "net.coderextreme.impactVL.EmptyP";
+				pClass = "impactVL.EmptyP";
 			}
 		});
 		jm.add(jmi);
@@ -625,7 +755,7 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 		bg.add(jmi);
 		jmi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				pClass = "net.coderextreme.impactVL.DontKnowP";
+				pClass = "impactVL.DontKnowP";
 			}
 		});
 		jm.add(jmi);
@@ -633,7 +763,7 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 		bg.add(jmi);
 		jmi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				pClass = "net.coderextreme.impactVL.BufferP";
+				pClass = "impactVL.BufferP";
 			}
 		});
 		jm.add(jmi);
@@ -641,7 +771,7 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 		bg.add(jmi);
 		jmi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				pClass = "net.coderextreme.impactVL.SortTopP";
+				pClass = "impactVL.SortTopP";
 			}
 		});
 		jm.add(jmi);
@@ -650,7 +780,7 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 		bg.add(jmi);
 		jmi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				pClass = "net.coderextreme.impactVL.SortBottomP";
+				pClass = "impactVL.SortBottomP";
 			}
 		});
 		jm.add(jmi);
@@ -658,7 +788,7 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 		bg.add(jmi);
 		jmi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				pClass = "net.coderextreme.impactVL.DivisionP";
+				pClass = "impactVL.DivisionP";
 			}
 		});
 		jm.add(jmi);
@@ -693,7 +823,7 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 	}
 	public static void openModule(BufferedReader br) {
 		try {
-			pClass = "net.coderextreme.impactVL.Module";
+			pClass = "impactVL.Module";
 			Common.MMAXX = Integer.parseInt(br.readLine());
 			Common.MMAXY = Integer.parseInt(br.readLine());
 			Common.modulePersonalities = new Personality[Common.MMAXX][Common.MMAXY];
@@ -721,7 +851,7 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 			cellsView.removeAll();
 			Common.PMAXX = Integer.parseInt(br.readLine());
 			Common.PMAXY = Integer.parseInt(br.readLine());
-			cellsView.setLayout(new GridLayout(Common.PMAXX, Common.PMAXY));
+			cellsView.setLayout(new GridLayout(Common.PMAXY, Common.PMAXX));
 			Common.cells = new Cell[Common.PMAXX][Common.PMAXY];
 			Common.personalities = new Personality[Common.PMAXX][Common.PMAXY];
 			int n = 0;
@@ -734,10 +864,12 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 					int x = Integer.parseInt(line);
 					int y = Integer.parseInt(br.readLine());
 					BufferP bp = new BufferP();
-					Common.personalities[x][y] = bp;
-					if (x < Common.PMAXX && y < Common.PMAXY) {
+					if (x >= 0 && x < Common.PMAXX && y >= 0 && y < Common.PMAXY) {
+						Common.personalities[x][y] = bp;
 						Common.cells[x][y] = new Cell(x, y);
 						Common.cells[x][y].setPersonality(bp);
+					} else {
+						System.err.println("Out of bounds "+x+","+y);
 					}
 					bp.setIn(br.readLine());
 					bp.setOut(br.readLine());
@@ -745,8 +877,8 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 				} while (true);
 			} catch (Exception e)  {
 				e.printStackTrace();
-				System.err.println("Read "+n+" buffers");
 			}
+			System.err.println("Read "+n+" buffers");
 			addCells();
 			cellsView.invalidate();
 			cellsView.validate();
@@ -778,7 +910,7 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 			Common.PMAXX = newx + 2;
 			Common.PMAXY = newy + 2;
 			Common.MMAXX = newx;
-			Common.MMAXY = newx;
+			Common.MMAXY = newy;
 
 			cellsView.setLayout(new GridLayout(Common.PMAXY,Common.PMAXX));
 			Common.cells = new Cell[Common.PMAXX][Common.PMAXY];
@@ -843,6 +975,30 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 			System.err.println("Failed to Save");
 		}
 	}
+	public static void saveModule(StringBuffer sb) {
+		try {
+			sb.append("<html>");
+			sb.append("<body>");
+			sb.append("<table style='width:"+(Common.PMAXX-2)+"; ");
+			sb.append("height:"+(Common.PMAXY-2)+";'>");
+			for (int y = 1; y < Common.PMAXY-1; y++) {
+				sb.append("<tr>");
+				for (int x = 1; x < Common.PMAXX-1; x++) {
+					String persName = Common.personalities[x][y].getClass().getName();
+					persName = persName.substring(persName.indexOf(".")+1);
+					persName = persName.substring(0, persName.length()-1);
+					sb.append("<td>"+persName+"</td>");
+				}
+				sb.append("</tr>");
+			}
+			sb.append("</table>");
+			sb.append("</body>");
+			sb.append("</html>");
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("Failed to Save");
+		}
+	}
 	public static void saveInputs(PrintStream oos) {
 		try {
 			oos.println(Common.PMAXX);
@@ -868,6 +1024,26 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 		try {
 			saveInputs(oos);
 			saveModule(oos);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("Failed to Save");
+		}
+	}
+	public static void saveMachine(StringBuffer sb) {
+		try {
+			sb.append("<table style='width:"+(Common.PMAXX)+"; ");
+			sb.append("height:"+(Common.PMAXY)+";'>");
+			for (int y = 0; y < Common.PMAXY; y++) {
+				sb.append("<tr>");
+				for (int x = 0; x < Common.PMAXX; x++) {
+					String persName = Common.personalities[x][y].getClass().getName();
+					persName = persName.substring(persName.indexOf(".")+1);
+					persName = persName.substring(0, persName.length()-1);
+					sb.append("<td>"+persName+"</td>");
+				}
+				sb.append("</tr>");
+			}
+			sb.append("</table>");
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.err.println("Failed to Save");

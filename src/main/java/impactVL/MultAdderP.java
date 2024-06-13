@@ -1,4 +1,4 @@
-package net.coderextreme.impactVL;
+package impactVL;
 import javax.swing.*;
 import java.awt.*;
 

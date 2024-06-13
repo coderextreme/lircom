@@ -1,4 +1,4 @@
-package net.coderextreme.impactVL;
+package impactVL;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.border.*;
@@ -222,7 +222,7 @@ class VisualModule extends JLabel implements Rectangular {
 		// creates a personality from current pClass
 		Cell c = new Cell(e.getX(), e.getY());
 		try {
-			Personality p = (Personality)(Class.forName("net.coderextreme.impactVL."+Impact.pClass).getDeclaredConstructor().newInstance());
+			Personality p = (Personality)(Class.forName("impactVL."+Impact.pClass).getDeclaredConstructor().newInstance());
 			if (p != null) {
 				c.setPersonality(p);
 			} else {
@@ -331,7 +331,7 @@ class CreateModule extends Command {
 	public void mouseClicked(MouseEvent e) {
 		if (creating && e.getComponent() instanceof VisualMachine) {
 			VisualMachine vm = (VisualMachine)e.getComponent();
-			// String modulename = "net.coderextreme.impactVL."+Select.ask(vm, "Enter node class or image:", Impact.pClass, bg);
+			// String modulename = "impactVL."+Select.ask(vm, "Enter node class or image:", Impact.pClass, bg);
 			// String modulename = javax.swing.JOptionPane.showInputDialog(vm, "Enter node name:", Impact.pClass);
 			String modulename = Impact.pClass;
 

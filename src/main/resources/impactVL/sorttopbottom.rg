@@ -1,6 +1,6 @@
 1
 2
-net.coderextreme.impact.SortTopP
+impactVL.SortTopP
 false
 false
 false
@@ -9,7 +9,7 @@ false
 false
 false
 false
-net.coderextreme.impact.SortBottomP
+impactVL.SortBottomP
 false
 false
 false

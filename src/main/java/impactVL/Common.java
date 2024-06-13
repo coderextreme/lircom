@@ -1,4 +1,4 @@
-package net.coderextreme.impactVL;
+package impactVL;
 public class Common {
 
 	public static int PMAXX = 11;
