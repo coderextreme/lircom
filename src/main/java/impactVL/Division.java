@@ -44,7 +44,7 @@ public class Division {
 				System.out.println("ChainedPersonalities in Binary "+result4);
 				System.out.println("Time="+(System.currentTimeMillis()-time));
 			} else {
-				System.out.println("numerator should 1");
+				System.out.println("numerator should be 1");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

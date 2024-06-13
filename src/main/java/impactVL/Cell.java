@@ -11,6 +11,7 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.InputSource;                                                                                         import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
+import org.xml.sax.Attributes;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.ParserConfigurationException;
@@ -536,8 +537,13 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 		    int x = 0;
 		    int maxY = 0;
 		    int maxX = 0;
-		    ArrayList<ArrayList<String>> rows = new ArrayList<ArrayList<String>>();
-		    ArrayList<String> currentRow = new ArrayList<String>();
+		    ArrayList<ArrayList<Personality>> rows = new ArrayList<ArrayList<Personality>>();
+		    ArrayList<Personality> currentRow = new ArrayList<Personality>();
+		    @Override
+		    public void startElement(String uri, String localName, String qName, Attributes attrs) throws SAXException {
+			switch (qName.toLowerCase()) {
+			}
+		    }
 		    @Override
 		    public void endElement(String uri, String localName, String qName) throws SAXException {
 			switch (qName.toLowerCase()) {
@@ -555,16 +561,13 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 				Common.personalities = new Personality[Common.PMAXX][Common.PMAXY];
 				for (int py = 0; py < Common.PMAXY; py++) {
 					for (int px = 0; px < Common.PMAXX; px++) {
+						Personality p = null;
 						try {
-							String curper = rows.get(py).get(px);
-							System.err.println("instantiating "+px+" "+py+" "+curper);
-							Class curperClass = Class.forName("impactVL."+curper+"P");
-
-							Personality p = (Personality)(curperClass.getDeclaredConstructor().newInstance());
-							Common.personalities[px+Common.startx][py+Common.starty] = p;
-						} catch (InvocationTargetException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InstantiationException e) {
-							e.printStackTrace(System.err);
+							p = rows.get(py).get(px);
+						} catch	(IndexOutOfBoundsException e) {
+							System.err.println("Oops, there doesn't seem to be a personality at "+px+","+px);
 						}
+						Common.personalities[px+Common.startx][py+Common.starty] = p;
 					}
 				}
 				cellsView.removeAll();
@@ -577,19 +580,42 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 				x = 0;
 				maxY = 0;
 				maxX = 0;
-				rows = new ArrayList<ArrayList<String>>();
-				currentRow = new ArrayList<String>();
+				rows = new ArrayList<ArrayList<Personality>>();
+				currentRow = new ArrayList<Personality>();
 			    }
 			    case "tr" -> {
 				// System.err.println("Parsing "+qName);
 				rows.add(currentRow);
-		    		currentRow = new ArrayList<String>();
+		    		currentRow = new ArrayList<Personality>();
 				x = 0;
 				maxY++;
 			    }
 			    case "td" -> {
 				// System.err.println("Parsing "+qName+" "+currentPersonality);
-				currentRow.add(currentPersonality);
+				try {
+					Personality p = null;
+					try {
+						if (currentPersonality != null && currentPersonality.startsWith("'")) {
+							currentPersonality = currentPersonality.substring(1);
+						}
+						Integer.parseInt(currentPersonality);
+						System.err.println("reading a buffer "+x+" "+maxY+" "+currentPersonality);
+						p = new BufferP();
+						if (p instanceof BufferP) {
+							((BufferP)p).setIn(currentPersonality);
+						}
+					} catch (java.lang.NumberFormatException e) {
+						if (currentPersonality == null || currentPersonality.trim().equals("")) {
+							currentPersonality = "Empty";
+						}
+						System.err.println("instantiating "+x+" "+maxY+" "+currentPersonality);
+						Class curperClass = Class.forName("impactVL."+currentPersonality+"P");
+						p = (Personality)(curperClass.getDeclaredConstructor().newInstance());
+					}
+					currentRow.add(p);
+				} catch (InvocationTargetException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InstantiationException e) {
+					e.printStackTrace(System.err);
+				}
 				x++;
 				if (x > maxX) {
 					maxX = x;
@@ -603,7 +629,7 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 		    @Override
 		    public void characters(char[] ch, int start, int length) throws SAXException {
 		    	if (length > 0) {
-				currentPersonality = new String(ch, start, length);
+				currentPersonality = new String(ch, start, length).trim();
 				System.err.println("GOT "+currentPersonality);
 			}
 		    }
@@ -618,6 +644,8 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 					Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 					String html = (String)clipboard.getData(DataFlavor.allHtmlFlavor);
 					html = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"+html.substring(html.indexOf("<"));
+					html = html.replaceAll("<br>", "");
+					System.err.println(html);
 					InputSource is = new InputSource(new StringReader(html));
 					SAXParserFactory parserFactory = SAXParserFactory.newInstance();
 					SAXParser parser = parserFactory.newSAXParser();
@@ -975,23 +1003,11 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 			System.err.println("Failed to Save");
 		}
 	}
-	public static void saveModule(StringBuffer sb) {
+	public static void saveMachine(StringBuffer sb) {
 		try {
 			sb.append("<html>");
 			sb.append("<body>");
-			sb.append("<table style='width:"+(Common.PMAXX-2)+"; ");
-			sb.append("height:"+(Common.PMAXY-2)+";'>");
-			for (int y = 1; y < Common.PMAXY-1; y++) {
-				sb.append("<tr>");
-				for (int x = 1; x < Common.PMAXX-1; x++) {
-					String persName = Common.personalities[x][y].getClass().getName();
-					persName = persName.substring(persName.indexOf(".")+1);
-					persName = persName.substring(0, persName.length()-1);
-					sb.append("<td>"+persName+"</td>");
-				}
-				sb.append("</tr>");
-			}
-			sb.append("</table>");
+			saveModule(sb);
 			sb.append("</body>");
 			sb.append("</html>");
 		} catch (Exception e) {
@@ -1029,16 +1045,25 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 			System.err.println("Failed to Save");
 		}
 	}
-	public static void saveMachine(StringBuffer sb) {
+	public static void saveModule(StringBuffer sb) {
 		try {
-			sb.append("<table style='width:"+(Common.PMAXX)+"; ");
-			sb.append("height:"+(Common.PMAXY)+";'>");
+			sb.append("<table>");
 			for (int y = 0; y < Common.PMAXY; y++) {
 				sb.append("<tr>");
 				for (int x = 0; x < Common.PMAXX; x++) {
-					String persName = Common.personalities[x][y].getClass().getName();
+					Personality p = Common.personalities[x][y];
+					String persName = "P";
+					if (p != null) {
+						persName = p.getClass().getName();
+					}
 					persName = persName.substring(persName.indexOf(".")+1);
 					persName = persName.substring(0, persName.length()-1);
+					if (p instanceof BufferP) {
+						String in = "'"+((BufferP)p).getIn();
+						if (!in.equals("'")) {
+							persName = "'"+((BufferP)p).getIn();  // grab the input buffer
+						}
+					}
 					sb.append("<td>"+persName+"</td>");
 				}
 				sb.append("</tr>");
