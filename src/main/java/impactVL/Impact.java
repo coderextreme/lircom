@@ -221,6 +221,21 @@ class VisualModule extends JLabel implements Rectangular {
 		this(mod.name);
 		module = mod;
 	}
+	public void init(VisualMachine vm, Selecter s, Placer p, int x, int y, Personality curper) {
+		setParent(vm);
+		addMouseListener(s);
+		addMouseListener(p);
+		addMouseMotionListener(s);
+		setBorder(new BevelBorder(BevelBorder.RAISED));
+		setSize(75,75);
+		setLocation(x, y);
+		cell = setModulePersonality(x, y, curper);
+		vm.add(this);
+
+		vm.invalidate();
+		vm.validate();
+		vm.repaint();
+	}
 	public void init(VisualMachine vm, MouseEvent e, Selecter s, Placer p) {
 		init(vm, s, p, e.getX(), e.getY());
 	}
@@ -231,7 +246,7 @@ class VisualModule extends JLabel implements Rectangular {
 		addMouseMotionListener(s);
 		setBorder(new BevelBorder(BevelBorder.RAISED));
 		setSize(75,75);
-		setLocation(x, y*YSCALE);
+		setLocation(x, y);
 		cell = setModulePersonality(x, y);
 		vm.add(this);
 
@@ -239,22 +254,23 @@ class VisualModule extends JLabel implements Rectangular {
 		vm.validate();
 		vm.repaint();
 	}
-	public Cell setModulePersonality(int x, int y) {
-		// creates a personality from current pClass
+	public Cell setModulePersonality(int x, int y, Personality curper) {
 		Cell c = new Cell(x, y);
+		c.setPersonality(curper);
+		c.repaint();
+		return c;
+	}
+	public Cell setModulePersonality(int x, int y) {
 		try {
+			System.err.println("pers class "+Impact.pClass);
 			Personality p = (Personality)(Class.forName("impactVL."+Impact.pClass).getDeclaredConstructor().newInstance());
-			if (p != null) {
-				c.setPersonality(p);
-			} else {
-				System.err.println("Class not found, continuing with image, if found");
-			}
+			return setModulePersonality(x, y, p);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			System.err.println("Can't set cell personality in CreateModule.setModulePersonality, skipping");
+			Cell c = new Cell(x, y);
+			return c;
 		}
-		c.repaint();
-		return c;
 	}
 	public void paint(Graphics g) {
 		super.paint(g);
@@ -357,6 +373,7 @@ class CreateModule extends Command {
 			// String modulename = "impactVL."+Select.ask(vm, "Enter node class or image:", Impact.pClass, bg);
 			// String modulename = javax.swing.JOptionPane.showInputDialog(vm, "Enter node name:", Impact.pClass);
 			String modulename = Impact.pClass;
+			System.err.println("module name is "+modulename);
 
 			if (modulename == null) {
 				return;
@@ -373,6 +390,12 @@ class CreateModule extends Command {
 	public VisualModule addModule(VisualMachine vm, String modulename, MouseEvent e) {
 		VisualModule module = new VisualModule(modulename);
 		module.init(vm, e, s, p);
+		return module;
+	}
+	public VisualModule addModule(VisualMachine vm, Personality curper, int x, int y) {
+		String name = curper.getClass().getName();
+		VisualModule module = new VisualModule(name);
+		module.init(vm, s, p, x, y, curper);
 		return module;
 	}
 	public VisualModule addModule(VisualMachine vm, String modulename, int x, int y) {
@@ -664,11 +687,6 @@ class VisualMachine extends JPanel implements MouseMotionListener {
 
 			Iterator<JsonNode> i = tree.elements();
 			while (i.hasNext()) {
-				/*
-				VisualLink l = (VisualLink)i.next();
-				VisualEndpoint frompt = l.from;
-				VisualEndpoint topt = l.to;
-				*/
 				JsonNode node = i.next();
 				if (node.isArray()) {
 					mainModule.setText(node.get(0).asText());
@@ -700,6 +718,7 @@ class VisualMachine extends JPanel implements MouseMotionListener {
 					}
 				}
 			}
+			
 		} catch (IOException e) {
 			NOTEOF = false;
 			e.printStackTrace(System.err);
@@ -1192,8 +1211,7 @@ public class Impact extends JFrame implements WindowListener {
 							if (p == null) {
 								// modulearray[x][y] = cm.addModule(vm, "EmptyP", me);
 							} else {
-								String name = p.getClass().getName();
-								modulearray[x][y] = cm.addModule(vm, name, me);
+								modulearray[x][y] = cm.addModule(vm, p, me.getX(), me.getY());
 							}
 						} else {
 							// modulearray[x][y] = cm.addModule(vm, "EmptyP", me);

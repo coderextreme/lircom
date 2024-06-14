@@ -34,7 +34,7 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 	public static JTextField jtfy = new JTextField(" 1");
 	public static JButton ok = new JButton("OK");
 	public static JButton cancel = new JButton("Cancel");
-	Personality p = null;
+	Personality cellsPersonality = null;
 	public static String pClass = "impactVL.EmptyP";
 	int x = 0;
 	int y = 0;
@@ -52,13 +52,15 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 		addMouseListener(this);
 	}
 	public void setPersonality(Personality p) {
-		this.p = p;
+		this.cellsPersonality = p;
+		System.err.println("set personality "+this.cellsPersonality);
 		if (p != null) {
 			p.setObserver(this);
 		}
 	}
 	public Personality getPersonality() {
-		return p;
+		System.err.println("get personality "+this.cellsPersonality);
+		return this.cellsPersonality;
 	}
 	public void setXY(int x, int y) {
 	}
@@ -85,8 +87,9 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 			movePersonalities();
 			break;
 		default:
-			if (p instanceof BufferP) {
-				((BufferP)p).keyPressed(e);
+			if (this.cellsPersonality instanceof BufferP) {
+				System.err.println("key pressed personality "+this.cellsPersonality);
+				((BufferP)this.cellsPersonality).keyPressed(e);
 			}
 			break;
 		}
@@ -153,6 +156,7 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 				setPersonality(p);
 				repaint();
 			} else {
+				/*
 				if (p instanceof BufferP) {
 					int b = e.getButton();
 					if (b == e.BUTTON1) {
@@ -164,6 +168,7 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 					}
 					repaint();
 				}
+				*/
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -190,18 +195,21 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 		super.paint(g);
 		// g.fillRect(0,0,5*M,5*M);
 		g.setColor(Color.black);
+		Personality p = cellsPersonality;
+		/*
 		if (p != null) {
 			p.paint(g);
 		} else {
 			System.err.println("Personality is null!");
 		}
+		*/
 		g.drawLine(0,0,0,5*M);
 		g.drawLine(0,5*M,5*M,5*M);
 		g.drawLine(5*M,5*M,5*M,0);
 		g.drawLine(5*M,0,0,0);
 
 		// Personality p =	getPersonality();
-		System.err.println("personality "+p);
+		System.err.println("personality "+this.cellsPersonality);
 		if (p == null || p instanceof BufferP || p instanceof EmptyP) {
 		} else {
 			p.paint(g);
@@ -892,6 +900,7 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 				}
 				int mx = Integer.parseInt(readLine(br))-1;
 				int my = Integer.parseInt(readLine(br))-1;
+				System.err.println("pname is "+pname);
 				if (mx >= 0 && mx < Common.MMAXX && my >= 0 && my < Common.MMAXY) {
 					Personality p = Common.modulePersonalities[mx][my] = (Personality)Class.forName(pname).getDeclaredConstructor().newInstance();
 					Common.personalities[mx+1][my+1] = p;
