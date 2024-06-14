@@ -140,6 +140,8 @@
 9
 8
 impactVL.DontKnowP
+1
+1
 false
 false
 false
@@ -149,6 +151,8 @@ false
 false
 false
 impactVL.RightTurnP
+2
+1
 false
 false
 false
@@ -158,6 +162,8 @@ false
 false
 false
 impactVL.DontKnowP
+3
+1
 false
 false
 false
@@ -167,6 +173,8 @@ false
 false
 false
 impactVL.RightTurnP
+4
+1
 false
 false
 false
@@ -176,6 +184,8 @@ false
 false
 false
 impactVL.DontKnowP
+5
+1
 false
 false
 false
@@ -185,6 +195,8 @@ false
 false
 false
 impactVL.RightTurnP
+6
+1
 false
 false
 false
@@ -194,6 +206,8 @@ false
 false
 false
 impactVL.DontKnowP
+7
+1
 false
 false
 false
@@ -203,6 +217,8 @@ false
 false
 false
 impactVL.RightTurnP
+8
+1
 false
 false
 false
@@ -212,6 +228,8 @@ false
 false
 false
 impactVL.RightTurnP
+9
+1
 false
 false
 false
@@ -221,6 +239,8 @@ false
 false
 false
 impactVL.PassP
+1
+2
 false
 false
 false
@@ -230,6 +250,8 @@ false
 false
 false
 impactVL.AndP
+2
+2
 false
 false
 false
@@ -239,6 +261,8 @@ false
 false
 false
 impactVL.PassP
+3
+2
 false
 false
 false
@@ -248,6 +272,8 @@ false
 false
 false
 impactVL.AndP
+4
+2
 false
 false
 false
@@ -257,6 +283,8 @@ false
 false
 false
 impactVL.PassP
+5
+2
 false
 false
 false
@@ -266,6 +294,8 @@ false
 false
 false
 impactVL.AndP
+6
+2
 false
 false
 false
@@ -275,6 +305,8 @@ false
 false
 false
 impactVL.PassP
+7
+2
 false
 false
 false
@@ -284,6 +316,8 @@ false
 false
 false
 impactVL.AndP
+8
+2
 false
 false
 false
@@ -293,6 +327,8 @@ false
 false
 false
 impactVL.PassP
+9
+2
 false
 false
 false
@@ -302,6 +338,8 @@ false
 false
 false
 impactVL.LeftTurnP
+1
+3
 false
 false
 false
@@ -311,6 +349,8 @@ false
 false
 false
 impactVL.MultAdderP
+2
+3
 false
 false
 false
@@ -320,6 +360,8 @@ false
 false
 false
 impactVL.DontKnowP
+3
+3
 false
 false
 false
@@ -329,6 +371,8 @@ false
 false
 false
 impactVL.MultAdderP
+4
+3
 false
 false
 false
@@ -338,6 +382,8 @@ false
 false
 false
 impactVL.DontKnowP
+5
+3
 false
 false
 false
@@ -347,6 +393,8 @@ false
 false
 false
 impactVL.MultAdderP
+6
+3
 false
 false
 false
@@ -356,6 +404,8 @@ false
 false
 false
 impactVL.DontKnowP
+7
+3
 false
 false
 false
@@ -365,6 +415,8 @@ false
 false
 false
 impactVL.MultAdderP
+8
+3
 false
 false
 false
@@ -374,6 +426,8 @@ false
 false
 false
 impactVL.DontKnowP
+9
+3
 false
 false
 false
@@ -383,6 +437,8 @@ false
 false
 false
 impactVL.PassP
+1
+4
 false
 false
 false
@@ -392,6 +448,8 @@ false
 false
 false
 impactVL.AndP
+2
+4
 false
 false
 false
@@ -401,6 +459,8 @@ false
 false
 false
 impactVL.PassP
+3
+4
 false
 false
 false
@@ -410,6 +470,8 @@ false
 false
 false
 impactVL.AndP
+4
+4
 false
 false
 false
@@ -419,6 +481,8 @@ false
 false
 false
 impactVL.PassP
+5
+4
 false
 false
 false
@@ -428,6 +492,8 @@ false
 false
 false
 impactVL.AndP
+6
+4
 false
 false
 false
@@ -437,6 +503,8 @@ false
 false
 false
 impactVL.PassP
+7
+4
 false
 false
 false
@@ -446,6 +514,8 @@ false
 false
 false
 impactVL.AndP
+8
+4
 false
 false
 false
@@ -455,6 +525,8 @@ false
 false
 false
 impactVL.PassP
+9
+4
 false
 false
 false
@@ -464,6 +536,8 @@ false
 false
 false
 impactVL.LeftTurnP
+1
+5
 false
 false
 false
@@ -473,6 +547,8 @@ false
 false
 false
 impactVL.MultAdderP
+2
+5
 false
 false
 false
@@ -482,6 +558,8 @@ false
 false
 false
 impactVL.DontKnowP
+3
+5
 false
 false
 false
@@ -491,6 +569,8 @@ false
 false
 false
 impactVL.MultAdderP
+4
+5
 false
 false
 false
@@ -500,6 +580,8 @@ false
 false
 false
 impactVL.DontKnowP
+5
+5
 false
 false
 false
@@ -509,6 +591,8 @@ false
 false
 false
 impactVL.MultAdderP
+6
+5
 false
 false
 false
@@ -518,6 +602,8 @@ false
 false
 false
 impactVL.DontKnowP
+7
+5
 false
 false
 false
@@ -527,6 +613,8 @@ false
 false
 false
 impactVL.MultAdderP
+8
+5
 false
 false
 false
@@ -536,6 +624,8 @@ false
 false
 false
 impactVL.DontKnowP
+9
+5
 false
 false
 false
@@ -545,6 +635,8 @@ false
 false
 false
 impactVL.PassP
+1
+6
 false
 false
 false
@@ -554,6 +646,8 @@ false
 false
 false
 impactVL.AndP
+2
+6
 false
 false
 false
@@ -563,6 +657,8 @@ false
 false
 false
 impactVL.PassP
+3
+6
 false
 false
 false
@@ -572,6 +668,8 @@ false
 false
 false
 impactVL.AndP
+4
+6
 false
 false
 false
@@ -581,6 +679,8 @@ false
 false
 false
 impactVL.PassP
+5
+6
 false
 false
 false
@@ -590,6 +690,8 @@ false
 false
 false
 impactVL.AndP
+6
+6
 false
 false
 false
@@ -599,6 +701,8 @@ false
 false
 false
 impactVL.PassP
+7
+6
 false
 false
 false
@@ -608,6 +712,8 @@ false
 false
 false
 impactVL.AndP
+8
+6
 false
 false
 false
@@ -617,6 +723,8 @@ false
 false
 false
 impactVL.PassP
+9
+6
 false
 false
 false
@@ -626,6 +734,8 @@ false
 false
 false
 impactVL.LeftTurnP
+1
+7
 false
 false
 false
@@ -635,6 +745,8 @@ false
 false
 false
 impactVL.MultAdderP
+2
+7
 false
 false
 false
@@ -644,6 +756,8 @@ false
 false
 false
 impactVL.DontKnowP
+3
+7
 false
 false
 false
@@ -653,6 +767,8 @@ false
 false
 false
 impactVL.MultAdderP
+4
+7
 false
 false
 false
@@ -662,6 +778,8 @@ false
 false
 false
 impactVL.DontKnowP
+5
+7
 false
 false
 false
@@ -671,6 +789,8 @@ false
 false
 false
 impactVL.MultAdderP
+6
+7
 false
 false
 false
@@ -680,6 +800,8 @@ false
 false
 false
 impactVL.DontKnowP
+7
+7
 false
 false
 false
@@ -689,6 +811,8 @@ false
 false
 false
 impactVL.MultAdderP
+8
+7
 false
 false
 false
@@ -698,6 +822,8 @@ false
 false
 false
 impactVL.DontKnowP
+9
+7
 false
 false
 false
@@ -707,6 +833,8 @@ false
 false
 false
 impactVL.PassP
+1
+8
 false
 false
 false
@@ -716,6 +844,8 @@ false
 false
 false
 impactVL.AndP
+2
+8
 false
 false
 false
@@ -725,6 +855,8 @@ false
 false
 false
 impactVL.PassP
+3
+8
 false
 false
 false
@@ -734,6 +866,8 @@ false
 false
 false
 impactVL.AndP
+4
+8
 false
 false
 false
@@ -743,6 +877,8 @@ false
 false
 false
 impactVL.PassP
+5
+8
 false
 false
 false
@@ -752,6 +888,8 @@ false
 false
 false
 impactVL.AndP
+6
+8
 false
 false
 false
@@ -761,6 +899,8 @@ false
 false
 false
 impactVL.PassP
+7
+8
 false
 false
 false
@@ -770,6 +910,8 @@ false
 false
 false
 impactVL.AndP
+8
+8
 false
 false
 false
@@ -779,6 +921,8 @@ false
 false
 false
 impactVL.PassP
+9
+8
 false
 false
 false
@@ -787,3 +931,4 @@ false
 false
 false
 false
+-------------
