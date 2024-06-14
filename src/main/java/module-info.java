@@ -14,4 +14,5 @@ module lircom {
 	exports lircom;
 	exports solitaire;
 	exports impact;
+	exports impactVL;
 }

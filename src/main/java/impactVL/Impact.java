@@ -8,6 +8,15 @@ import java.awt.event.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.net.URL;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.core.JsonEncoding;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 class Module implements Cloneable {  // aka Node
 	Vector endPoints; // links around outside of module
 	Vector links; // links between submodules
@@ -15,7 +24,7 @@ class Module implements Cloneable {  // aka Node
 	String name; // name of machine or module (filename?)
 	int width; // width in personalities
 	int height; // height in personalities
-	int id;
+	long id;
 	static int idsequence = 0;
 	public Module(String name) {
 		this.name = name;
@@ -182,21 +191,30 @@ class VisualModule extends JLabel implements Rectangular {
 	HashSet leftLines = new HashSet();
 	HashSet topLines = new HashSet();
 	HashSet bottomLines = new HashSet();
-	public VisualModule(String clazzName) {
-		super("");
+	int YSCALE = 2;
+	public void loadIcon(String text) {
+		setText(text);
 		// We don't need this as Cell draw it
+		// System.err.println("text "+text);
+		// Do not specify a URL. TODO
+		URL icon = this.getClass().getClassLoader().getResource("impactVL/"+text+".gif");
+		if (icon != null) {
+			System.err.println("Setting "+text+" icon url "+icon.toString());
+			setIcon(new ImageIcon(icon, text));
+			ImageIcon clicon = (ImageIcon)getIcon();
+			clicon.setImage(clicon.getImage().getScaledInstance(75, 75,Image.SCALE_DEFAULT));
+		}
+		invalidate();
+		validate();
+		repaint();
+	}
+	public VisualModule(String clazzName) {
+		super(clazzName);
+		// System.err.println("cell "+clazzName);
 		String text = clazzName != null ? (clazzName.lastIndexOf(".") > 0 ? clazzName.substring(clazzName.lastIndexOf(".")+1) : clazzName ) : "Node";
-		module = new Module(text);
 		if (text != null) {
-			System.err.println("cell "+clazzName);
-			// Do not specify a URL. TODO
-			URL icon = this.getClass().getClassLoader().getResource("impactVL/"+text+".gif");
-			if (icon != null) {
-				System.err.println("Setting "+text+" icon url "+icon.toString());
-				setIcon(new ImageIcon(icon, text));
-				ImageIcon clicon = (ImageIcon)getIcon();
-				clicon.setImage(clicon.getImage().getScaledInstance(75, 75,Image.SCALE_DEFAULT));
-			}
+			module = new Module(text);
+			loadIcon(text);
 		}
 	}
 	public VisualModule(Module mod) {
@@ -204,23 +222,26 @@ class VisualModule extends JLabel implements Rectangular {
 		module = mod;
 	}
 	public void init(VisualMachine vm, MouseEvent e, Selecter s, Placer p) {
+		init(vm, s, p, e.getX(), e.getY());
+	}
+	public void init(VisualMachine vm, Selecter s, Placer p, int x, int y) {
 		setParent(vm);
 		addMouseListener(s);
 		addMouseListener(p);
 		addMouseMotionListener(s);
 		setBorder(new BevelBorder(BevelBorder.RAISED));
 		setSize(75,75);
-		setLocation(e.getX(), e.getY());
-		cell = setModulePersonality(e);
+		setLocation(x, y*YSCALE);
+		cell = setModulePersonality(x, y);
 		vm.add(this);
 
 		vm.invalidate();
 		vm.validate();
 		vm.repaint();
 	}
-	public Cell setModulePersonality(MouseEvent e) {
+	public Cell setModulePersonality(int x, int y) {
 		// creates a personality from current pClass
-		Cell c = new Cell(e.getX(), e.getY());
+		Cell c = new Cell(x, y);
 		try {
 			Personality p = (Personality)(Class.forName("impactVL."+Impact.pClass).getDeclaredConstructor().newInstance());
 			if (p != null) {
@@ -240,13 +261,15 @@ class VisualModule extends JLabel implements Rectangular {
 		try {
 			Icon icon = getIcon();
 			if (icon != null) {
-				icon.paintIcon(this, g, getX(), getX());
+				icon.paintIcon(this, g, getX(), getY());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		if (cell != null) {
 			cell.paint(g);
+		} else {
+			System.err.println("No cell!");
 		}
 	}
 	public void setMachine(VisualMachine vm) {
@@ -350,6 +373,11 @@ class CreateModule extends Command {
 	public VisualModule addModule(VisualMachine vm, String modulename, MouseEvent e) {
 		VisualModule module = new VisualModule(modulename);
 		module.init(vm, e, s, p);
+		return module;
+	}
+	public VisualModule addModule(VisualMachine vm, String modulename, int x, int y) {
+		VisualModule module = new VisualModule(modulename);
+		module.init(vm, s, p, x, y);
 		return module;
 	}
 }
@@ -557,20 +585,138 @@ class VisualMachine extends JPanel implements MouseMotionListener {
 	}
 	public void saveLinks(PrintStream ps) {
 		ps.println("Node "+mainModule.getText()+" {");
-		Iterator i = links.iterator();
+		Iterator<VisualLink> i = links.iterator();
 		while (i.hasNext()) {
-			VisualLink l = (VisualLink)i.next();
+			VisualLink l = i.next();
 			VisualEndpoint frompt = l.from;
 			VisualEndpoint topt = l.to;
 			ps.println("\tRoute from "+frompt.module.getText()+"."+frompt.module.module.id+"."+frompt.label+" to "+topt.module.getText()+"."+topt.module.module.id+"."+topt.label+";");
 		}
 		ps.println("}");
 	}
+	public void generatorWriteString(JsonGenerator generator, String s) {
+		try {
+			generator.writeString(s);
+			System.err.println("JSON writes "+s);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	public void generatorWriteNumber(JsonGenerator generator, int n) {
+		try {
+			generator.writeNumber(n);
+			System.err.println("JSON writes "+n);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	public void generatorWriteNumber(JsonGenerator generator, long n) {
+		try {
+			generator.writeNumber(n);
+			System.err.println("JSON writes "+n);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	public void generateLinks(PrintStream ps) {
+		try {
+			JsonFactory factory = new JsonFactory();
+			JsonGenerator generator = factory.createGenerator(ps);
+			generator.writeStartArray();
+			Iterator<VisualLink> i = links.iterator();
+			while (i.hasNext()) {
+				VisualLink l = i.next();
+				VisualEndpoint frompt = l.from;
+				VisualEndpoint topt = l.to;
+				generator.writeStartArray();
+				generatorWriteString(generator, mainModule.getText());
+				generatorWriteString(generator, frompt.module.getText());
+				generatorWriteNumber(generator, frompt.module.module.id);
+				generatorWriteNumber(generator, frompt.module.getX());
+				generatorWriteNumber(generator, frompt.module.getY());
+				generatorWriteString(generator, frompt.label);
+				generatorWriteString(generator, topt.module.getText());
+				generatorWriteNumber(generator, topt.module.module.id);
+				generatorWriteNumber(generator, topt.module.getX());
+				generatorWriteNumber(generator, topt.module.getY());
+				generatorWriteString(generator, topt.label);
+				generator.writeEndArray();
+			}
+			generator.writeEndArray();
+			generator.close();
+		} catch (IOException e) {
+			e.printStackTrace(System.err);
+		}
+	}
 	static public void saveMachines(PrintStream ps) {
+		Cell.saveMachine(ps);
 		Iterator m = machines.iterator();
 		while (m.hasNext()) {
 			VisualMachine vm = (VisualMachine)m.next();
-			vm.saveLinks(ps);
+			vm.generateLinks(ps);
+		}
+	}
+	public boolean openLinks(BufferedReader br, Impact impact) {
+		boolean NOTEOF = true;
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			JsonNode tree = mapper.readTree(br);
+
+			Iterator<JsonNode> i = tree.elements();
+			while (i.hasNext()) {
+				/*
+				VisualLink l = (VisualLink)i.next();
+				VisualEndpoint frompt = l.from;
+				VisualEndpoint topt = l.to;
+				*/
+				JsonNode node = i.next();
+				if (node.isArray()) {
+					mainModule.setText(node.get(0).asText());
+
+					VisualLink l = new VisualLink();
+
+					try {
+						String clazzName = node.get(1).asText();
+						String text = clazzName != null ? (clazzName.lastIndexOf(".") > 0 ? clazzName.substring(clazzName.lastIndexOf(".")+1) : clazzName ) : "Node";
+						VisualModule fromMod = impact.cm.addModule(this, text, node.get(4).asInt(), node.get(5).asInt());
+						fromMod.loadIcon(text);
+						l.from = new VisualEndpoint(fromMod, text);
+						l.from.module.module.id = node.get(2).asLong();
+						l.from.module.setText(node.get(3).asText());
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+
+					try {
+						String clazzName = node.get(6).asText();
+						String text = clazzName != null ? (clazzName.lastIndexOf(".") > 0 ? clazzName.substring(clazzName.lastIndexOf(".")+1) : clazzName ) : "Node";
+						VisualModule toMod = impact.cm.addModule(this, text, node.get(9).asInt(),node.get(10).asInt());
+						toMod.loadIcon(text);
+						l.to = new VisualEndpoint(toMod, text);
+						l.to.module.module.id = node.get(7).asLong();
+						l.to.module.setText(node.get(8).asText());
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
+			}
+		} catch (IOException e) {
+			NOTEOF = false;
+			e.printStackTrace(System.err);
+		}
+		return NOTEOF;
+	}
+	public static void openMachines(BufferedReader br, Impact impact) {
+		boolean NOTEOF = true;
+		NOTEOF = Cell.openMachine(br);
+		if (!NOTEOF) {
+			Iterator m = machines.iterator();
+			long nvm = 0;
+			while (m.hasNext() && NOTEOF) {
+				VisualMachine vm = (VisualMachine)m.next();
+				System.err.println("VM "+nvm++);
+				NOTEOF = vm.openLinks(br, impact);
+			}
 		}
 	}
 	public void addLink(VisualLink l) {
@@ -850,9 +996,9 @@ class VisualMachine extends JPanel implements MouseMotionListener {
 		HashSet vlines = new HashSet();
 		HashSet hlines = new HashSet();
 		FontMetrics fm = getFontMetrics(getFont());
-		Iterator i = links.iterator();
+		Iterator<VisualLink> i = links.iterator();
 		while (i.hasNext()) {
-			VisualLink l = (VisualLink)i.next();
+			VisualLink l = i.next();
 			Rectangular from = l.from.module;
 			if (from == null) {
 				from = l.from;
@@ -1021,64 +1167,72 @@ public class Impact extends JFrame implements WindowListener {
 						return;
 					}
 				}
-		try {
-			BufferedReader br = new BufferedReader(new InputStreamReader(is));
-			Cell.openMachine(br);
-			br.close();
-			is.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return;
-		}
-		int id = 0;
-		VisualModule [][] modulearray = new VisualModule[Common.PMAXX][Common.PMAXY];
-		for (int y = 0; y < Common.PMAXY; y++) {
-			for (int x = 0; x < Common.PMAXX; x++) {
-				MouseEvent me = new MouseEvent(
-					vm,
-					id++,
-					System.currentTimeMillis(),
-					0, x*150, y*50,
-					1, false);
-							
-				Personality p = Common.cells[x][y].getPersonality();
-				if (p == null) {
-					modulearray[x][y] = cm.addModule(vm, "EmptyP", me);
-				} else {
-					String name = p.getClass().getName();
-					modulearray[x][y] = cm.addModule(vm, name, me);
+				try {
+					BufferedReader br = new BufferedReader(new InputStreamReader(is));
+					VisualMachine.openMachines(br, Impact.this);
+					br.close();
+					is.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+					return;
 				}
-			}
-		}
-		for (int y = 0; y < Common.PMAXY; y++) {
-			for (int x = 0; x < Common.PMAXX; x++) {
-				if (y < Common.PMAXY-1 && x > 0 && x < Common.PMAXX-1 ) {
-					VisualMachine.link(modulearray[x][y],
-							modulearray[x][y+1],
-							new AcquireLabel("out", false),
-							new AcquireLabel("in", false),
-							p);
-					VisualMachine.link(modulearray[x][y+1],
-							modulearray[x][y],
-							new AcquireLabel("out", false),
-							new AcquireLabel("in", false),
-							p);
-				}
-				if (x < Common.PMAXX-1 && y > 0 && y < Common.PMAXY-1 ) {
-					VisualMachine.link(modulearray[x][y],
-							modulearray[x+1][y],
-							new AcquireLabel("out", false),
-							new AcquireLabel("in", false),
-							p);
-					VisualMachine.link(modulearray[x+1][y],
-							modulearray[x][y],
-							new AcquireLabel("out", false),
-							new AcquireLabel("in", false),
-							p);
+				int id = 0;
+				VisualModule [][] modulearray = new VisualModule[Common.PMAXX][Common.PMAXY];
+				for (int y = 0; y < Common.PMAXY; y++) {
+					for (int x = 0; x < Common.PMAXX; x++) {
+						MouseEvent me = new MouseEvent(
+							vm,
+							id++,
+							System.currentTimeMillis(),
+							0, x*150, y*50,
+							1, false);
+									
+						if (Common.cells[x][y] != null) {
+							Personality p = Common.cells[x][y].getPersonality();
+							if (p == null) {
+								// modulearray[x][y] = cm.addModule(vm, "EmptyP", me);
+							} else {
+								String name = p.getClass().getName();
+								modulearray[x][y] = cm.addModule(vm, name, me);
+							}
+						} else {
+							// modulearray[x][y] = cm.addModule(vm, "EmptyP", me);
+						}
 					}
 				}
+				for (int y = 0; y < Common.PMAXY; y++) {
+					for (int x = 0; x < Common.PMAXX; x++) {
+						if (y < Common.PMAXY-1 && x > 0 && x < Common.PMAXX-1 ) {
+							if (modulearray[x][y] != null && modulearray[x][y+1] != null) {
+								VisualMachine.link(modulearray[x][y],
+										modulearray[x][y+1],
+										new AcquireLabel("out", false),
+										new AcquireLabel("in", false),
+										p);
+								VisualMachine.link(modulearray[x][y+1],
+										modulearray[x][y],
+										new AcquireLabel("out", false),
+										new AcquireLabel("in", false),
+										p);
+							}
+						}
+						if (x < Common.PMAXX-1 && y > 0 && y < Common.PMAXY-1 ) {
+							if (modulearray[x][y] != null && modulearray[x+1][y] != null) {
+								VisualMachine.link(modulearray[x][y],
+										modulearray[x+1][y],
+										new AcquireLabel("out", false),
+										new AcquireLabel("in", false),
+										p);
+								VisualMachine.link(modulearray[x+1][y],
+										modulearray[x][y],
+										new AcquireLabel("out", false),
+										new AcquireLabel("in", false),
+										p);
+							}
+						}
+						vm.getFrame().setVisible(true);
+					}
 				}
-				vm.getFrame().setVisible(true);
 			}
 		};
 		openmach.putValue(Action.NAME, "Open Route Graph");

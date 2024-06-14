@@ -16,8 +16,9 @@ import javax.xml.parsers.SAXParserFactory;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.ParserConfigurationException;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.NullPointerException;
 
-public class Cell extends Component implements MouseMotionListener, MouseListener, KeyListener, Runnable {
+public class Cell extends JComponent implements MouseMotionListener, MouseListener, KeyListener, Runnable {
 	public static int M = Common.M;
 	public static int SX = Common.SX;
 	public static int SY = Common.SY;
@@ -94,8 +95,8 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 		for (int y = 0; y < Common.PMAXY; y++) {
 			for (int x = 0; x < Common.PMAXX; x++) {
 				if (Common.cells[x][y] != null) {
-					if (x+Common.startx < Common.PMAXX &&
-					    y+Common.starty < Common.PMAXY) {
+					if (x+Common.startx >= 0 && x+Common.startx < Common.PMAXX &&
+					    y+Common.starty >= 0 && y+Common.starty < Common.PMAXY) {
 						Common.cells[x][y].setPersonality(Common.personalities[x+Common.startx][y+Common.starty]);
 					} else {
 						Common.cells[x][y].setPersonality(null);
@@ -124,10 +125,17 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 			
 			for (int mx = 0; mx < Common.modulePersonalities.length; mx++) {
 				for (int my = 0; my < Common.modulePersonalities[mx].length; my++) {
-					Personality p = Common.personalities[x+mx][y+my] = (Personality)Common.modulePersonalities[mx][my].clone();
+					Personality mp = Common.modulePersonalities[mx][my];
 					Cell c = Common.cells[x+mx][y+my];
-					c.setPersonality(p);
-					c.repaint();
+					if (mp != null) {
+						Personality p = Common.personalities[x+mx][y+my] = (Personality)(mp.clone());
+						if (c != null && p != null) {
+							c.setPersonality(p);
+							c.repaint();
+						} else {
+							System.err.println("cell is "+c+" personality is "+p);
+						}
+					}
 				}
 			}
 		}
@@ -178,20 +186,25 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 	}
 	public void paint(Graphics g) {
 		g.setFont(new Font("Helvetica", Font.PLAIN, M - 2));
-		// g.setColor(Color.white);
+		g.setColor(Color.white);
 		super.paint(g);
 		// g.fillRect(0,0,5*M,5*M);
 		g.setColor(Color.black);
 		if (p != null) {
 			p.paint(g);
+		} else {
+			System.err.println("Personality is null!");
 		}
 		g.drawLine(0,0,0,5*M);
 		g.drawLine(0,5*M,5*M,5*M);
 		g.drawLine(5*M,5*M,5*M,0);
 		g.drawLine(5*M,0,0,0);
 
+		// Personality p =	getPersonality();
+		System.err.println("personality "+p);
 		if (p == null || p instanceof BufferP || p instanceof EmptyP) {
 		} else {
+			p.paint(g);
 			g.drawLine(3*M,0,3*M,M);
 			g.drawLine(3*M,M,4*M,M);
 			g.drawLine(4*M,M,4*M,0);
@@ -850,48 +863,82 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 		jf.pack();
 		jf.setVisible(true);
 	}
-	public static void openModule(BufferedReader br) {
+	private static long lineno = 0;
+	public static String readLine(BufferedReader br) {
+		String s = "";
 		try {
-			pClass = "impactVL.Module";
-			Common.MMAXX = Integer.parseInt(br.readLine());
-			Common.MMAXY = Integer.parseInt(br.readLine());
-			Common.modulePersonalities = new Personality[Common.MMAXX][Common.MMAXY];
-			for (int y = 0; y < Common.MMAXY; y++) {
-				for (int x = 0; x < Common.MMAXX; x++) {
-					String pname = br.readLine();
-					Common.modulePersonalities[x][y] = (Personality)Class.forName(pname).getDeclaredConstructor().newInstance();
-					Common.modulePersonalities[x][y].lOutput = Boolean.parseBoolean(br.readLine());
-					Common.modulePersonalities[x][y].rOutput = Boolean.parseBoolean(br.readLine());
-					Common.modulePersonalities[x][y].tOutput = Boolean.parseBoolean(br.readLine());
-					Common.modulePersonalities[x][y].bOutput = Boolean.parseBoolean(br.readLine());
-					Common.modulePersonalities[x][y].lFull = Boolean.parseBoolean(br.readLine());
-					Common.modulePersonalities[x][y].rFull = Boolean.parseBoolean(br.readLine());
-					Common.modulePersonalities[x][y].tFull = Boolean.parseBoolean(br.readLine());
-					Common.modulePersonalities[x][y].bFull = Boolean.parseBoolean(br.readLine());
-				}
-			}
+			lineno++;
+			s = br.readLine();
+			System.err.println("Got "+s+" on line "+lineno);
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.err.println("Failed to Load");
+			System.err.println("Failed to Load on line "+lineno);
+			throw new NullPointerException();
+		}
+		return s;
+	}
+	public static boolean openModule(BufferedReader br) {
+		pClass = "impactVL.Module";
+		Common.MMAXX = Integer.parseInt(readLine(br));
+		Common.MMAXY = Integer.parseInt(readLine(br));
+		Common.modulePersonalities = new Personality[Common.MMAXX][Common.MMAXY];
+		try {
+			int n = 0;
+			String pname = null;
+			do {
+				pname = readLine(br);
+				if (pname == null || pname.equals("-------------")) {
+					break;
+				}
+				int mx = Integer.parseInt(readLine(br))-1;
+				int my = Integer.parseInt(readLine(br))-1;
+				if (mx >= 0 && mx < Common.MMAXX && my >= 0 && my < Common.MMAXY) {
+					Personality p = Common.modulePersonalities[mx][my] = (Personality)Class.forName(pname).getDeclaredConstructor().newInstance();
+					Common.personalities[mx+1][my+1] = p;
+					Common.cells[mx+1][my+1] = new Cell(mx+1, my+1);
+					Common.cells[mx+1][my+1].setPersonality(p);
+					p.lOutput = Boolean.parseBoolean(readLine(br));
+					p.rOutput = Boolean.parseBoolean(readLine(br));
+					p.tOutput = Boolean.parseBoolean(readLine(br));
+					p.bOutput = Boolean.parseBoolean(readLine(br));
+					p.lFull = Boolean.parseBoolean(readLine(br));
+					p.rFull = Boolean.parseBoolean(readLine(br));
+					p.tFull = Boolean.parseBoolean(readLine(br));
+					p.bFull = Boolean.parseBoolean(readLine(br));
+				} else {
+					System.err.println("Out of bounds "+mx+","+my);
+				}
+				n++;
+			} while (true && n < Common.MMAXX * Common.MMAXY);
+			if (pname == null) {
+				return false; // EOF
+			} else {
+				return true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace(System.err);
+			System.err.println("Failed to load module on line "+lineno);
+			return false; // bail
 		}
 	}
-	public static void openInputs(BufferedReader br) {
+	public static boolean openInputs(BufferedReader br) {
 		try {
 			cellsView.removeAll();
-			Common.PMAXX = Integer.parseInt(br.readLine());
-			Common.PMAXY = Integer.parseInt(br.readLine());
+			Common.PMAXX = Integer.parseInt(readLine(br));
+			Common.PMAXY = Integer.parseInt(readLine(br));
 			cellsView.setLayout(new GridLayout(Common.PMAXY, Common.PMAXX));
 			Common.cells = new Cell[Common.PMAXX][Common.PMAXY];
 			Common.personalities = new Personality[Common.PMAXX][Common.PMAXY];
+			String line = null;
 			int n = 0;
 			try {
 				do {
-					String line = br.readLine();
+					line = readLine(br);
 					if (line == null || line.equals("-------------")) {
 						break;
 					}
 					int x = Integer.parseInt(line);
-					int y = Integer.parseInt(br.readLine());
+					int y = Integer.parseInt(readLine(br));
 					BufferP bp = new BufferP();
 					if (x >= 0 && x < Common.PMAXX && y >= 0 && y < Common.PMAXY) {
 						Common.personalities[x][y] = bp;
@@ -900,10 +947,10 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 					} else {
 						System.err.println("Out of bounds "+x+","+y);
 					}
-					bp.setIn(br.readLine());
-					bp.setOut(br.readLine());
+					bp.setIn(readLine(br));
+					bp.setOut(readLine(br));
 					n++;
-				} while (true);
+				} while (true && n < Common.PMAXX * Common.PMAXY);
 			} catch (Exception e)  {
 				e.printStackTrace();
 			}
@@ -912,23 +959,35 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 			cellsView.invalidate();
 			cellsView.validate();
 			cellsView.repaint();
+			if (line == null) {
+				return false; // EOF
+			} else {
+				return true;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.err.println("Failed to Load");
+			System.err.println("Failed to load inputs on line "+lineno);
+			return false; // bail
 		}
 	}
-	public static void openMachine(BufferedReader br) {
+	public static boolean openMachine(BufferedReader br) {
+		boolean NOTEOF = true;
 		try {
-			openInputs(br);
-			openModule(br);
+			cellsView.removeAll();
+			NOTEOF = openInputs(br);
+			if (NOTEOF) {
+				NOTEOF = openModule(br);
+			}
 			setModulePersonalities(1, 1);
+			addCells();
 			cellsView.invalidate();
 			cellsView.validate();
 			cellsView.repaint();
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.err.println("Failed to Load");
+			System.err.println("Failed to load machine");
 		}
+		return NOTEOF;
 	}
 	public static void clear() {
 		try {
@@ -987,18 +1046,24 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 			oos.println(Common.PMAXY-2);
 			for (int y = 1; y < Common.PMAXY-1; y++) {
 				for (int x = 1; x < Common.PMAXX-1; x++) {
-					oos.println(Common.personalities[x][y].getClass().getName());
-					System.err.println(Common.personalities[x][y].getClass().getName());
-					oos.println(Common.personalities[x][y].lOutput);
-					oos.println(Common.personalities[x][y].rOutput);
-					oos.println(Common.personalities[x][y].tOutput);
-					oos.println(Common.personalities[x][y].bOutput);
-					oos.println(Common.personalities[x][y].lFull);
-					oos.println(Common.personalities[x][y].rFull);
-					oos.println(Common.personalities[x][y].tFull);
-					oos.println(Common.personalities[x][y].bFull);
+					Personality p = Common.personalities[x][y];
+					if (p != null) {
+						System.err.println(p.getClass().getName());
+						oos.println(p.getClass().getName());
+						oos.println(x);
+						oos.println(y);
+						oos.println(p.lOutput);
+						oos.println(p.rOutput);
+						oos.println(p.tOutput);
+						oos.println(p.bOutput);
+						oos.println(p.lFull);
+						oos.println(p.rFull);
+						oos.println(p.tFull);
+						oos.println(p.bFull);
+					}
 				}
 			}
+			oos.println("-------------");
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.err.println("Failed to Save");
@@ -1024,10 +1089,12 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 				for (int x = 0; x < Common.PMAXX; x++) {
 					if (Common.personalities[x][y] instanceof BufferP) {
 						BufferP bp = (BufferP)Common.personalities[x][y];
-						oos.println(x);
-						oos.println(y);
-						oos.println(bp.getIn());
-						oos.println(bp.getOut());
+						if (bp != null) {
+							oos.println(x);
+							oos.println(y);
+							oos.println(bp.getIn());
+							oos.println(bp.getOut());
+						}
 					}
 				}
 			}
@@ -1187,13 +1254,12 @@ public class Cell extends Component implements MouseMotionListener, MouseListene
 	static public void addCells() {
 		for (int y = 0; y < Common.PMAXY; y++) {
 			for (int x = 0; x < Common.PMAXX; x++) {
-				if (Common.cells[x][y] == null) {
-					Common.cells[x][y] = new Cell(x, y);
+				if (Common.personalities[x][y] != null && Common.cells[x][y] == null) {
+					Cell c = Common.cells[x][y] = new Cell(x, y);
+					c.setPersonality(Common.personalities[x][y]);
+					c.repaint();
+					cellsView.add(c);
 				}
-				Cell c = Common.cells[x][y];
-				c.setPersonality(Common.personalities[x][y]);
-				c.repaint();
-				cellsView.add(c);
 			}
 		}
 	}
