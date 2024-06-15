@@ -1,5 +1,6 @@
 package impactVL;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.image.*;
 import java.awt.event.*;
 import java.awt.*;
@@ -38,6 +39,7 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 	public static String pClass = "impactVL.EmptyP";
 	int x = 0;
 	int y = 0;
+	public static File currentFolder = new File(System.getProperty("user.dir"));
 
 	public Cell(int x, int y) {
 		this();
@@ -195,20 +197,15 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 		super.paint(g);
 		// g.fillRect(0,0,5*M,5*M);
 		g.setColor(Color.black);
-		Personality p = cellsPersonality;
-		/*
-		if (p != null) {
+		Personality p = this.cellsPersonality;
+		if (p != null && p instanceof BufferP)  {
 			p.paint(g);
-		} else {
-			System.err.println("Personality is null!");
 		}
-		*/
 		g.drawLine(0,0,0,5*M);
 		g.drawLine(0,5*M,5*M,5*M);
 		g.drawLine(5*M,5*M,5*M,0);
 		g.drawLine(5*M,0,0,0);
 
-		// Personality p =	getPersonality();
 		System.err.println("personality "+this.cellsPersonality);
 		if (p == null || p instanceof BufferP || p instanceof EmptyP) {
 		} else {
@@ -433,15 +430,23 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 		jmi = new JMenuItem("Open Inputs...");
 		jmi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				JFileChooser jfc = new JFileChooser(System.getProperty("user.dir"));
+				JFileChooser jfc = new JFileChooser(currentFolder);
+				jfc.removeChoosableFileFilter(jfc.getAcceptAllFileFilter());
+				jfc.setFileFilter(new FileNameExtensionFilter("Files ending in .rg", "rg"));
 				int rv = jfc.showOpenDialog(cellsView);
 				if (rv != JFileChooser.APPROVE_OPTION) {
 					return;
 				}
 				try {
+					currentFolder = jfc.getCurrentDirectory();
 					FileInputStream fis = new FileInputStream(jfc.getSelectedFile()); 
 					BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+					cellsView.removeAll();
 					openInputs(br);
+					addCells();
+					cellsView.invalidate();
+					cellsView.validate();
+					cellsView.repaint();
 					br.close();
 					fis.close();
 				} catch (Exception e) {
@@ -453,15 +458,23 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 		jmi = new JMenuItem("Open Node...");
 		jmi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				JFileChooser jfc = new JFileChooser(System.getProperty("user.dir"));
+				JFileChooser jfc = new JFileChooser(currentFolder);
+				jfc.removeChoosableFileFilter(jfc.getAcceptAllFileFilter());
+				jfc.setFileFilter(new FileNameExtensionFilter("Files ending in .rg", "rg"));
 				int rv = jfc.showOpenDialog(cellsView);
 				if (rv != JFileChooser.APPROVE_OPTION) {
 					return;
 				}
 				try {
+					currentFolder = jfc.getCurrentDirectory();
 					FileInputStream fis = new FileInputStream(jfc.getSelectedFile()); 
 					BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+					cellsView.removeAll();
 					openModule(br);
+					addCells();
+					cellsView.invalidate();
+					cellsView.validate();
+					cellsView.repaint();
 					br.close();
 					fis.close();
 				} catch (Exception e) {
@@ -473,15 +486,23 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 		jmi = new JMenuItem("Open Route Graph...");
 		jmi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				JFileChooser jfc = new JFileChooser(System.getProperty("user.dir"));
+				JFileChooser jfc = new JFileChooser(currentFolder);
+				jfc.removeChoosableFileFilter(jfc.getAcceptAllFileFilter());
+				jfc.setFileFilter(new FileNameExtensionFilter("Files ending in .rg", "rg"));
 				int rv = jfc.showOpenDialog(cellsView);
 				if (rv != JFileChooser.APPROVE_OPTION) {
 					return;
 				}
 				try {
+					currentFolder = jfc.getCurrentDirectory();
 					FileInputStream fis = new FileInputStream(jfc.getSelectedFile()); 
 					BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+					cellsView.removeAll();
 					openMachine(br);
+					addCells();
+					cellsView.invalidate();
+					cellsView.validate();
+					cellsView.repaint();
 					br.close();
 					fis.close();
 				} catch (Exception e) {
@@ -493,13 +514,16 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 		jmi = new JMenuItem("Save Inputs As...");
 		jmi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				JFileChooser jfc = new JFileChooser(System.getProperty("user.dir"));
+				JFileChooser jfc = new JFileChooser(currentFolder);
+				jfc.removeChoosableFileFilter(jfc.getAcceptAllFileFilter());
+				jfc.setFileFilter(new FileNameExtensionFilter("Files ending in .rg", "rg"));
 				int rv = jfc.showSaveDialog(cellsView);
 				if (rv != JFileChooser.APPROVE_OPTION) {
 					return;
 				}
 				
 				try {
+					currentFolder = jfc.getCurrentDirectory();
 					FileOutputStream fos = new FileOutputStream(jfc.getSelectedFile());
 					PrintStream oos = new PrintStream(fos);
 					saveInputs(oos);
@@ -514,12 +538,15 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 		jmi = new JMenuItem("Save Node As...");
 		jmi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				JFileChooser jfc = new JFileChooser(System.getProperty("user.dir"));
+				JFileChooser jfc = new JFileChooser(currentFolder);
+				jfc.removeChoosableFileFilter(jfc.getAcceptAllFileFilter());
+				jfc.setFileFilter(new FileNameExtensionFilter("Files ending in .rg", "rg"));
 				int rv = jfc.showSaveDialog(cellsView);
 				if (rv != JFileChooser.APPROVE_OPTION) {
 					return;
 				}
 				try {
+					currentFolder = jfc.getCurrentDirectory();
 					FileOutputStream fos = new FileOutputStream(jfc.getSelectedFile());
 					PrintStream oos = new PrintStream(fos);
 					saveModule(oos);
@@ -534,13 +561,16 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 		jmi = new JMenuItem("Save Route Group As...");
 		jmi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				JFileChooser jfc = new JFileChooser(System.getProperty("user.dir"));
+				JFileChooser jfc = new JFileChooser(currentFolder);
+				jfc.removeChoosableFileFilter(jfc.getAcceptAllFileFilter());
+				jfc.setFileFilter(new FileNameExtensionFilter("Files ending in .rg", "rg"));
 				int rv = jfc.showSaveDialog(cellsView);
 				if (rv != JFileChooser.APPROVE_OPTION) {
 					return;
 				}
 				
 				try {
+					currentFolder = jfc.getCurrentDirectory();
 					FileOutputStream fos = new FileOutputStream(jfc.getSelectedFile());
 					PrintStream oos = new PrintStream(fos);
 					saveMachine(oos);
@@ -932,7 +962,6 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 	}
 	public static boolean openInputs(BufferedReader br) {
 		try {
-			cellsView.removeAll();
 			Common.PMAXX = Integer.parseInt(readLine(br));
 			Common.PMAXY = Integer.parseInt(readLine(br));
 			cellsView.setLayout(new GridLayout(Common.PMAXY, Common.PMAXX));
@@ -964,10 +993,6 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 				e.printStackTrace();
 			}
 			System.err.println("Read "+n+" buffers");
-			addCells();
-			cellsView.invalidate();
-			cellsView.validate();
-			cellsView.repaint();
 			if (line == null) {
 				return false; // EOF
 			} else {
@@ -982,16 +1007,11 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 	public static boolean openMachine(BufferedReader br) {
 		boolean NOTEOF = true;
 		try {
-			cellsView.removeAll();
 			NOTEOF = openInputs(br);
 			if (NOTEOF) {
 				NOTEOF = openModule(br);
 			}
 			setModulePersonalities(1, 1);
-			addCells();
-			cellsView.invalidate();
-			cellsView.validate();
-			cellsView.repaint();
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.err.println("Failed to load machine");
@@ -1263,12 +1283,12 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 	static public void addCells() {
 		for (int y = 0; y < Common.PMAXY; y++) {
 			for (int x = 0; x < Common.PMAXX; x++) {
-				if (Common.personalities[x][y] != null && Common.cells[x][y] == null) {
+			//	if (Common.personalities[x][y] != null && Common.cells[x][y] == null) {
 					Cell c = Common.cells[x][y] = new Cell(x, y);
 					c.setPersonality(Common.personalities[x][y]);
 					c.repaint();
 					cellsView.add(c);
-				}
+			//	}
 			}
 		}
 	}

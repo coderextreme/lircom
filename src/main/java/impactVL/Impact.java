@@ -1127,6 +1127,7 @@ public class Impact extends JFrame implements WindowListener {
 	Cut ct;
 	Copy cpy;
 	Paste paste;
+	public File currentFolder = new File(System.getProperty("user.dir"));
 	public static String pClass = "EmptyP";
 	public void init() {
 		getContentPane().setLayout(new BorderLayout());
@@ -1172,14 +1173,14 @@ public class Impact extends JFrame implements WindowListener {
 					is = new FileInputStream("machineoutput.rg");
 				} catch (Exception e) {
 					try {
-						JFileChooser jfc = new JFileChooser(System.getProperty("user.dir"));
+						JFileChooser jfc = new JFileChooser(currentFolder);
 						jfc.removeChoosableFileFilter(jfc.getAcceptAllFileFilter());
 						jfc.setFileFilter(new FileNameExtensionFilter("Files ending in .rg", "rg"));
-
 						int rv = jfc.showOpenDialog(vm);
 						if (rv != JFileChooser.APPROVE_OPTION) {
 							return;
 						}
+						currentFolder = jfc.getCurrentDirectory();
 						is = new FileInputStream(jfc.getSelectedFile()); 
 					} catch (Exception e2) {
 						e2.printStackTrace();
@@ -1260,17 +1261,18 @@ public class Impact extends JFrame implements WindowListener {
 		AbstractAction saveact = new AbstractAction() {
 			public void actionPerformed(ActionEvent ae) {
 				System.err.println(getValue(NAME));
-				JFileChooser jfc = new JFileChooser(System.getProperty("user.dir"));
+				JFileChooser jfc = new JFileChooser(currentFolder);
 				jfc.setDialogType(JFileChooser.SAVE_DIALOG);
 				jfc.removeChoosableFileFilter(jfc.getAcceptAllFileFilter());
 				jfc.setFileFilter(new FileNameExtensionFilter("Files ending in .rg", "rg"));
 
-				int rv = jfc.showOpenDialog(null);
+				int rv = jfc.showSaveDialog(null);
 				PrintStream ps;
 				if (rv != JFileChooser.APPROVE_OPTION) {
 					ps = System.out;
 					return;
 				} else {
+					currentFolder = jfc.getCurrentDirectory();
 					try {
 						ps = new PrintStream(new FileOutputStream(jfc.getSelectedFile())); 
 					} catch (Exception exfo) {
