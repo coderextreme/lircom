@@ -21,7 +21,8 @@ public class BufferP extends Personality {
 				}
 			}
 			break;
-		default:
+		case KeyEvent.VK_0:
+		case KeyEvent.VK_1:
 			addToInBuffer(c);
 			if (observer != null) {
 				observer.repaint();
