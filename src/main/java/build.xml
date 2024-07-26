@@ -68,8 +68,8 @@
 	    <fileset dir="../resources/impactVL">
 		    <include name="**/*.rg"/>
             </fileset>
-	    <fileset dir="impactVL">
-		    <include name="**/*.java"/>
+	    <fileset dir=".">
+		    <include name="impactVL/*.java"/>
             </fileset>
 	    <fileset dir="build">
 		    <include name="**/*.class"/>
