@@ -32,7 +32,7 @@
 			   fork="${fork}">
 		</javac>
 
-		<jar destfile="${impact.jar}" duplicate="fail" strict="warn">
+		<jar destfile="${impact.jar}" duplicate="add" strict="warn">
             <!-- http://docs.oracle.com/javase/8/docs/technotes/guides/deploy/manifest.html -->
             <manifest id="ClassesJarManifest">
                 <attribute name="Built-By" value="${user.name.build}"/>
@@ -42,18 +42,22 @@
                 <attribute name="Main-Class" value="impactVL.Impact"/>
                 <attribute name="Sealed" value="true"/>
             </manifest>
-	    <fileset dir="../resources/impactVL">
-		    <include name="**/sort*"/>
+	    <fileset dir="../resources">
+		    <include name="impactVL/*.rg"/>
             </fileset>
-	    <fileset dir="impactVL">
-		    <include name="**/*.java"/>
+	    <fileset dir=".">
+		    <include name="impactVL/*.java"/>
             </fileset>
 	    <fileset dir="build">
 		    <include name="**/*.class"/>
             </fileset>
-	    <fileset dir="../resources/impactVL">
-		    <include name="**/*.gif"/>
+	    <fileset dir="../resources">
+		    <include name="impactVL/*.gif"/>
             </fileset>
+	    <zipgroupfileset dir=".">
+		    <include name="jackson-core-2.17.1.jar"/>
+		    <include name="jackson-databind-2.17.1.jar"/>
+	    </zipgroupfileset>
 	 </jar>
 		<jar destfile="${cell.jar}" duplicate="fail" strict="warn">
             <!-- http://docs.oracle.com/javase/8/docs/technotes/guides/deploy/manifest.html -->
