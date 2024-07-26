@@ -442,7 +442,7 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 					FileInputStream fis = new FileInputStream(jfc.getSelectedFile()); 
 					BufferedReader br = new BufferedReader(new InputStreamReader(fis));
 					cellsView.removeAll();
-					openInputs(br);
+					openInputs(br, true);
 					addCells();
 					cellsView.invalidate();
 					cellsView.validate();
@@ -960,13 +960,15 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 			return false; // bail
 		}
 	}
-	public static boolean openInputs(BufferedReader br) {
+	public static boolean openInputs(BufferedReader br, boolean onlyInputs) {
 		try {
 			Common.PMAXX = Integer.parseInt(readLine(br));
 			Common.PMAXY = Integer.parseInt(readLine(br));
-			cellsView.setLayout(new GridLayout(Common.PMAXY, Common.PMAXX));
-			Common.cells = new Cell[Common.PMAXX][Common.PMAXY];
-			Common.personalities = new Personality[Common.PMAXX][Common.PMAXY];
+			if (!onlyInputs) {
+				cellsView.setLayout(new GridLayout(Common.PMAXY, Common.PMAXX));
+				Common.cells = new Cell[Common.PMAXX][Common.PMAXY];
+				Common.personalities = new Personality[Common.PMAXX][Common.PMAXY];
+			}
 			String line = null;
 			int n = 0;
 			try {
@@ -1007,7 +1009,7 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 	public static boolean openMachine(BufferedReader br) {
 		boolean NOTEOF = true;
 		try {
-			NOTEOF = openInputs(br);
+			NOTEOF = openInputs(br, false);
 			if (NOTEOF) {
 				NOTEOF = openModule(br);
 			}
