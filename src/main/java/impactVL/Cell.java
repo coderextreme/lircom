@@ -239,7 +239,7 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 		return new Dimension(5*M,5*M);
 	}
 	public static void main(String args[]) {
-		String personalities_str = "division";
+		String personalities_str = "4x4";
 		if (args.length > 0) {
 			personalities_str = args[0];
 		}

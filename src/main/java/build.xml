@@ -14,7 +14,6 @@
     <property name="java.classes.dir"        value="net"/>
     <!--
     <property name="classpath"        value=".;build;impact.jar;../resources/;${M2}/com/fasterxml/jackson/core/jackson-annotations/2.17.1/jackson-annotations-2.17.1.jar;${M2}/com/fasterxml/jackson/core/jackson-core/2.17.1/jackson-core-2.17.1.jar;${M2}/com/fasterxml/jackson/core/jackson-databind/2.17.1/jackson-databind-2.17.1.jar;${M2}/com/fasterxml/jackson/jr/jackson-jr-objects/2.17.1/jackson-jr-objects-2.17.1.jar;${M2}/com/fasterxml/classmate/1.7.0/classmate-1.7.0.jar"/>
-    <property name="classpath"        value=".;build;impact.jar;../resources/;./jackson-annotations-2.17.1.jar;./jackson-core-2.17.1.jar;./jackson-databind-2.17.1.jar;./jackson-jr-objects-2.17.1.jar;./classmate-1.7.0.jar"/>
     -->
     <property name="classpath"        value=".;build;impact.jar;../resources/;./jackson-core-2.17.1.jar;./jackson-databind-2.17.1.jar"/>
     <target name="all" depends="default,impact"/>
@@ -75,8 +74,8 @@
 	    <fileset dir="build">
 		    <include name="**/*.class"/>
             </fileset>
-	    <fileset dir="../resources/impactVL">
-		    <include name="**/*.gif"/>
+	    <fileset dir="../resources">
+		    <include name="impactVL/*.gif"/>
             </fileset>
 	 </jar>
 	 <echo>Now run `ant impact`, `ant Cell` and `ant Cell4x4`</echo>
@@ -91,6 +90,7 @@
     </target>
     <target name="Cell" depends="default">
 	    <java classname="impactVL.Cell" classpath="${classpath}" fork="${fork}">
+		<arg value="division"/>
 	</java>
     </target>
     <target name="Cell4x4" depends="default">
