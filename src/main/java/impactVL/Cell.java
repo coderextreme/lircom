@@ -131,14 +131,16 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 			for (int mx = 0; mx < Common.modulePersonalities.length; mx++) {
 				for (int my = 0; my < Common.modulePersonalities[mx].length; my++) {
 					Personality mp = Common.modulePersonalities[mx][my];
-					Cell c = Common.cells[x+mx][y+my];
-					if (mp != null) {
-						Personality p = Common.personalities[x+mx][y+my] = (Personality)(mp.clone());
-						if (c != null && p != null) {
-							c.setPersonality(p);
-							c.repaint();
-						} else {
-							System.err.println("cell is "+c+" personality is "+p);
+					if (x+mx >= 0 && x+mx < Common.PMAXX && y+my >= 0 && y+my < Common.PMAXY) {
+						Cell c = Common.cells[x+mx][y+my];
+						if (mp != null) {
+							Personality p = Common.personalities[x+mx][y+my] = (Personality)(mp.clone());
+							if (c != null && p != null) {
+								c.setPersonality(p);
+								c.repaint();
+							} else {
+								System.err.println("cell is "+c+" personality is "+p);
+							}
 						}
 					}
 				}
