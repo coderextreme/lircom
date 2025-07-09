@@ -215,11 +215,19 @@ vulnerability -->
 	    </exclusions>
     </dependency>
     <!-- https://mvnrepository.com/artifact/net.sourceforge.htmlunit/htmlunit -->
+    <!--
     <dependency>
 	<groupId>net.sourceforge.htmlunit</groupId>
 	<artifactId>htmlunit</artifactId>
 	<version>2.70.0</version>
     </dependency>
+    -->
+    <!-- https://mvnrepository.com/artifact/org.htmlunit/htmlunit -->
+<dependency>
+    <groupId>org.htmlunit</groupId>
+    <artifactId>htmlunit</artifactId>
+    <version>4.13.0</version>
+</dependency>
     <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
     <dependency>
         <groupId>org.apache.httpcomponents</groupId>
