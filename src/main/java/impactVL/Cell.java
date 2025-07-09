@@ -600,7 +600,7 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 		    @Override
 		    public void endElement(String uri, String localName, String qName) throws SAXException {
 			switch (qName.toLowerCase()) {
-			    case "table" -> {
+			    case "table":
 				System.err.println("Parsing "+qName+" "+maxX+" "+maxY);
 				Common.startx = 0;
 				Common.starty = 0;
@@ -635,15 +635,15 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 				maxX = 0;
 				rows = new ArrayList<ArrayList<Personality>>();
 				currentRow = new ArrayList<Personality>();
-			    }
-			    case "tr" -> {
+				break;
+			    case "tr":
 				// System.err.println("Parsing "+qName);
 				rows.add(currentRow);
 		    		currentRow = new ArrayList<Personality>();
 				x = 0;
 				maxY++;
-			    }
-			    case "td" -> {
+				break;
+			    case "td":
 				// System.err.println("Parsing "+qName+" "+currentPersonality);
 				try {
 					Personality p = null;
@@ -673,9 +673,9 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 				if (x > maxX) {
 					maxX = x;
 			    	}
-			    }
-			    case "th" -> {
-			    }
+				break;
+			    case "th":
+				break;
 			}
 		    }
 
@@ -899,7 +899,7 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 		tools.add(interval);
 		jf.getContentPane().add("North", tools);
 		jf.getContentPane().add("Center", jsp);
-		//jf.setSize(800,600);
+		jf.setSize(1000,1000);
 		jf.pack();
 		jf.setVisible(true);
 	}

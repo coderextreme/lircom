@@ -7,6 +7,9 @@
     <kotlin.version>1.6.0</kotlin.version>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
     <junit-jupiter.version>5.4.2</junit-jupiter.version>
+    <maven.compiler.target>8</maven.compiler.target>
+    <maven.compiler.source>8</maven.compiler.source>
+    <maven.compiler.release>8</maven.compiler.release>
 </properties>
   <build>
     <plugins>
@@ -16,7 +19,9 @@
         <version>3.13.0</version>
         <configuration>
           <!-- or whatever version you use -->
-          <release>22</release>
+          <source>8</source>
+          <target>8</target>
+	  <release>8</release>
           <encoding>UTF-8</encoding>
 	  <compilerArgument>-Xlint:all</compilerArgument>
         </configuration>
@@ -210,13 +215,11 @@ vulnerability -->
 	    </exclusions>
     </dependency>
     <!-- https://mvnrepository.com/artifact/net.sourceforge.htmlunit/htmlunit -->
-    <!--
     <dependency>
 	<groupId>net.sourceforge.htmlunit</groupId>
 	<artifactId>htmlunit</artifactId>
 	<version>2.55.0</version>
     </dependency>
-	    -->
     <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
     <dependency>
         <groupId>org.apache.httpcomponents</groupId>

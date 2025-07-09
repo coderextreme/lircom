@@ -116,12 +116,19 @@ class Proxy implements LineHandler {
 			}
 		}
 	}
+	public String repeat(int indent, String repeatee) {
+		StringBuffer sb = new StringBuffer("");
+		for (int i = 0; i < indent; i++) {
+			sb.append(repeatee);
+		}
+		return sb.toString();
+	}
 	public void printHierarchy(Joint joint, Writer w, int indent) throws IOException {
 		//  System.err.println("got here");
-		w.write("\t".repeat(indent)+(indent == 0 ? "ROOT " : "JOINT ")+joint.jointId+"\n");
-		w.write("\t".repeat(indent)+"{\n");
-		w.write("\t".repeat(indent+1)+"\tOFFSET "+joint.x+" "+-joint.y+" "+joint.z+"\n");
-		w.write("\t".repeat(indent+1)+"\tCHANNELS 3 Xposition Yposition Zposition\n");
+		w.write(repeat(indent, "\t")+(indent == 0 ? "ROOT " : "JOINT ")+joint.jointId+"\n");
+		w.write(repeat(indent, "\t")+"{\n");
+		w.write(repeat(indent+1, "\t")+"\tOFFSET "+joint.x+" "+-joint.y+" "+joint.z+"\n");
+		w.write(repeat(indent+1, "\t")+"\tCHANNELS 3 Xposition Yposition Zposition\n");
 		Iterator<Joint> itr = joint.children.iterator();
 		while (itr.hasNext()) {
 			joint =  itr.next();
@@ -129,7 +136,7 @@ class Proxy implements LineHandler {
 				printHierarchy(joint, w, indent+1);
 			}
 		}
-		w.write("\t".repeat(indent)+"}\n");
+		w.write(repeat(indent, "\t")+"}\n");
 	}
 	public void receiveMocapSpewBVH(String line, Writer w) throws IOException {
 		// System.err.println("Received "+line);
