@@ -4,6 +4,8 @@
 
 export CLASSPATH="${CLASSPATH}:src/main/resources"
 
-${JAVA_OPTS} net.coderextreme.impactVL.Impact
-${JAVA_OPTS} net.coderextreme.impactVL.Cell 4x4
-${JAVA_OPTS} net.coderextreme.impactVL.Cell
+pushd src/main/java
+ant impact
+ant Cell
+ant Cell4x4
+popd
