@@ -47,7 +47,7 @@ Download JOGAMP and Gluegen from here:
 
 https://jogamp.org/deployment/archive/master/?C=M;O=D
 
-(already downloaded for linux-amd64, see m2 folder)
+(already downloaded for linux-amd64, see jar folder)
 
 Get a version build after Jan 12, 2021
 
