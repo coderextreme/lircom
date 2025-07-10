@@ -29,6 +29,8 @@ Wait for parties to join.
 
 Guest:
 
+Go to another command prompt.
+
 C:\> cd lircom
 
 Start bat script
