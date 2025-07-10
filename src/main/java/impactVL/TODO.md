@@ -46,7 +46,7 @@
 
 # Better ideas for Buffer input/output
     * Inkpot for 0, 1, Empty Input, Empty Output
-    * Save output buffers in export format
+    * Save output buffers in export format, read input buffers in import format
     * Select buffers to save
 
 # I/O languages
