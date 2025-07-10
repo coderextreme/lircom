@@ -6,6 +6,7 @@
     * Try different sizes
 
 # Fix Safari/iOS clipboard/loading
+    * Disabled clipboardMode (NO SOLUTION YET)
 
 # Get Jed a couple of machines (COMPLETE)
     * Division example
