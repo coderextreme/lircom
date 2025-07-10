@@ -9,20 +9,13 @@
     <script>
 	cheerpjInit({
     		// javaProperties: ["java.awt.headless=false"]
-		clipboardMode: "permission"
+		clipboardMode: "system"
 	}).then(() => {
 		(async () => {
 		cheerpjCreateDisplay(1000, 1000);
 		const exitCode = await cheerpjRunMain(
 		  "impactVL.Cell",
-			/*
-		  "lircom.MainWindow",
-		  */
 		  "/app/lircom/target/Impact.jar:/app/lircom/target/lircom-3.jar",
-			/*
-		  "lircom.Chat",
-		  "john",
-		  */
 		);
 		console.log(`Program exited with code ${exitCode}`);
 		})();
