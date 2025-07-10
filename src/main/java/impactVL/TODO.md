@@ -7,6 +7,7 @@
 
 # Fix Safari/iOS clipboard/loading
     * Disabled clipboardMode (NO SOLUTION YET)
+    * Loading works on https://coderextreme.github.io/lircom/
 
 # Get Jed a couple of machines (COMPLETE)
     * Division example
