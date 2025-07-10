@@ -60,3 +60,4 @@
     * Route graph
     * Jed's external personality loading format
     * Floweth, high level
+    * Provide textarea to cut/copy/paste route graph
