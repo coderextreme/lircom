@@ -16,7 +16,7 @@
 # It's a 4x4 multiply, not add
     * Verify top row: "Don't Know", "Right Turn", ... (Verified)
     * Possibly erase text label
-    * Figure out how to format input and ouput
+    * Figure out how to format input and output
     * Currently, if you type in 0's you get 0's out, and if you type 1's, you get 1's out.  Where are the 0's?  (FIXED)
 
 # Implemented Jed's loading
