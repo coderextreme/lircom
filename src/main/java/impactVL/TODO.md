@@ -7,33 +7,37 @@
 
 # Fix Safari/iOS clipboard/loading
 
-# Get Jed a couple of machines
+# Get Jed a couple of machines (COMPLETE)
     * Division example
     * Sort example
 
 # It's a 4x4 multiply, not add
-    * Verify top row: "Don't Know", "Right Turn", ...
+    * Verify top row: "Don't Know", "Right Turn", ... (Verified)
     * Possibly erase text label
+    * Figure out how to format input and ouput
+    * Currently, if you type in 0's you get 0's out, and if you type 1's, you get 1's out.  Where are the 0's?  (FIXED)
 
 # Implemented Jed's loading
     * Jed to provide data file
     * Add generate/parse+load options for data files
     * John to implement loading how Jed wants.
-    * Numbers for personalities (bit string?)
+    * Devise a way to generate a loading file from a current machine
+    * Numbers for personalities (bit string?) (BELAYED)
 
 
 # allow for quick choosing of personalities
-    * Press for personality (1, 2, 3, ...)
-    * Array or enum for personalities
-    * Provide context menu, possibly with number, text, and icon
-    * Add icon to Create menu, if not to big on phones.
-    * Allow to freeze/unfreeze buffer personality changes for bit entry
-    * Unfreeze then context menu to blank a buffer (accelerated?)
+    * Press for personality (1, 2, 3, ...) (COMPLETE)
+    * Array or enum for personalities (COMPLETE)
+    * Provide context menu, possibly with number, text, and icon (BELAYED)
+    * Add icon to Create menu, if not to big on phones. (BELAYED)
+    * Allow to freeze/unfreeze buffer personality changes for bit entry (USE INKPOT)
+    * Unfreeze then context menu to blank a buffer (accelerated?) (BELAYED)
 
 # Implement a high-level language
     * JSON, XML or custom
 
 # Create a way or document a way to create "cookie cutter" machines that can be pasted for creating sorting machines.
+    * Partially implemented, look at impactVL.Module
 
 # Compose machines usign Impact.javat
 
@@ -41,12 +45,13 @@
     * Not tables
     * Use Route Graph format
 
-# Bring up keyboard/Ctrl/Cmd in CheerpJ on mobile
+# Bring up keyboard/Ctrl/Cmd in CheerpJ on mobile (IMPOSSIBLE?)
 
 
 # Better ideas for Buffer input/output
-    * Inkpot for 0, 1, Empty Input, Empty Output
-    * Save output buffers in export format, read input buffers in import format
+    * Inkpot for 0, 1, Backspace, Replace
+    * Save output buffers in export format
+    * read input buffers in import format (VERIFY)
     * Select buffers to save
 
 # I/O languages
