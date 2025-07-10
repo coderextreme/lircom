@@ -40,7 +40,7 @@
 # Create a way or document a way to create "cookie cutter" machines that can be pasted for creating sorting machines.
     * Partially implemented, look at impactVL.Module
 
-# Compose machines usign Impact.javat
+# Compose machines usign Impact.java
 
 # Route Graphs import/export via the Menu.
     * Not tables
