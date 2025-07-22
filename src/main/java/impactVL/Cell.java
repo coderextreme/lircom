@@ -20,6 +20,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.NullPointerException;
 
 public class Cell extends JComponent implements MouseMotionListener, MouseListener, KeyListener, Runnable {
+	public static String [] personalityClasses = new String[] {
+		"impactVL.AndP", "impactVL.BitAdderP", "impactVL.BufferP", "impactVL.CopyP",
+		"impactVL.DivisionP", "impactVL.DontKnowP", "impactVL.EmptyP",
+		"impactVL.LeftShiftP", "impactVL.LeftTurnP", "impactVL.MultAdderP", "impactVL.PassP",
+		"impactVL.RightShiftP", "impactVL.RightTurnP", "impactVL.SortBottomP", "impactVL.SortTopP" };
+	public static int classIndex = 0;
 	public static int M = Common.M;
 	public static int SX = Common.SX;
 	public static int SY = Common.SY;
@@ -33,8 +39,15 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 	public static JTextField jtfx = new JTextField(" 1");
 	public static JLabel jly = new JLabel("Height w/o buffers");
 	public static JTextField jtfy = new JTextField(" 1");
+	// public static JMenu createMenu = new JMenu("Create");
+	public static ButtonGroup bg = new ButtonGroup();
 	public static JButton ok = new JButton("OK");
 	public static JButton cancel = new JButton("Cancel");
+	public static final String REPLACE = "Replace";
+	public static final String BACKSPACE = "Backspace";
+	public static final String BIT_0 = "0";
+	public static final String BIT_1 = "1";
+	public static String ink = "";
 	Personality cellsPersonality = null;
 	public static String pClass = "impactVL.EmptyP";
 	int x = 0;
@@ -150,29 +163,38 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 	public void mouseClicked(MouseEvent e) {
 		System.err.println("Click "+x+","+y);
 		try {
+			Personality p =	Common.personalities[x+Common.startx][y+Common.starty];
 			if (pClass.equals("impactVL.Module")) {
 				setModulePersonalities(x, y);
 				System.err.println("Setting Module "+x+","+y);
-			} else if (x+Common.startx >= 0 && y+Common.starty >= 0 && x+Common.startx < Common.PMAXX && y+Common.starty < Common.PMAXY) {
-				Personality p = (Personality)(Class.forName(pClass).getDeclaredConstructor().newInstance());
-				Common.personalities[x+Common.startx][y+Common.starty] = p;
-				System.err.println("Setting "+(x+Common.startx)+","+(y+Common.starty)+" to "+pClass);
-				setPersonality(p);
-				repaint();
-			} else {
-				/*
-				if (p instanceof BufferP) {
-					int b = e.getButton();
-					if (b == e.BUTTON1) {
-						System.err.println(1);
-						((BufferP)p).addToInBuffer('1');
-					} else if (b == e.BUTTON3) {
-						System.err.println(0);
-						((BufferP)p).addToInBuffer('0');
+			} else if (p instanceof BufferP) {
+					System.err.println(ink);
+					switch (ink) {
+						case BIT_0:
+						case BIT_1:
+							((BufferP)p).addToInBuffer(ink);
+							repaint();
+							break;
+						case BACKSPACE:
+							((BufferP)p).backspace();
+							repaint();
+							break;
+						case REPLACE:
+							try {
+								setPersonalityFromPopup(x, y);
+							} catch (InvocationTargetException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InstantiationException ex) {
+								ex.printStackTrace(System.err);
+							}
+							break;
+						default:
+							break;
 					}
-					repaint();
+			} else if (x+Common.startx >= 0 && y+Common.starty >= 0 && x+Common.startx < Common.PMAXX && y+Common.starty < Common.PMAXY) {
+				try {
+					setPersonalityFromPopup(x, y);
+				} catch (InvocationTargetException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InstantiationException ex) {
+					ex.printStackTrace(System.err);
 				}
-				*/
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -193,6 +215,22 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 		}
 		return true;
 	}
+	public class PopupAction implements ActionListener {
+		String pclass = "impactVL.EmptyP";
+		public PopupAction(String pClass) {
+			this.pclass = pClass;
+		    
+		}
+		public void actionPerformed(ActionEvent ae) {
+			pClass = this.pclass;
+		}
+	}
+	public void createPersonalityMenu(String displayName, String className, ButtonGroup bg, JMenu jm) {
+		JMenuItem jmi = new JRadioButtonMenuItem(displayName);
+		bg.add(jmi);
+		jmi.addActionListener(new PopupAction(className));
+		jm.add(jmi);
+	}
 	public void paint(Graphics g) {
 		g.setFont(new Font("Helvetica", Font.PLAIN, M - 2));
 		g.setColor(Color.white);
@@ -208,7 +246,7 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 		g.drawLine(5*M,5*M,5*M,0);
 		g.drawLine(5*M,0,0,0);
 
-		System.err.println("personality "+this.cellsPersonality);
+		// System.err.println("personality "+this.cellsPersonality);
 		if (p == null || p instanceof BufferP || p instanceof EmptyP) {
 		} else {
 			p.paint(g);
@@ -241,6 +279,10 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 		return new Dimension(5*M,5*M);
 	}
 	public static void main(String args[]) {
+		new Cell(args);
+	}
+	public Cell(String args[]) {
+		this();
 		String personalities_str = "4x4";
 		if (args.length > 0) {
 			personalities_str = args[0];
@@ -341,17 +383,17 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 				Common.personalities[0][y] = new BufferP();
 				Common.personalities[1][y] = new DivisionP();
 				Common.personalities[2][y] = new BufferP();
-				((BufferP)Common.personalities[2][y]).addToInBuffer('1');
-				((BufferP)Common.personalities[2][y]).addToInBuffer('0');
-				((BufferP)Common.personalities[2][y]).addToInBuffer('0');
-				((BufferP)Common.personalities[2][y]).addToInBuffer('0');
-				((BufferP)Common.personalities[2][y]).addToInBuffer('0');
-				((BufferP)Common.personalities[2][y]).addToInBuffer('0');
-				((BufferP)Common.personalities[2][y]).addToInBuffer('0');
-				((BufferP)Common.personalities[2][y]).addToInBuffer('1');
+				((BufferP)Common.personalities[2][y]).addToInBuffer(BIT_1);
+				((BufferP)Common.personalities[2][y]).addToInBuffer(BIT_0);
+				((BufferP)Common.personalities[2][y]).addToInBuffer(BIT_0);
+				((BufferP)Common.personalities[2][y]).addToInBuffer(BIT_0);
+				((BufferP)Common.personalities[2][y]).addToInBuffer(BIT_0);
+				((BufferP)Common.personalities[2][y]).addToInBuffer(BIT_0);
+				((BufferP)Common.personalities[2][y]).addToInBuffer(BIT_0);
+				((BufferP)Common.personalities[2][y]).addToInBuffer(BIT_1);
 			}
-			((BufferP)Common.personalities[1][0]).addToInBuffer('1');
-			((BufferP)Common.personalities[1][0]).addToInBuffer('1');
+			((BufferP)Common.personalities[1][0]).addToInBuffer(BIT_1);
+			((BufferP)Common.personalities[1][0]).addToInBuffer(BIT_1);
 		} else {
 			// random personalities
 			Random r = new Random();
@@ -739,140 +781,25 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 
 
 
-
-		ButtonGroup bg = new ButtonGroup();
-
-		jm = new JMenu("Create");
-		jmb.add(jm);
-		jmi = new JRadioButtonMenuItem("Node");
-		bg.add(jmi);
-		jmi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				pClass = "impactVL.Module";
-			}
-		});
-		jm.add(jmi);
-		jmi = new JRadioButtonMenuItem("Pass");
-		bg.add(jmi);
-		jmi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				pClass = "impactVL.PassP";
-			}
-		});
-		jm.add(jmi);
-		jmi = new JRadioButtonMenuItem("Left Turn");
-		bg.add(jmi);
-		jmi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				pClass = "impactVL.LeftTurnP";
-			}
-		});
-		jm.add(jmi);
-		jmi = new JRadioButtonMenuItem("Right Turn");
-		bg.add(jmi);
-		jmi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				pClass = "impactVL.RightTurnP";
-			}
-		});
-		jm.add(jmi);
-		jmi = new JRadioButtonMenuItem("Left Shift");
-		bg.add(jmi);
-		jmi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				pClass = "impactVL.LeftShiftP";
-			}
-		});
-		jm.add(jmi);
-		jmi = new JRadioButtonMenuItem("Right Shift");
-		bg.add(jmi);
-		jmi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				pClass = "impactVL.RightShiftP";
-			}
-		});
-		jm.add(jmi);
-		jmi = new JRadioButtonMenuItem("Copy");
-		bg.add(jmi);
-		jmi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				pClass = "impactVL.CopyP";
-			}
-		});
-		jm.add(jmi);
-		jmi = new JRadioButtonMenuItem("And");
-		bg.add(jmi);
-		jmi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				pClass = "impactVL.AndP";
-			}
-		});
-		jm.add(jmi);
-		jmi = new JRadioButtonMenuItem("Multiply Adder");
-		bg.add(jmi);
-		jmi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				pClass = "impactVL.MultAdderP";
-			}
-		});
-		jm.add(jmi);
-		jmi = new JRadioButtonMenuItem("Bit Adder");
-		bg.add(jmi);
-		jmi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				pClass = "impactVL.BitAdderP";
-			}
-		});
-		jm.add(jmi);
-		jmi = new JRadioButtonMenuItem("Empty/Flaw");
-		bg.add(jmi);
-		jmi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				pClass = "impactVL.EmptyP";
-			}
-		});
-		jm.add(jmi);
-		jmi = new JRadioButtonMenuItem("Don't Know");
-		bg.add(jmi);
-		jmi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				pClass = "impactVL.DontKnowP";
-			}
-		});
-		jm.add(jmi);
-		jmi = new JRadioButtonMenuItem("Buffer");
-		bg.add(jmi);
-		jmi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				pClass = "impactVL.BufferP";
-			}
-		});
-		jm.add(jmi);
-		jmi = new JRadioButtonMenuItem("Sort Top");
-		bg.add(jmi);
-		jmi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				pClass = "impactVL.SortTopP";
-			}
-		});
-		jm.add(jmi);
-
-		jmi = new JRadioButtonMenuItem("Sort Bottom");
-		bg.add(jmi);
-		jmi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				pClass = "impactVL.SortBottomP";
-			}
-		});
-		jm.add(jmi);
-		jmi = new JRadioButtonMenuItem("Division");
-		bg.add(jmi);
-		jmi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				pClass = "impactVL.DivisionP";
-			}
-		});
-		jm.add(jmi);
+		/*
+		createPersonalityMenu("Module", "impactVL.Module", bg, createMenu);
+		createPersonalityMenu("And", "impactVL.AndP", bg, createMenu);
+		createPersonalityMenu("Bit Adder", "impactVL.BitAdderP", bg, createMenu);
+		createPersonalityMenu("Buffer", "impactVL.BufferP", bg, createMenu);
+		createPersonalityMenu("Copy", "impactVL.CopyP", bg, createMenu);
+		createPersonalityMenu("Division", "impactVL.DivisionP", bg, createMenu);
+		createPersonalityMenu("Don't Know", "impactVL.DontKnowP", bg, createMenu);
+		createPersonalityMenu("Empty/Flaw", "impactVL.EmptyP", bg, createMenu);
+		createPersonalityMenu("Left Shift", "impactVL.LeftShiftP", bg, createMenu);
+		createPersonalityMenu("Left Turn", "impactVL.LeftTurnP", bg, createMenu);
+		createPersonalityMenu("Multiply Adder", "impactVL.MultAdderP", bg, createMenu);
+		createPersonalityMenu("Pass", "impactVL.PassP", bg, createMenu);
+		createPersonalityMenu("Right Shift", "impactVL.RightShiftP", bg, createMenu);
+		createPersonalityMenu("Right Turn", "impactVL.RightTurnP", bg, createMenu);
+		createPersonalityMenu("Sort Bottom", "impactVL.SortBottomP", bg, createMenu);
+		createPersonalityMenu("Sort Top", "impactVL.SortTopP", bg, createMenu);
+		jmb.add(createMenu);
+		*/
 
 		JPanel tools = new JPanel();
 		JButton adv = new JButton("Advance");
@@ -897,6 +824,46 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 		tools.add(new JLabel("Pause interval"));
 		interval.setColumns(6);
 		tools.add(interval);
+		tools.add(new JLabel("Inkpots:"));
+		ButtonGroup inkpots = new ButtonGroup();
+
+		JRadioButton jrb = new JRadioButton(BIT_0);
+		jrb.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				ink = BIT_0;
+			}
+		});
+		inkpots.add(jrb);
+		tools.add(jrb);
+
+		jrb = new JRadioButton(BIT_1);
+		jrb.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				ink = BIT_1;
+			}
+		});
+		inkpots.add(jrb);
+		tools.add(jrb);
+
+		jrb = new JRadioButton(BACKSPACE);
+		jrb.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				ink = BACKSPACE;
+			}
+		});
+		inkpots.add(jrb);
+		tools.add(jrb);
+
+		jrb = new JRadioButton(REPLACE);
+		jrb.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				ink = REPLACE;
+			}
+		});
+		inkpots.add(jrb);
+		tools.add(jrb);
+
+
 		jf.getContentPane().add("North", tools);
 		jf.getContentPane().add("Center", jsp);
 		jf.setSize(1000,1000);
@@ -1282,6 +1249,30 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 				stopdlg.pack();
 			}
 			stopdlg.setVisible(true);
+		}
+	}
+	public void setPersonalityFromPopup(int x, int y) throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+		int pc = 0;
+		for (; pc < personalityClasses.length; pc++) {
+			System.err.println("per class index "+pc+" "+pClass+" "+personalityClasses[pc]);
+			if (pClass.equals(personalityClasses[pc])) {
+				pc++;
+				classIndex = pc % personalityClasses.length;
+				System.err.println("per class index2 "+pc+" "+pClass+" "+personalityClasses[classIndex]);
+				System.err.println("Class index "+classIndex);
+				pClass = personalityClasses[classIndex];
+				break;
+			}
+		}
+		System.err.println("Setting personality "+x+" "+y+" "+pClass);
+
+	     	if (!"impactVL.Module".equals(pClass)) {
+			Personality p = (Personality)(Class.forName(pClass).getDeclaredConstructor().newInstance());
+			Common.personalities[x+Common.startx][y+Common.starty] = p;
+			setPersonality(p);
+			repaint();
+		} else {
+			System.err.println("Not sure what to do about impactVL.Module 'personality'");
 		}
 	}
 	static public void addCells() {

@@ -14,20 +14,23 @@ public class BufferP extends Personality {
 		case KeyEvent.VK_LEFT:
 			break;
 		case KeyEvent.VK_BACK_SPACE:
-			if (in.length() > 0) {
-				in.deleteCharAt(in.length()-1);
-				if (observer != null) {
-					observer.repaint();
-				}
-			}
+			backspace();
 			break;
 		case KeyEvent.VK_0:
 		case KeyEvent.VK_1:
-			addToInBuffer(c);
+			addToInBuffer(""+c);
 			if (observer != null) {
 				observer.repaint();
 			}
 			break;
+		}
+	}
+	public void backspace() {
+		if (in.length() > 0) {
+			in.deleteCharAt(in.length()-1);
+			if (observer != null) {
+				observer.repaint();
+			}
 		}
 	}
 	public void paint(Graphics g) {
@@ -51,7 +54,7 @@ public class BufferP extends Personality {
 	public void setOut(String s) {
 		out = new StringBuffer(s);
 	}
-	public void addToInBuffer(char value) {
+	public void addToInBuffer(String value) {
 		in.append(value);
 		Common.changed = true;
 		tFull = true;
