@@ -425,6 +425,7 @@ vulnerability -->
 		    <artifactId>xerces</artifactId>
 		</exclusion>
 	    </exclusions>
+
 </dependency>
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
