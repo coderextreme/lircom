@@ -408,20 +408,22 @@ class SolitaireClient extends lircom.ClientOnServer {
 	public SolitaireClient(java.net.Socket s, String nick) throws Exception {
 		super(s);
 		setNick("Solitaire"+nick);
+		lircom.Message.thisApplication = "Cards";
 	}
 	public Hashtable client_messages = new Hashtable();
-	public boolean processLine(String line) throws Exception {
+	public lircom.Message processLine(String line) throws Exception {
 		lircom.Message m = lircom.Message.parse(line);
-		if (m.nick.startsWith("Solitaire") && !m.nick.equals(getNick()) && !seenMessage(m, client_messages)) {
+		if (m != null && m.nick.startsWith("Solitaire") && !m.nick.equals(getNick()) && !seenMessage(m, client_messages)) {
 			System.err.println("Processing "+m.message);
 			Log.enabled = false;
 			System.err.println("Log.enabled is "+Log.enabled);
 			GameMiner.processLine(m.message);
 			Log.enabled = true;
 			System.err.println("Log enabled is "+Log.enabled);
-			return true;
+			return m;
 		} else {
-			return false;
+			System.err.print("Ignoring message "+line);
+			return null;
 		}
 	}
 }
@@ -437,39 +439,49 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 	boolean randomrun = false;
 	boolean methodicalrun = false;
 	boolean stop = false;
-	boolean stopped = true;
+	boolean stopped = false;
 	boolean logic = false;
+	boolean dealer = false;
 	SolitaireClient cos = null;
 
 	static public void main(String args[]) throws Exception {
-		Game g = new Game();
+		lircom.Message.thisApplication = "Cards";
                 String mode = "random";
                 String host = "localhost";
                 int port = 8180;
                 if (args.length > 0) {
                         mode = args[0];
                 }
-                if (args.length > 1) {
-                        host = args[1];
-                }
-                if (args.length > 2) {
-                    port = Integer.parseInt(args[2]);
-                }
-		String nickname = javax.swing.JOptionPane.showInputDialog(g.jf, "Enter player name:");
-		g.startGame(mode, host, port, nickname);
+		if (args.length > 1) {
+			for (int a = 2; a < args.length; a++) {
+				System.out.println(args[a]);
+				System.out.flush();
+				String hostPort [] = args[a].trim().split(":");
+				Game g = new Game(mode, hostPort[0], Integer.valueOf(hostPort[1]), null);
+			}
+		}
+	}
+	public Game(String mode, String host, int port, String nickname) throws Exception {
+		startGame(mode, host, port, nickname);
 	}
 	public void startGame(String mode, String server, int port, String nick) throws Exception {
 		GameMiner.game = this;
 		GameMiner.jf = jf;
-		boolean dealer;
+		if (nick == null) {
+			nick = javax.swing.JOptionPane.showInputDialog(this.jf, "Enter player name:");
+		}
 		try {
+			System.err.println("Connecting to "+server+":"+port);
 			java.net.Socket s = new java.net.Socket(server, port);
 			// lircom.Client peer = new lircom.Client();
+			System.err.println("Connected to "+server+":"+port);
 			cos = new SolitaireClient(s, nick);
 			Log.initialize(cos);
 			cos.start();
 		} catch (Exception cosex) {
+			System.err.println("Got exception connecting to "+server+":"+port);
 			cosex.printStackTrace();
+			System.err.println("Couldn't connect to "+server+":"+port);
 		}
 		if (mode.equals("display")) {
 			dealer = false;
@@ -499,26 +511,48 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 		JMenuItem dumpLogic = new JMenuItem("Dump Logic");
 		file.add(dumpLogic);
 		dumpLogic.addActionListener(this);
+
+		JMenuItem dealRandom = new JMenuItem("Deal");
+		file.add(dealRandom);
+		dealRandom.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+         			java.awt.EventQueue.invokeLater(() -> {            
+					System.err.println("Dealing");
+					Game.this.stop = false;
+					Game.this.dealer = true;
+					deal(Game.this.dealer);
+				});
+			}
+		});
+
 		JMenuItem startRandom = new JMenuItem("Start Computer Player");
 		file.add(startRandom);
 		startRandom.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				System.err.println("Starting Computer Player");
-				stop = false;
-				randomrun = true;
-				try {
-					start();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+         			java.awt.EventQueue.invokeLater(() -> {            
+					System.err.println("Starting Computer Player");
+					Game.this.stop = false;
+					Game.this.randomrun = true;
+				});
 			}
 		});
+
 		JMenuItem stopItem = new JMenuItem("Stop Computer Player");
 		file.add(stopItem);
 		stopItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				System.err.println("Stopping Computer Player");
 				stop = true;
+			}
+		});
+
+		JMenuItem quitItem = new JMenuItem("Quit");
+		file.add(quitItem);
+		quitItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				System.err.println("Quitting");
+				stopped = true;
+                		System.exit(0);
 			}
 		});
 
@@ -542,9 +576,9 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 		jf.getContentPane().invalidate();
 		jf.getContentPane().validate();
 		jf.getContentPane().repaint();
-		if (randomrun || methodicalrun) {
-			start();
-		}
+		java.awt.EventQueue.invokeLater(() -> {            
+			Game.this.start();
+		});
 	}
         public void windowClosing(WindowEvent we) {
 		stop = true;
@@ -873,14 +907,21 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 		}
 	}
 	public void run() {
-		if (randomrun) {
-			stopped = false;
-			randomrun();
-			stopped = true;
-		} else if (methodicalrun) {
-			stopped = false;
-			methodicalrun();
-			stopped = true;
+		while (!stopped) {
+			if (randomrun) {
+				// stopped = false;
+				randomrun();
+				// stopped = true;
+			} else if (methodicalrun) {
+				// stopped = false;
+				methodicalrun();
+				// stopped = true;
+			}
+			try {
+				Thread.sleep(1000);
+			} catch (Exception e) {
+				System.err.println("Close window to exit");
+			}
 		}
 	}
 	public void randomrun() {

@@ -2,16 +2,22 @@ package impact;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.Map;
+import java.util.HashMap;
 
 import com.jogamp.opengl.GL2;
 
 public abstract class GraphObject {
 	List<GraphObject> graphObjects = new Vector<GraphObject>();
-	protected int name;
+	static Map<String, Integer> nameToNumber = new HashMap<String, Integer>();
+	protected String name;
 	abstract void draw(GL2 gl);
 	public abstract Object clone();
-	abstract int getName();
-        protected GraphObject(int name) {
+	abstract String getName();
+	public boolean isNumber(int ni) {
+		return nameToNumber.get(name) == ni;
+	}
+        protected GraphObject(String name) {
             this.name = name;
         }
 	public void addGraphObject(GraphObject arc) {

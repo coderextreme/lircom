@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>CheerpJ test</title>
+    <script src="https://cjrtnc.leaningtech.com/4.2/loader.js"></script>
+  </head>
+  <body>
+    <script>
+	cheerpjInit({
+    		// javaProperties: ["java.awt.headless=false"]
+		clipboardMode: "system"
+	}).then(() => {
+		(async () => {
+		cheerpjCreateDisplay(1000, 1000);
+		const exitCode = await cheerpjRunMain(
+		  "impactVL.Cell",
+			/*
+		  "lircom.MainWindow",
+		  */
+		  "/app/target/Impact.jar:/app/target/lircom-3.jar:/app/src/main/java/jackson-core-2.17.1.jar:/app/src/main/java/jackson-databind-2.17.1.jar",
+			/*
+		  "lircom.Chat",
+		  "john",
+		  */
+		);
+		console.log(`Program exited with code ${exitCode}`);
+		})();
+      });
+    </script>
+  </body>
+</html>

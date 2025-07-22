@@ -140,20 +140,22 @@ public class Stack implements ActionListener, ChangeListener {
 		}
 	}
 	public void stateChanged(ChangeEvent e) {
-		System.err.println("State Changed");
-		if (directcb.getText().charAt(0) == StackLayout.X) {
-			directcb.setText(""+StackLayout.Y);
-		} else {
-			directcb.setText(""+StackLayout.X);
-		}
-		gui.setLayout(new StackLayout(Integer.parseInt(offsetjtf.getText()), directcb.getText().charAt(0)));
-		gui.setSize(gui.getLayout().preferredLayoutSize(gui));
-		jf.invalidate();
-		jf.validate();
-		gui.invalidate();
-		gui.validate();
-		gui.repaint();
-		jf.repaint();
+		java.awt.EventQueue.invokeLater(() -> {
+			System.err.println("State Changed");
+			if (directcb.getText().charAt(0) == StackLayout.X) {
+				directcb.setText(""+StackLayout.Y);
+			} else {
+				directcb.setText(""+StackLayout.X);
+			}
+			gui.setLayout(new StackLayout(Integer.parseInt(offsetjtf.getText()), directcb.getText().charAt(0)));
+			gui.setSize(gui.getLayout().preferredLayoutSize(gui));
+			jf.invalidate();
+			jf.validate();
+			gui.invalidate();
+			gui.validate();
+			gui.repaint();
+			jf.repaint();
+		});
 	}
 	public void remove(CardItem ci) {
 		remove(indexOf(ci));
@@ -178,7 +180,9 @@ public class Stack implements ActionListener, ChangeListener {
 			}
 		}
 		if (gui != null) {
-			gui.remove(icim);
+			if (icim != null) {
+				gui.remove(icim);
+			}
 			gui.setSize(gui.getLayout().preferredLayoutSize(gui));
 		}
 		Log.write("PICK|"+stack_no+"|"+i+"|"+icim.toString());

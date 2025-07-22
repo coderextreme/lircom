@@ -5,4 +5,10 @@ public class OutLineHandler implements LineHandler {
 		System.out.print(line);
 		System.out.flush();
 	}
+	public void receive(String nick, String line) {
+		System.out.print(nick);
+		System.out.print("> ");
+		System.out.print(line);
+		System.out.flush();
+	}
 }

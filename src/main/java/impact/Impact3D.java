@@ -39,15 +39,22 @@ public class Impact3D implements GLEventListener, MouseListener, MouseMotionList
   static boolean shifting = false;
   static boolean control = false;
   private boolean cut = false;
+  private Proxy proxy = null;
   public static void main(String[] args) {
+	lircom.Message.thisApplication = "Impact";
 	try {
-		Proxy.getProxy();
-		new Impact3D();
+		for (int a = 0; a < args.length; a++) {
+			System.out.println(args[a]);
+			System.out.flush();
+			String hostPort [] = args[a].trim().split(":");
+			new Impact3D(hostPort[0], Integer.valueOf(hostPort[1]));
+		}
 	} catch (Throwable t) {
 		t.printStackTrace();
 	}
   }
-  public Impact3D() {
+  public Impact3D(String host, int port) {
+    proxy = new Proxy(host, port);
     Frame frame = new Frame("Impact 3D");
     MenuBar menubar = new MenuBar();
     Menu file = new Menu("File");
@@ -66,11 +73,13 @@ public class Impact3D implements GLEventListener, MouseListener, MouseMotionList
 		newPoint();
 	}
     });
-    MenuItem newPolygon = new MenuItem("New Polygon", new MenuShortcut(KeyEvent.VK_O));
-    file.add(newPolygon);
-    newPolygon.addActionListener(new ActionListener() {
+    MenuItem newLineSegment = new MenuItem("New Line Segment", new MenuShortcut(KeyEvent.VK_L));
+    file.add(newLineSegment);
+    newLineSegment.addActionListener(new ActionListener() {
 	public void actionPerformed(ActionEvent ae) {
-		newPolygon();
+		objects.select(newPoint());
+		objects.select(newPoint());
+		newLineSegment();
 	}
     });
     MenuItem newTriangle = new MenuItem("New Triangle", new MenuShortcut(KeyEvent.VK_T));
@@ -91,6 +100,13 @@ public class Impact3D implements GLEventListener, MouseListener, MouseMotionList
 		objects.select(newPoint());
 		objects.select(newPoint());
 		objects.select(newPoint());
+		newPolygon();
+	}
+    });
+    MenuItem newPolygon = new MenuItem("New Polygon", new MenuShortcut(KeyEvent.VK_O));
+    file.add(newPolygon);
+    newPolygon.addActionListener(new ActionListener() {
+	public void actionPerformed(ActionEvent ae) {
 		newPolygon();
 	}
     });
@@ -200,7 +216,7 @@ public class Impact3D implements GLEventListener, MouseListener, MouseMotionList
                 animator.stop();
               }
             }).start();
-	   Proxy.getProxy().close();
+	   proxy.close();
           System.exit(0);
         }
       });
@@ -253,15 +269,22 @@ public class Impact3D implements GLEventListener, MouseListener, MouseMotionList
 
   public Polygon newPolygon() {
 	cmd = UPDATE;
-	Polygon arc = new Polygon(Impact3D.name++, objects.selected, true);
+	Polygon arc = new Polygon(new Integer(Impact3D.name++).toString(), objects.selected, true);
 	objects.add(arc);
 	objects.selected.clear();
 	return arc;
   }
+  public Line newLineSegment() {
+	cmd = UPDATE;
+	Line segment = new Line(new Integer(Impact3D.name++).toString(), objects.selected, true);
+	objects.add(segment);
+	objects.selected.clear();
+	return segment;
+  }
   public Point newPoint() {
     Point point;
     cmd = UPDATE;
-    objects.add(point = new Point(Impact3D.name++, true));
+    objects.add(point = new Point(new Integer(Impact3D.name++).toString(), true));
     return point;
   }
   public void resetView() {
@@ -400,7 +423,6 @@ public class Impact3D implements GLEventListener, MouseListener, MouseMotionList
 
     public void processHits(int hits, IntBuffer buffer)
     {
-      System.out.println("---------------------------------");
 /*
       System.out.println(" HITS: " + hits);
 */
@@ -429,6 +451,7 @@ public class Impact3D implements GLEventListener, MouseListener, MouseMotionList
 	      //System.err.println("buffer name "+nm);
               if (j==(names-1)) {
 		found = objects.select(nm);
+      		System.out.println("---------------------------------");
               }
               offset++;
             }

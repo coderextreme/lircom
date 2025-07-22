@@ -1,0 +1,3 @@
+module lircom {
+	requires junit;
+}

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Impact" default="default" basedir=".">
+    <description>Builds, tests, and runs the ImpactVL project.</description>
+    <property name="fork"                value="true"/>
+    <!--
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+    -->
+    <property name="impact.jar"     value="impact.jar"/>
+    <property name="cell.jar"     value="cell.jar"/>
+    <!--
+    <property name="M2"     value="C:/Users/jcarl/.m2/repository"/>
+    -->
+    <property name="javac.verbose"              value="false"/>
+    <property name="java.classes.dir"        value="net"/>
+    <!--
+    <property name="classpath"        value=".;build;impact.jar;../resources/;${M2}/com/fasterxml/jackson/core/jackson-annotations/2.17.1/jackson-annotations-2.17.1.jar;${M2}/com/fasterxml/jackson/core/jackson-core/2.17.1/jackson-core-2.17.1.jar;${M2}/com/fasterxml/jackson/core/jackson-databind/2.17.1/jackson-databind-2.17.1.jar;${M2}/com/fasterxml/jackson/jr/jackson-jr-objects/2.17.1/jackson-jr-objects-2.17.1.jar;${M2}/com/fasterxml/classmate/1.7.0/classmate-1.7.0.jar"/>
+    -->
+    <property name="classpath"        value=".;build;impact.jar;../resources/;./jackson-core-2.17.1.jar;./jackson-databind-2.17.1.jar"/>
+    <target name="all" depends="default,impact"/>
+
+   
+
+    <target name="default">
+	    <mkdir dir="build"/>
+
+	    <javac  srcdir="impactVL"
+			   destdir="build"
+	    		   debug="true"
+	    		   classpath="${classpath}"
+		 	   includeantruntime="false"
+			   verbose="${javac.verbose}"
+			   fork="${fork}">
+		</javac>
+
+		<jar destfile="${impact.jar}" duplicate="add" strict="warn">
+            <!-- http://docs.oracle.com/javase/8/docs/technotes/guides/deploy/manifest.html -->
+            <manifest id="ClassesJarManifest">
+                <attribute name="Built-By" value="${user.name.build}"/>
+                <attribute name="Implementation-Vendor" value="John Carlson"/>
+                <attribute name="Implementation-Title" value="ImpactVL"/>
+                <attribute name="Implementation-Version" value="2.0"/>
+                <attribute name="Main-Class" value="impactVL.Impact"/>
+                <attribute name="Sealed" value="true"/>
+            </manifest>
+	    <fileset dir="../resources">
+		    <include name="impactVL/*.rg"/>
+            </fileset>
+	    <fileset dir=".">
+		    <include name="impactVL/*.java"/>
+            </fileset>
+	    <fileset dir="build">
+		    <include name="**/*.class"/>
+            </fileset>
+	    <fileset dir="../resources">
+		    <include name="impactVL/*.gif"/>
+            </fileset>
+	    <zipgroupfileset dir=".">
+		    <include name="jackson-core-2.17.1.jar"/>
+		    <include name="jackson-databind-2.17.1.jar"/>
+		    <include name="jackson-core-2.17.1-sources.jar"/>
+		    <include name="jackson-databind-2.17.1-sources.jar"/>
+	    </zipgroupfileset>
+	 </jar>
+		<jar destfile="${cell.jar}" duplicate="fail" strict="warn">
+            <!-- http://docs.oracle.com/javase/8/docs/technotes/guides/deploy/manifest.html -->
+            <manifest id="ClassesJarManifest">
+                <attribute name="Built-By" value="${user.name.build}"/>
+                <attribute name="Implementation-Vendor" value="John Carlson"/>
+                <attribute name="Implementation-Title" value="ImpactVL"/>
+                <attribute name="Implementation-Version" value="2.0"/>
+                <attribute name="Main-Class" value="impactVL.Cell"/>
+                <attribute name="Sealed" value="true"/>
+            </manifest>
+	    <fileset dir="../resources/impactVL">
+		    <include name="**/*.rg"/>
+            </fileset>
+	    <fileset dir=".">
+		    <include name="impactVL/*.java"/>
+            </fileset>
+	    <fileset dir="build">
+		    <include name="**/*.class"/>
+            </fileset>
+	    <fileset dir="../resources">
+		    <include name="impactVL/*.gif"/>
+            </fileset>
+	 </jar>
+	 <echo>Now run `ant impact`, `ant Cell` and `ant Cell4x4`</echo>
+    </target>
+    <target name="impact" depends="default">
+	    <java classname="impactVL.Impact" classpath="${classpath}" fork="${fork}">
+	</java>
+    </target>
+    <target name="impact.jar" depends="default">
+	    <java classname="impactVL.Impact" classpath="${classpath}" fork="${fork}">
+	</java>
+    </target>
+    <target name="Cell" depends="default">
+	    <java classname="impactVL.Cell" classpath="${classpath}" fork="${fork}">
+		<arg value="division"/>
+	</java>
+    </target>
+    <target name="Cell4x4" depends="default">
+	    <java classname="impactVL.Cell" classpath="${classpath}" fork="${fork}">
+		<arg value="4x4"/>
+	</java>
+    </target>
+</project>

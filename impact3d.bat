@@ -1,8 +1,8 @@
-set DIR=C:\Users\john\lircom
+set DIR=C:\Users\jcarl\lircom
 set JARS=%DIR%\m2
-set DWN=C:\Users\john\Downloads
+set DWN=C:\Users\jcarl\Downloads
 set M2=m2
-set LIB=C:\Users\john\Downloads\jogamp-all-platforms\lib\windows-amd64
+set LIB=C:\Users\jcarl\Downloads\jogamp-all-platforms\lib\windows-amd64
 
 start %DIR%\peer.bat
 

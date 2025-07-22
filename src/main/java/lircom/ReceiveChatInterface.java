@@ -5,7 +5,7 @@ import java.io.InputStream;
 public interface ReceiveChatInterface {
 	void receive(String from, String message, String color);
 	void receive(String from, String message);
-	boolean processLine(String message) throws Exception;
+	Message processLine(String message) throws Exception;
 	void receive(String from, InputStream file);
 	void receiveAction(String from, String message);
 	void receiveJoin(String network, String room, String person);

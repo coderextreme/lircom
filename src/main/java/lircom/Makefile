@@ -3,7 +3,7 @@ JAVA=java
 JAR=jar
 KEYSTORE=../../../../mykeystore
 M2=../../../../m2
-CLASSPATH="../../../../target/lircom-2.jar;../../../../m2/httpclient-4.5.13.jar;../../../../m2/htmlunit-2.55.0.jar;../../../../m2/httpunit-1.7.3.jar;../../../../m2/nekohtml-1.9.22.jar;../../../../m2/xml-apis-1.4.01.jar;../../../../m2/js-1.7R2.jar;../../../../m2/json-20190722.jar;.."
+CLASSPATH="../../../../target/lircom-2.jar;../../../../m2/httpclient-4.5.13.jar;../../../../m2/htmlunit-4.13.0.jar;../../../../m2/httpunit-1.7.3.jar;../../../../m2/nekohtml-1.9.22.jar;../../../../m2/xml-apis-1.4.01.jar;../../../../m2/js-1.7R2.jar;../../../../m2/json-20190722.jar;.."
 
 BFCLASSPATH="..;../../../../m2/xml-apis.1.4.01.jar;../../../../m2/js-1.7R2.jar"
 CLASSPATH3="..;lircom.jar;../../../../target/lircom-2.jar"
@@ -59,13 +59,6 @@ wikispeak: lircom.jar
 
 babelfish: lircom.jar
 	$(JAVA) -cp $(BFCLASSPATH) lircom.BabelFish "thank you"
-
-runestone: lircom.jar
-	$(JAVA) -Xmx256m -cp $(CLASSPATH) lircom.Runestone
-
-Heathens: lircom.jar
-	$(JAVA) -Xmx256m -cp $(CLASSPATH) lircom.Heathens
-
 
 signall:
 	(for i in ../../../../target/*jar ../../../../m2/*jar ../*/*.jar; do jarsigner -storepass foobar -keystore $(KEYSTORE) $$i myself; done)

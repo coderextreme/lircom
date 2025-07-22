@@ -218,6 +218,7 @@ public class Lircom extends JFrame {
                 hyperlinkHandler = new Hyperactive();
                 chat_Info_Area.addHyperlinkListener(hyperlinkHandler);
     }
+    /*(
     public void init(HTMLEditorSample chat) throws Exception {
 		FromGUI fg = new FromGUI();
 		FromServer fs = new FromServer();
@@ -235,6 +236,7 @@ public class Lircom extends JFrame {
                 hyperlinkHandler = new Hyperactive();
                 chat_Info_Area.addHyperlinkListener(hyperlinkHandler);
     }
+    */
     public Chat chat;
 	private JEditorPane chat_Info_Area = null;
 	private JTextField chat_Text_Field = null;

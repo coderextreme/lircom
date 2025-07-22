@@ -134,7 +134,7 @@ public class ClientConnect extends javax.swing.JFrame {
                 tm.removeRow(0);
         }
         while (i.hasNext()) {
-                System.err.println("got here");
+                //  System.err.println("got here");
                 PossibleConnection pcon = (PossibleConnection)
                     PossibleConnection.get(i.next().toString());
                 try {

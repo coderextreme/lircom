@@ -1,9 +1,11 @@
 #!/bin/bash
-export JAVAC=javac
-export JAVA=java
-export JAR=jar
-export KEYSTORE=mykeystore
-export M2=m2
-export CLASSPATH="target/lircom-2.jar"
 
-${JAVA} -Xmx256m -classpath ${CLASSPATH} solitaire.Game dealer localhost 8180
+. env.sh
+
+#${JAVA_OPTS} solitaire.Game display
+#${JAVA_OPTS} solitaire.Game random
+#${JAVA_OPTS} solitaire.Game methodical
+
+${JAVA_OPTS} lircom.Peer ${PORTS} | xargs -L ${NUM_PORTS} ${JAVA_OPTS} solitaire.Game random &
+sleep 1
+echo ${PORTS} | awk '{ for(i=1; i<=NF; i++) { print $i; }}' | sed 's/^/localhost:/' | xargs -L ${NUM_PORTS} ${JAVA_OPTS} solitaire.Game dealer &

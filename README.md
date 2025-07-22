@@ -1,6 +1,12 @@
 # lircom
 Language Independent Relay Communications
 
+For a grand tour, edit the configuration in env.sh, and run all.sh
+
+But first, do
+
+$ mvn clean; mvn install; ant
+
 Host:
 
 Go to command prompt folder where you unpacked lircom, called lircom.
@@ -19,9 +25,11 @@ Menu > Advertise Service
 
 Pick a server nick and hit advertise button.
 
-Wait for parties to john.
+Wait for parties to join.
 
 Guest:
+
+Go to another command prompt.
 
 C:\> cd lircom
 
@@ -41,7 +49,7 @@ Download JOGAMP and Gluegen from here:
 
 https://jogamp.org/deployment/archive/master/?C=M;O=D
 
-(already downloaded for linux-amd64, see m2 folder)
+(already downloaded for linux-amd64, see jar folder)
 
 Get a version build after Jan 12, 2021
 

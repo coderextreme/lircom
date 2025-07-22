@@ -6,14 +6,24 @@ public class Peer extends Thread {
 	private int port = 0;
 	private ServerSocket ss;
 	static public void main(String args[]) throws Exception {
-		if (args.length != 1) {
-			System.err.println("Usage: java Peer localport");
+		lircom.Message.thisApplication = null;
+		if (args.length <= 0) {
+			System.err.println("Usage: java Peer localPort ... ");
+			Peer s = new Peer();
+		} else {
+			for (int i = 0; i < args.length; i++) {
+				Peer s = new Peer(Integer.parseInt(args[i]));
+			}
 		}
-		Peer s = new Peer();
-		s.setPort(Integer.parseInt(args[0]));
-		s.start();
 	}
 	public Peer() throws Exception {
+		this(8180);
+	}
+	public Peer(int port) throws Exception {
+		setPort(port);
+		start();
+		System.out.println("localhost:"+port);
+		System.out.flush();
 	}
 	public void setPort(int port) throws Exception {
 		this.port = port;

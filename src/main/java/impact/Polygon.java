@@ -9,8 +9,11 @@ import com.jogamp.common.nio.Buffers;
 
 public  class Polygon extends GraphObject {
   	float [] white = new float[] { 1.0f, 1.0f, 1.0f, 1.0f };
-	Polygon(int name, List<GraphObject> nodes, boolean useProxy) {
+	Polygon(String name, List<GraphObject> nodes, boolean useProxy) {
             super(name);
+	    if (nameToNumber.get(name) == null) {
+		nameToNumber.put(name, Integer.parseInt(name));
+	    }
 	    for (GraphObject node : nodes) {
 			// arcs connect nodes
 		    if (node instanceof Point) {
@@ -22,12 +25,12 @@ public  class Polygon extends GraphObject {
 	        Proxy.getProxy().insert(this);
 	    }
 	}
-        public int getName() {
+        public String getName() {
 		return this.name;
 	}
 	public void draw(GL2 gl) {
 	
-	   gl.glPushName(name);
+	   gl.glPushName(nameToNumber.get(name));
 	   gl.glBegin(gl.GL_POLYGON);
 	   List<GraphObject> objs = getGraphObjects();
 	   int size = objs.size(); 
@@ -50,7 +53,10 @@ public  class Polygon extends GraphObject {
 	   gl.glPopName();
 	}
 	public Object clone() {
-		Polygon arc = new Polygon(Impact3D.name++, getGraphObjects(), true);
+		Integer ni = Impact3D.name++;
+		String nm = ni.toString();
+		nameToNumber.put(nm, ni);
+		Polygon arc = new Polygon(nm, getGraphObjects(), true);
 		Proxy.getProxy().update(arc);
 		return arc;
 	}
@@ -63,6 +69,7 @@ public  class Polygon extends GraphObject {
 		     GraphObject obj = (GraphObject)objs.get(i);
 		     sb.append("|");
 	             sb.append(obj.name);
+		     System.err.println("There's a graph object with name "+obj.name);
 	        }
 		p.send(sb.toString());
 		receive(sb.toString());
@@ -89,39 +96,40 @@ public  class Polygon extends GraphObject {
 	static public void receive(String line) {
 		String [] params = line.split("\\|");
 		 if (params[2].startsWith("INSERT")) {
-			int nm = Integer.parseInt(params[1]);
+			String nm = params[1];
 			List<GraphObject> nodes = new ArrayList<GraphObject>();
 			for (int i = 3; i < params.length; i++) {
-				int nodenm = Integer.parseInt(params[i]);
+				String nodenm = params[i];
 				synchronized(Impact3D.objects.shown) {
 					Iterator<GraphObject> n = Impact3D.objects.shown.iterator();
 					while (n.hasNext()) {
 						
 						GraphObject obj = n.next();
-						if (obj instanceof Point && obj.name == nodenm) {
+						if (obj instanceof Point && obj.name.equals(nodenm)) {
 							nodes.add(obj);
 						}
 					}
 				}
 			}
-			int n = Integer.parseInt(params[1]);
-			if (n >= Impact3D.name) {
-				Impact3D.name = n+1;
+			int ni = Integer.parseInt(nm);
+			if (ni >= Impact3D.name) {
+				Impact3D.name = ni+1;
 			}
-			Polygon arc = new Polygon(n, nodes, false);
+			nameToNumber.put(nm, ni);
+			Polygon arc = new Polygon(nm, nodes, false);
 			Impact3D.objects.add(arc);
 		 } else if (params[2].startsWith("UPDATE")) {
 			boolean found = false;
-			int nm = Integer.parseInt(params[1]);
+			String nm = params[1];
 			List<GraphObject> nodes = new ArrayList<GraphObject>();
 			for (int i = 3; i < params.length; i++) {
-				int nodenm = Integer.parseInt(params[i]);
+				String nodenm = params[i];
 				synchronized(Impact3D.objects.shown) {
 					Iterator<GraphObject> n = Impact3D.objects.shown.iterator();
 					while (n.hasNext()) {
 						
 						GraphObject obj = n.next();
-						if (obj instanceof Point && obj.name == nodenm) {
+						if (obj instanceof Point && obj.name.equals(nodenm)) {
 							nodes.add(obj);
 						}
 					}
@@ -135,7 +143,7 @@ public  class Polygon extends GraphObject {
 		   		Iterator<GraphObject> ni = Impact3D.objects.shown.iterator();
 				while (ni.hasNext()) {
 					GraphObject obj = ni.next();
-					if (obj.name == nm) {
+					if (obj.name.equals(nm)) {
 						if (obj instanceof Polygon) {
 							Polygon arc = (Polygon)obj;
 							found = true;
@@ -145,7 +153,8 @@ public  class Polygon extends GraphObject {
 				}
 			}
 			if (!found) {
-				Polygon arc = new Polygon(n, nodes, false);
+				nameToNumber.put(nm, n);
+				Polygon arc = new Polygon(nm, nodes, false);
 				Impact3D.objects.add(arc);
 			}
 		} else if (params[2].startsWith("DELETE")) {
@@ -154,7 +163,7 @@ public  class Polygon extends GraphObject {
 		   		Iterator<GraphObject> a = Impact3D.objects.shown.iterator();
 				while (a.hasNext()) {
 					GraphObject obj = a.next();
-					if (obj.name == nm) {
+					if (obj.name.equals(nm)) {
 						a.remove();
 					}
 				}				

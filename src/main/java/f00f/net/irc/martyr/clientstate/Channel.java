@@ -85,7 +85,7 @@ public class Channel
 	 *
      * @param member Member to add to the channel
      * @param why Command that caused the member to be added
-	 * @deprecated Use <code>addMember( String, InCommand )</code>
+	 * @Deprecated Use <code>addMember( String, InCommand )</code>
 	 * instead.
 	 */
 	public void addMember( String member, Command why )
@@ -108,7 +108,7 @@ public class Channel
 	/**
      * @param nick Nick to add to the channel
      * @param why Command that caused the member to be added
-	 * @deprecated Use <code>addMember( FullNick, InCommand )</code> intead.
+	 * @Deprecated Use <code>addMember( FullNick, InCommand )</code> intead.
 	 */
 	public void addMember( FullNick nick, Command why )
 	{
@@ -139,7 +139,7 @@ public class Channel
 	/**
      * @param member Nick to remove from channel
      * @param why Command that caused removal
-	 * @deprecated Use <code>removeMember( String, InCommand ) instead.</code>
+	 * @Deprecated Use <code>removeMember( String, InCommand ) instead.</code>
 	 * */
 	public void removeMember( String member, Command why )
 	{
@@ -149,7 +149,7 @@ public class Channel
 	/**
      * @param member Member to remove from channel
      * @param why Command that caused removal
-	 * @deprecated Use <code>removeMember( FullNick, InCommand ) instead.</code>
+	 * @Deprecated Use <code>removeMember( FullNick, InCommand ) instead.</code>
 	 * */
 	public void removeMember( FullNick member, Command why )
 	{
