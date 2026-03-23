@@ -91,7 +91,8 @@ public class ClientOnServer extends Thread implements Errors {
 	    }
         }
 	public void run() {
-		try {
+                        
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(input))){
 			String line = null;
                         /*
 			int c = -1;
@@ -127,18 +128,19 @@ public class ClientOnServer extends Thread implements Errors {
 				}
 			} while (node != null);
 			*/
-                        BufferedReader br = new BufferedReader(new InputStreamReader(input));
-                        while ((line = br.readLine()) != null) {
-                                try {
-                                    if (line.trim().equals("")) {
-                                        continue;
-                                    }
-                                    // log("received in ClientOnServer "+line);
-				    processLine(line);
-                                } catch (ClientException ce) {
-                                    log(ce);
-                                }
-			
+			synchronized(br) {
+				while ((line = br.readLine()) != null) {
+					try {
+					    if (line.trim().equals("")) {
+						continue;
+					    }
+					    // log("received in ClientOnServer "+line);
+					    processLine(line);
+					} catch (ClientException ce) {
+					    log(ce);
+					}
+				
+				}
 			}
 		} catch (SocketException e) {
 			log("SocketException while reading");
@@ -181,7 +183,7 @@ public class ClientOnServer extends Thread implements Errors {
 	}
 	public Message processMessage(Message m) throws Exception {
 		if (!seenMessage(m, server_messages)) {
-			log("not seen message "+m.message);
+			// log("not seen message "+m.message);
 			try {
 				Hashtable rec = prepareToSend(m);
 				send(m, rec);
@@ -204,7 +206,7 @@ public class ClientOnServer extends Thread implements Errors {
 		while (i.hasNext()) { // go through existing list
 			String to = (String)i.next();
 			if (to.equals("*")) {
-				log("Adding ALL Clients");
+				// log("Adding ALL Clients");
 				newrec.put("*", "*"); // send to who is left
 				rec = (Hashtable<Long,ClientOnServer>)(clients.clone());
 				// rec.remove(clientno);
@@ -267,7 +269,7 @@ public class ClientOnServer extends Thread implements Errors {
                         output.println(line);
                         output.flush();
                     } else {
-                        log("output is null..."+line);
+                        // log("output is null..."+line);
                     }
                 } catch (Exception e) {
                     try {
@@ -301,35 +303,38 @@ public class ClientOnServer extends Thread implements Errors {
                 log("No recipient found in message");
             }                 
         }
-        static Hashtable<String, Message> server_messages = new Hashtable<String, Message>();
-        public boolean seenMessage(Message m, Hashtable<String, Message> messages) {
+        private static Hashtable<String, Message> server_messages = new Hashtable<String, Message>();
+        public synchronized boolean seenMessage(Message m, Hashtable<String, Message> messages) {
 	    if (m == null) {
 		    log("Message m is null in seenMessage");
 		    return true;
 	    }
             String umsg = m.timestamp+","+m.sequenceno+","+m.nick+","+getNick();
-            Iterator i = messages.keySet().iterator();
+            Iterator<String> i = messages.keySet().iterator();
             Vector<String> removes = new Vector<String>();
             while (i.hasNext()) {
-                String sumsg = (String)i.next();
+                String sumsg = i.next();
+		String umsgc = umsg.substring(0, umsg.lastIndexOf(","));
+		String sumsgc = sumsg.substring(0, sumsg.lastIndexOf(","));
                 //log("sumsg "+sumsg+" umsg "+umsg);
                 if (umsg.equals(sumsg)) {
-                    log("Found "+umsg+" on "+addressportclient+"  already not sending");
                     return true;
-                }
+                } else {
+                    //log("******"+umsg+" not equal to "+sumsg+" sending for the first time");
+		}
                 int comma = sumsg.indexOf(",");
                 long msgtime = Long.parseLong(sumsg.substring(0, comma));
                 if (System.currentTimeMillis() - msgtime > 30000) { // save messages for 30 seconds
                     removes.add(sumsg);
                 }
             }
-            i = removes.iterator();
-            while (i.hasNext()) {
-                String sumsg = (String)i.next();
-                log("Removing "+sumsg);
+            ListIterator<String> j = removes.listIterator();
+            while (j.hasNext()) {
+                String sumsg = j.next();
+                // log("Removing "+sumsg);
                 messages.remove(sumsg);
             }
-            log("Saving "+umsg);
+            // log("Saving "+umsg);
             messages.put(umsg, m);
             return false;
         }

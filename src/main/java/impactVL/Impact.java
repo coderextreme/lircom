@@ -197,7 +197,7 @@ class VisualModule extends JLabel implements Rectangular {
 		// We don't need this as Cell draw it
 		// System.err.println("text "+text);
 		// Do not specify a URL. TODO
-		URL icon = this.getClass().getClassLoader().getResource("impactVL/"+text+".gif");
+		URL icon = this.getClass().getClassLoader().getResource("impactVL/"+text+".png");
 		if (icon != null) {
 			System.err.println("Setting "+text+" icon url "+icon.toString());
 			setIcon(new ImageIcon(icon, text));

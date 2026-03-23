@@ -47,6 +47,7 @@ public class Synth {
     java.util.Random r = new java.util.Random();
     public void speak(String saying) {
         String os = System.getProperty("os.name");
+	System.out.println("OS is "+os);
 	String nick = "System";
 	if (saying.indexOf(" ") >= 0) {
 		nick = saying.substring(0, saying.indexOf(" "));

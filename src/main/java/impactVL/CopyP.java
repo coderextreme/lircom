@@ -6,7 +6,7 @@ public class CopyP extends Personality {
 	static private Image image = null;
 	public CopyP() {
 		if (image == null) {
-			image = new ImageIcon(this.getClass().getClassLoader().getResource("impactVL/copy.gif")).getImage();
+			image = new ImageIcon(this.getClass().getClassLoader().getResource("impactVL/copy.png")).getImage();
 		}
 	}
 	public void step(int x, int y) {

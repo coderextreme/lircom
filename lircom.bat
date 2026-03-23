@@ -3,4 +3,5 @@ set CLASSPATH="%DIR%/target/lircom-3.jar;%DIR%/m2/httpunit-1.7.3.jar;%DIR%/m2/ne
 
 start bash %DIR%/peer.sh
 
-java -Xmx256m -cp %CLASSPATH% lircom.MainWindow lircom.Chat
+rem java -Xmx256m -cp %CLASSPATH% lircom.MainWindow lircom.Chat
+java -jar target/lircom-3-jar-with-dependencies.jar lircom.Chat

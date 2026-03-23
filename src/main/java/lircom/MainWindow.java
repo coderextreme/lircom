@@ -64,7 +64,6 @@ public class MainWindow extends javax.swing.JFrame implements java.awt.event.Win
         flashchat = new javax.swing.JMenuItem();
         languageMenu = new javax.swing.JMenu();
         zh = new javax.swing.JMenuItem();
-        zt = new javax.swing.JMenuItem();
         nl = new javax.swing.JMenuItem();
         en = new javax.swing.JMenuItem();
         fr = new javax.swing.JMenuItem();
@@ -285,14 +284,6 @@ public class MainWindow extends javax.swing.JFrame implements java.awt.event.Win
         });
         languageMenu.add(zh);
 
-        zt.setText("??");
-        zt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ztActionPerformed(evt);
-            }
-        });
-        languageMenu.add(zt);
-
         nl.setText("Nederlands");
         nl.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -365,7 +356,7 @@ public class MainWindow extends javax.swing.JFrame implements java.awt.event.Win
         });
         languageMenu.add(pt);
 
-        ru.setText("Russian (sorry, IntelliJ doesn't handle Cyrillic");
+        ru.setText("русский");
         ru.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ruActionPerformed(evt);
@@ -426,56 +417,64 @@ public class MainWindow extends javax.swing.JFrame implements java.awt.event.Win
         chat.toggleSound();
     }//GEN-LAST:event_soundToggleItemActionPerformed
 
-    private void ztActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ztActionPerformed
-        chat.setLanguage("zt");
-    }//GEN-LAST:event_ztActionPerformed
-
     private void zhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zhActionPerformed
         chat.setLanguage("zh");
+	//chat.setLanguage("中文");
     }//GEN-LAST:event_zhActionPerformed
 
     private void esActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_esActionPerformed
         chat.setLanguage("es");
+        //chat.setLanguage("Español");
     }//GEN-LAST:event_esActionPerformed
 
     private void ruActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ruActionPerformed
         chat.setLanguage("ru");
+        //chat.setLanguage("русский");
     }//GEN-LAST:event_ruActionPerformed
 
     private void ptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ptActionPerformed
         chat.setLanguage("pt");
+        //chat.setLanguage("Português");
     }//GEN-LAST:event_ptActionPerformed
 
     private void koActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_koActionPerformed
         chat.setLanguage("ko");
+        //chat.setLanguage("한국어");
     }//GEN-LAST:event_koActionPerformed
 
     private void jaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jaActionPerformed
         chat.setLanguage("ja");
+        //chat.setLanguage("日本語");
     }//GEN-LAST:event_jaActionPerformed
 
     private void itActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itActionPerformed
         chat.setLanguage("it");
+        //chat.setLanguage("italiano");
     }//GEN-LAST:event_itActionPerformed
 
     private void elActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_elActionPerformed
         chat.setLanguage("el");
+        //chat.setLanguage("ελληνικά");
     }//GEN-LAST:event_elActionPerformed
 
     private void frActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_frActionPerformed
-       chat.setLanguage("fr");
+        chat.setLanguage("fr");
+        //chat.setLanguage("Francais");
     }//GEN-LAST:event_frActionPerformed
 
     private void nlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nlActionPerformed
        chat.setLanguage("nl");
+       //chat.setLanguage("Nederlands");
     }//GEN-LAST:event_nlActionPerformed
 
     private void deActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deActionPerformed
         chat.setLanguage("de");
+        //chat.setLanguage("Deutsch");
     }//GEN-LAST:event_deActionPerformed
 
     private void enActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enActionPerformed
         chat.setLanguage("en");
+        //chat.setLanguage("English");
     }//GEN-LAST:event_enActionPerformed
 
     private void flashchatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_flashchatActionPerformed
@@ -808,7 +807,6 @@ public void 	windowOpened(java.awt.event.WindowEvent e) {}
     private javax.swing.JMenuItem warmChicken;
     private javax.swing.JMenuItem watchSolitaire;
     private javax.swing.JMenuItem zh;
-    private javax.swing.JMenuItem zt;
     // End of variables declaration//GEN-END:variables
     
 }

@@ -489,7 +489,7 @@ public class Chat extends ClientOnServer implements WindowListener, ActionListen
 		} else {
 			from = getNick();
 		}
-	        Message m = new Message(rec, from, line, lang);
+	        Message m = new Message(rec, from, line, getLanguage());
 		try {
 			Hashtable clientrec = prepareToSend(m);
                         send(m, clientrec);
@@ -508,15 +508,7 @@ public class Chat extends ClientOnServer implements WindowListener, ActionListen
 							sci.msgSend(line, (String)irci.next());
 						}
 					} else {
-						/*
-							if (sci instanceof Heathens) {
-								sci.msgSend(m.generate());
-							} else {
-							*/
-								sci.msgSend(line);
-								/*
-							}
-							*/
+					    sci.msgSend(line);
 					}
 				}
 				say(from, "says", line, color);
@@ -695,7 +687,7 @@ SwingUtilities.invokeLater(new Runnable() {
 
 	public synchronized void displayToScreen(Message m) {
 	    try  {
-                m.translate(lang);
+                m.translate(getLanguage());
 	        String text = quoteURL(m.message);
 	        if (!seenMessage(m, gui_messages)) {
 			say(m.nick, "says", text, color);

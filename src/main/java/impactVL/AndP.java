@@ -6,7 +6,7 @@ public class AndP extends Personality {
 	static private Image image = null;
 	public AndP() {
 		if (image == null) {	
-			image = new ImageIcon(this.getClass().getClassLoader().getResource("impactVL/andthing.gif")).getImage();
+			image = new ImageIcon(this.getClass().getClassLoader().getResource("impactVL/andthing.png")).getImage();
 		}
 	}
 	public void step(int x, int y) {

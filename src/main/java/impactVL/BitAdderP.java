@@ -6,7 +6,7 @@ public class BitAdderP extends Personality {
 	static private Image image = null;
 	public BitAdderP() {
 		if (image == null) {
-			image = new ImageIcon(this.getClass().getClassLoader().getResource("impactVL/adder.gif")).getImage();
+			image = new ImageIcon(this.getClass().getClassLoader().getResource("impactVL/adder.png")).getImage();
 		}
 	}
 	public void step(int x, int y) {

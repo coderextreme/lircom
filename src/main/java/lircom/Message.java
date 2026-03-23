@@ -89,13 +89,13 @@ public class Message extends Throwable {
 	}
     }
     public String translate(String targetLanguage) {
-	    log("language is "+ this.language);
+	    log("source language is "+ this.language);
 	    log("target language is "+ targetLanguage);
 	    log("input message "+ this.message);
 	if (!this.language.equals("__") && !this.language.equals(targetLanguage)) {
 		try {
-			// return BabelFish.translate(message, this.language, targetLanguage);
-			return this.message;
+			this.message = com.example.TranslationApp.translate(message, this.language, targetLanguage);
+			this.language = targetLanguage;
 		} catch (Exception e) {
 			log(e);
 		}
@@ -110,7 +110,7 @@ public class Message extends Throwable {
 		    message.rec = new java.util.Hashtable<String,String>();
 		    for (JsonNode recNode : node.get(0)) {
 			message.rec.put(recNode.asText(), recNode.asText());
-			log("Recipient: "+recNode.asText());
+			// log("Recipient: "+recNode.asText());
 		    }
 		    message.from = node.get(1).asText();
 		    message.timestamp = node.get(2).asLong();
@@ -120,7 +120,7 @@ public class Message extends Throwable {
 		    message.nick = node.get(6).asText();
 		    message.application = node.get(7).asText();
 		    message.message = node.get(8).asText();
-		    log("Incoming: "+node.toString());
+		    // log("Incoming: "+node.toString());
 		    return message;
 		}
 	}
