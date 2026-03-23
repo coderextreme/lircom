@@ -52,7 +52,7 @@ public class ServerAdvertise extends javax.swing.JFrame {
         getContentPane().add(jLabel1, gridBagConstraints);
 
         url.setColumns(40);
-        url.setText("http://coderextreme.net/advertise.php");
+        url.setText("https://coderextreme.net/advertise.php");
         url.setMinimumSize(new java.awt.Dimension(200, 19));
         url.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

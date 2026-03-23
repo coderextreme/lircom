@@ -53,7 +53,7 @@
     <Component class="javax.swing.JTextField" name="url">
       <Properties>
         <Property name="columns" type="int" value="40"/>
-        <Property name="text" type="java.lang.String" value="http://coderextreme.net/advertise.php"/>
+        <Property name="text" type="java.lang.String" value="https://coderextreme.net/advertise.php"/>
         <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[200, 19]"/>
         </Property>

@@ -43,7 +43,7 @@
         </Component>
         <Component class="javax.swing.JTextField" name="url">
           <Properties>
-            <Property name="text" type="java.lang.String" value="http://coderextreme.net/advertise.php"/>
+            <Property name="text" type="java.lang.String" value="https://coderextreme.net/advertise.php"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="urlActionPerformed"/>

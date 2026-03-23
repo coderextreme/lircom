@@ -50,7 +50,7 @@ public class ClientConnect extends javax.swing.JFrame {
         });
         jPanel1.add(harvestButton);
 
-        url.setText("http://coderextreme.net/advertise.php");
+        url.setText("https://coderextreme.net/advertise.php");
         url.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 urlActionPerformed(evt);

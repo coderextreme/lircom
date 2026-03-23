@@ -2,7 +2,7 @@
 <!-- JNLP File for Impact 3D Simulator -->
 <jnlp
   spec="1.0+"
-  codebase="http://coderextreme.net/lircom/src"
+  codebase="https://coderextreme.net/lircom/src"
   href="malvok.jnlp">
   <information>
     <title>Impact 3D Simulator</title>
