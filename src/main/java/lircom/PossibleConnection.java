@@ -20,7 +20,7 @@ public class PossibleConnection {
         String nick;
         String date;
         boolean connected;
-	static java.util.Hashtable<Object, PossibleConnection> pcons = new java.util.Hashtable<Object, PossibleConnection>();
+	static java.util.HashMap<Object, PossibleConnection> pcons = new java.util.HashMap<Object, PossibleConnection>();
         ClientOnServer client;
 	public PossibleConnection(String host, String port, String nick, String date) {
 		this.host = host;

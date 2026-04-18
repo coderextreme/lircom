@@ -1,9 +1,9 @@
 package impact;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 
 public class ImpactClient extends lircom.ClientOnServer {
-	public Hashtable client_messages = new Hashtable();
+	public HashMap client_messages = new HashMap();
 	private Proxy proxy = null;
 	public ImpactClient(Proxy proxy, java.net.Socket s, String nick) throws Exception {
 		super(s);

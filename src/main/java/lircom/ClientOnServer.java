@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class ClientOnServer extends Thread implements Errors {
 	protected InputStream input;
 	protected PrintWriter output;
-	protected static Hashtable<Long,ClientOnServer> clients = new Hashtable<Long,ClientOnServer>();
+	protected static HashMap<Long,ClientOnServer> clients = new HashMap<Long,ClientOnServer>();
 	long clientno;
 	String addressportclient;
 	static long cs = 0;
@@ -185,7 +185,7 @@ public class ClientOnServer extends Thread implements Errors {
 		if (!seenMessage(m, server_messages)) {
 			// log("not seen message "+m.message);
 			try {
-				Hashtable rec = prepareToSend(m);
+				HashMap rec = prepareToSend(m);
 				send(m, rec);
 			} catch (Message msge) {
 				messageException(msge);
@@ -196,19 +196,19 @@ public class ClientOnServer extends Thread implements Errors {
 		}
 	}
         
-	public Hashtable prepareToSend(Message m) throws Exception, Message {
+	public HashMap prepareToSend(Message m) throws Exception, Message {
 		// add from this client
 		String from = m.from;
 		prependFrom(m);
-		Hashtable<Long,ClientOnServer> rec = new Hashtable<Long,ClientOnServer>(); // hashtable of client #s
+		HashMap<Long,ClientOnServer> rec = new HashMap<Long,ClientOnServer>(); // hashtable of client #s
 		Iterator i = m.rec.keySet().iterator();
-		Hashtable<String,String> newrec = new Hashtable<String,String>();
+		HashMap<String,String> newrec = new HashMap<String,String>();
 		while (i.hasNext()) { // go through existing list
 			String to = (String)i.next();
 			if (to.equals("*")) {
 				// log("Adding ALL Clients");
 				newrec.put("*", "*"); // send to who is left
-				rec = (Hashtable<Long,ClientOnServer>)(clients.clone());
+				rec = (HashMap<Long,ClientOnServer>)(clients.clone());
 				// rec.remove(clientno);
 				break;
 			} else {
@@ -238,7 +238,7 @@ public class ClientOnServer extends Thread implements Errors {
 			    	recstr = recstr.substring(colon+1);
 			    }
 			    if (recstr.trim().equals("")) {
-			    	return new Hashtable();
+			    	return new HashMap();
 			    }
 			    log("recstr is "+recstr);
 			    ClientOnServer r = (ClientOnServer)clients.get(Long.valueOf(recstr));
@@ -280,7 +280,7 @@ public class ClientOnServer extends Thread implements Errors {
                     throw e;
                 }
 	}
-        public void send(Message m, Hashtable recipient) throws Exception {
+        public void send(Message m, HashMap recipient) throws Exception {
             if (recipient != null && recipient.size() > 0) {
                 Iterator i = recipient.keySet().iterator();
                 ClientException ce = new ClientException();
@@ -303,15 +303,15 @@ public class ClientOnServer extends Thread implements Errors {
                 log("No recipient found in message");
             }                 
         }
-        private static Hashtable<String, Message> server_messages = new Hashtable<String, Message>();
-        public synchronized boolean seenMessage(Message m, Hashtable<String, Message> messages) {
+        private static HashMap<String, Message> server_messages = new HashMap<String, Message>();
+        public synchronized boolean seenMessage(Message m, HashMap<String, Message> messages) {
 	    if (m == null) {
 		    log("Message m is null in seenMessage");
 		    return true;
 	    }
             String umsg = m.timestamp+","+m.sequenceno+","+m.nick+","+getNick();
             Iterator<String> i = messages.keySet().iterator();
-            Vector<String> removes = new Vector<String>();
+            ArrayList<String> removes = new ArrayList<String>();
             while (i.hasNext()) {
                 String sumsg = i.next();
 		String umsgc = umsg.substring(0, umsg.lastIndexOf(","));
@@ -364,7 +364,7 @@ public class ClientOnServer extends Thread implements Errors {
 	}
 	public void messageException(Message m) {
 		try {
-			Hashtable rec = prepareToSend(m);
+			HashMap rec = prepareToSend(m);
 			send(m, rec);
 		} catch (Message msge) {
 			log(msge.generate());

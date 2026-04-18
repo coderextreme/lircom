@@ -399,7 +399,7 @@ public class Chat extends ClientOnServer implements WindowListener, ActionListen
 	public void setColor(String color) {
 		this.color = color;
 	}
-	Hashtable<String, Message> client_messages = new Hashtable<String, Message>();
+	HashMap<String, Message> client_messages = new HashMap<String, Message>();
         public void flushContacts() {
             try {
                 DefaultListModel<String> dlm = (DefaultListModel<String>)jp.getModel();
@@ -448,7 +448,7 @@ public class Chat extends ClientOnServer implements WindowListener, ActionListen
 			jp.repaint();
 			// if the client is also a server
 			try {
-				Hashtable rec = prepareToSend(m);
+				HashMap rec = prepareToSend(m);
 				send(m, rec);
 			} catch (Message msge) {
 				messageException(msge);
@@ -458,7 +458,7 @@ public class Chat extends ClientOnServer implements WindowListener, ActionListen
 			return null;
 	        }
 	}
-	Hashtable<String, Message> gui_messages = new Hashtable<String, Message>();
+	HashMap<String, Message> gui_messages = new HashMap<String, Message>();
 	class ProcessCommand implements ActionListener {
             public void actionPerformed(ActionEvent ae) {
                 String line = tf.getText();
@@ -469,8 +469,8 @@ public class Chat extends ClientOnServer implements WindowListener, ActionListen
                 current = history.size();
                 int [] clino = jp.getSelectedIndices();
 		// we will fill in who the message is to below
-		Hashtable<String,String> rec = new Hashtable<String,String>();
-		Hashtable<String,String> ircrec = new Hashtable<String,String>();
+		HashMap<String,String> rec = new HashMap<String,String>();
+		HashMap<String,String> ircrec = new HashMap<String,String>();
                 for (int i = 0; i < clino.length; i++) {
 		    String contact = (String)contacts.get(clino[i]);
 		    int ircind = contact.indexOf("irc:");
@@ -491,7 +491,7 @@ public class Chat extends ClientOnServer implements WindowListener, ActionListen
 		}
 	        Message m = new Message(rec, from, line, getLanguage());
 		try {
-			Hashtable clientrec = prepareToSend(m);
+			HashMap clientrec = prepareToSend(m);
                         send(m, clientrec);
 		} catch (Message msge) {
 			messageException(msge);
@@ -699,7 +699,7 @@ SwingUtilities.invokeLater(new Runnable() {
 	public void windowClosing(WindowEvent we) {
                 Message m = new Message("*", getNick(), "has exited", "en");
                 try {
-		    Hashtable rec = prepareToSend(m);
+		    HashMap rec = prepareToSend(m);
                     send(m, rec);
                 } catch (Message msge) {
 		    messageException(msge);

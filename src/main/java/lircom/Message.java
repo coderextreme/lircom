@@ -25,7 +25,7 @@ import java.io.ByteArrayOutputStream;
  */
 public class Message extends Throwable {
     String from = "";
-    public java.util.Hashtable<String,String> rec = new java.util.Hashtable<String,String>();
+    public java.util.HashMap<String,String> rec = new java.util.HashMap<String,String>();
     long timestamp = 0; // don't want to make public, but have to so that flooding can be done
     public String nick = "";
     public String message = "";
@@ -43,7 +43,7 @@ public class Message extends Throwable {
     private static void log(Exception e) {
 	    e.printStackTrace(logStream);
     }
-    public Message(java.util.Hashtable<String,String> rec, String nick, String message, String lang) {
+    public Message(java.util.HashMap<String,String> rec, String nick, String message, String lang) {
 	this.rec = rec;
         this.from = "";
         this.nick = nick;
@@ -55,8 +55,8 @@ public class Message extends Throwable {
         }
     }
     public Message(String to, String nick, String message, String lang) {
-	this((java.util.Hashtable<String,String>)null, nick, message, lang);
-        rec = new java.util.Hashtable<String,String>();
+	this((java.util.HashMap<String,String>)null, nick, message, lang);
+        rec = new java.util.HashMap<String,String>();
 	rec.put(to, to);
     }
     public Message(String to, String nick, long error, String message, String lang) {
@@ -107,7 +107,7 @@ public class Message extends Throwable {
 		if (node.isArray()) {
 		    // recipients
 		    Message message = new Message();
-		    message.rec = new java.util.Hashtable<String,String>();
+		    message.rec = new java.util.HashMap<String,String>();
 		    for (JsonNode recNode : node.get(0)) {
 			message.rec.put(recNode.asText(), recNode.asText());
 			// log("Recipient: "+recNode.asText());

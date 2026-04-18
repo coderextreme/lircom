@@ -15,7 +15,7 @@ import java.io.*;
  * A talking clock powered by FreeTTS.
  */
 public class Synth {
-	java.util.Hashtable<String, String> nickToVoice = new java.util.Hashtable<String, String>();
+	java.util.HashMap<String, String> nickToVoice = new java.util.HashMap<String, String>();
 	public final String [] voices = {
 		"Alex",
 		"Bruce",

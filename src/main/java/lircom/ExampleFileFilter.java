@@ -42,8 +42,8 @@ package lircom;
 
 
 import java.io.File;
-import java.util.Hashtable;
-import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
 import javax.swing.filechooser.*;
 
 /**
@@ -70,7 +70,7 @@ public class ExampleFileFilter extends FileFilter {
     private static String TYPE_UNKNOWN = "Type Unknown";
     private static String HIDDEN_FILE = "Hidden File";
 
-    private Hashtable<String,ExampleFileFilter>  filters = null;
+    private HashMap<String,ExampleFileFilter>  filters = null;
     private String description = null;
     private String fullDescription = null;
     private boolean useExtensionsInDescription = true;
@@ -82,7 +82,7 @@ public class ExampleFileFilter extends FileFilter {
      * @see #addExtension
      */
     public ExampleFileFilter() {
-	this.filters = new Hashtable<String,ExampleFileFilter>();
+	this.filters = new HashMap<String,ExampleFileFilter>();
     }
 
     /**
@@ -193,7 +193,7 @@ public class ExampleFileFilter extends FileFilter {
      */
     public void addExtension(String extension) {
 	if(filters == null) {
-	    filters = new Hashtable(5);
+	    filters = new HashMap(5);
 	}
 	filters.put(extension.toLowerCase(), this);
 	fullDescription = null;
@@ -214,11 +214,11 @@ public class ExampleFileFilter extends FileFilter {
 	    if(description == null || isExtensionListInDescription()) {
  		fullDescription = description==null ? "(" : description + " (";
 		// build the description from the extension list
-		Enumeration extensions = filters.keys();
+		Iterator<String> extensions = filters.keySet().iterator();
 		if(extensions != null) {
-		    fullDescription += "." + (String) extensions.nextElement();
-		    while (extensions.hasMoreElements()) {
-			fullDescription += ", ." + (String) extensions.nextElement();
+		    fullDescription += "." + extensions.next();
+		    while (extensions.hasNext()) {
+			fullDescription += ", ." + extensions.next();
 		    }
 		}
 		fullDescription += ")";
