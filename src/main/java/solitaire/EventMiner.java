@@ -8,9 +8,9 @@ public class EventMiner {
 	static public void main(String arg[]) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String line;
-		Hashtable<String,String>[] args = (Hashtable<String,String>[])new Hashtable<?,?>[TUPLESIZE];
+		HashMap<String,String>[] args = (HashMap<String,String>[])new HashMap<?,?>[TUPLESIZE];
 		for (int a = 0; a < TUPLESIZE; a++) {
-			args[a] = new Hashtable<String,String>();
+			args[a] = new HashMap<String,String>();
 		}
 		Vector<Vector<String>> lines = new Vector<Vector<String>>();
 		while((line = br.readLine()) != null) {
@@ -37,9 +37,9 @@ public class EventMiner {
 			System.out.println();
 			System.out.println();
 			System.out.println();
-		Hashtable<String, Hashtable<Integer, Hashtable<String,String>>>[] cxr = (Hashtable<String, Hashtable<Integer, Hashtable<String,String>>>[])new Hashtable<?,?>[TUPLESIZE];
+		HashMap<String, HashMap<Integer, HashMap<String,String>>>[] cxr = (HashMap<String, HashMap<Integer, HashMap<String,String>>>[])new HashMap<?,?>[TUPLESIZE];
 		for (int a = 0; a < TUPLESIZE; a++) {
-			cxr[a] = new Hashtable<String, Hashtable<Integer, Hashtable<String,String>>>();
+			cxr[a] = new HashMap<String, HashMap<Integer, HashMap<String,String>>>();
 		}
 		for (int i = 0; i < lines.size(); i++) {
 			Vector<String> v = (Vector<String>)lines.elementAt(i);
@@ -49,15 +49,15 @@ public class EventMiner {
 			}
 			for (int j = 0; j < v.size(); j++) {
 				// System.out.print(ss[j]);
-				Hashtable<Integer, Hashtable<String,String>> ht = (Hashtable<Integer, Hashtable<String,String>>)cxr[j].get(ss[j]);
+				HashMap<Integer, HashMap<String,String>> ht = (HashMap<Integer, HashMap<String,String>>)cxr[j].get(ss[j]);
 				if (ht == null) {
-					ht = new Hashtable<Integer, Hashtable<String,String>>();
+					ht = new HashMap<Integer, HashMap<String,String>>();
 				}
 				for (int k = 0; k < v.size(); k++) {
 					int l = k;
-					Hashtable<String,String> ht2 = (Hashtable<String,String>)ht.get(l);
+					HashMap<String,String> ht2 = (HashMap<String,String>)ht.get(l);
 					if (ht2 == null) {
-						ht2 = new Hashtable<String,String>();
+						ht2 = new HashMap<String,String>();
 					}
 					// System.out.print(" ");
 					// System.out.print(ss[k]);
@@ -70,7 +70,7 @@ public class EventMiner {
 			// System.out.println();
 		}
 		for (int a = 0; a < TUPLESIZE; a++) {
-			Hashtable col = cxr[a];
+			HashMap col = cxr[a];
 			Iterator i = col.keySet().iterator();
 			System.out.print("COL ");
 			System.out.print(a);
@@ -79,13 +79,13 @@ public class EventMiner {
 				Object s = i.next();
 				System.out.print(s);
 
-				Hashtable ht = (Hashtable)col.get(s);
+				HashMap ht = (HashMap)col.get(s);
 				Iterator j = ht.keySet().iterator();
 				while (j.hasNext()) {
 					Object sel = j.next();
 					System.out.print("\n\t");
 					System.out.print(sel);
-					Hashtable ht2 = (Hashtable)ht.get(sel);
+					HashMap ht2 = (HashMap)ht.get(sel);
 					if (ht2 == null) {
 						System.out.println(" null");
 					} else {

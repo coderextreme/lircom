@@ -12,7 +12,7 @@ import java.awt.event.WindowListener;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.TreeSet;
@@ -410,7 +410,7 @@ class SolitaireClient extends lircom.ClientOnServer {
 		setNick("Solitaire"+nick);
 		lircom.Message.thisApplication = "Cards";
 	}
-	public Hashtable client_messages = new Hashtable();
+	public HashMap client_messages = new HashMap();
 	public lircom.Message processLine(String line) throws Exception {
 		lircom.Message m = lircom.Message.parse(line);
 		if (m != null && m.nick.startsWith("Solitaire") && !m.nick.equals(getNick()) && !seenMessage(m, client_messages)) {
@@ -439,7 +439,7 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 	boolean randomrun = false;
 	boolean methodicalrun = false;
 	boolean stop = false;
-	boolean stopped = false;
+	private volatile boolean running = false;
 	boolean logic = false;
 	boolean dealer = false;
 	SolitaireClient cos = null;
@@ -453,10 +453,11 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
                         mode = args[0];
                 }
 		if (args.length > 1) {
-			for (int a = 2; a < args.length; a++) {
+			for (int a = 1; a < args.length; a++) {
 				System.out.println(args[a]);
 				System.out.flush();
 				String hostPort [] = args[a].trim().split(":");
+				System.err.println("Mode: "+mode+" host: "+hostPort[0]+" port: "+hostPort[1]);
 				Game g = new Game(mode, hostPort[0], Integer.valueOf(hostPort[1]), null);
 			}
 		}
@@ -485,18 +486,18 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 		}
 		if (mode.equals("display")) {
 			dealer = false;
-			jf.setTitle("Watch Solitaire being played");
+			jf.setTitle(nick+", watch Solitaire being played on"+server+":"+port);
 		} else if (mode.equals("random")) {
 			randomrun = true;
 			dealer = true;
-			jf.setTitle("Random Player");
+			jf.setTitle(nick+" play randomly on "+server+":"+port);
 		} else if (mode.equals("methodical")) {
 			methodicalrun = true;
 			dealer = true;
-			jf.setTitle("Methodical Player");
+			jf.setTitle(nick+", play methodically on "+server+":"+port);
 		} else if (mode.equals("dealer")) {
 			dealer = true;
-			jf.setTitle("You are the solitaire dealer");
+			jf.setTitle(nick+"you are the solitaire dealer on "+server+":"+port);
 		} else {
 			dealer = false;
 		}
@@ -551,7 +552,7 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 		quitItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				System.err.println("Quitting");
-				stopped = true;
+				running = false;
                 		System.exit(0);
 			}
 		});
@@ -582,13 +583,6 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 	}
         public void windowClosing(WindowEvent we) {
 		stop = true;
-		try {
-			while (!stopped) {
-				Thread.sleep(1000);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		if (logic) {
 			System.err.println("Writing out Logic");
 			Logic.print();
@@ -907,15 +901,14 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 		}
 	}
 	public void run() {
-		while (!stopped) {
+		running = true;
+		while (running) {
 			if (randomrun) {
-				// stopped = false;
 				randomrun();
-				// stopped = true;
+				running = false;
 			} else if (methodicalrun) {
-				// stopped = false;
 				methodicalrun();
-				// stopped = true;
+				running = false;
 			}
 			try {
 				Thread.sleep(1000);

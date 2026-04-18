@@ -12,7 +12,7 @@ export DWN=/c/Users/jcarl/Downloads
 export LIB=${DWN}/jogamp-all-platforms/lib/windows-amd64
 export MEMORY=-Xmx256m
 export JAVA_OPTS="java ${MEMORY} -javaagent:C:/Users/jcarl/lircom/patch-agent/target/patch-agent-1.0.jar -Djava.library.path=${LIB} --add-exports java.base/java.lang=ALL-UNNAMED --add-exports java.desktop/sun.awt=ALL-UNNAMED --add-exports java.desktop/sun.java2d=ALL-UNNAMED --enable-final-field-mutation=ALL-UNNAMED --enable-native-access=ALL-UNNAMED"
-export PORTS="8180 8181"
+export PORTS="8180 8181 8182 8183"
 export NUM_PORTS=4
 
 

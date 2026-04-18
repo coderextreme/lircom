@@ -4,7 +4,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -20,7 +20,7 @@ public class CardItem extends JLabel implements ListCellRenderer, MouseListener,
 	private int position;
 	private ImageIcon ii = null;
 	private static Game game;
-	private static Hashtable<String,String> map = new Hashtable<String,String>();
+	private static HashMap<String,String> map = new HashMap<String,String>();
 	private static ImageIcon background = null;
 
 	static public final String cardset = "/solitaire/cardset-standard/";
