@@ -11,6 +11,7 @@ module lircom {
 	requires com.fasterxml.jackson.core;
 	requires com.fasterxml.jackson.databind;
 	requires com.fasterxml.classmate;
+	requires okhttp3;
 	exports lircom;
 	exports solitaire;
 	exports impact;
