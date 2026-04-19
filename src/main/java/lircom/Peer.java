@@ -15,6 +15,7 @@ public class Peer extends Thread {
 				Peer s = new Peer(Integer.parseInt(args[i]));
 			}
 		}
+		System.out.close();
 	}
 	public Peer() throws Exception {
 		this(8180);

@@ -239,17 +239,17 @@ class SubLogic {
 	}
 }
 class Logic {
-	static public Logic stacks[][] = new Logic[15][15];
+	static public Logic logic_stacks[][] = new Logic[15][15];
 	ArrayList ors = new ArrayList();
 	static ArrayList sets = new ArrayList();
 	static ArrayList intersections = new ArrayList();
 	static public void construct(int goodMove, Game g, int fromStack, int toStack, CardItem cim, int pos) {
-		if (stacks[fromStack][toStack] == null) {
-			stacks[fromStack][toStack] = new Logic();
+		if (logic_stacks[fromStack][toStack] == null) {
+			logic_stacks[fromStack][toStack] = new Logic();
 		}
-		SubLogic sl = new SubLogic(goodMove, g, stacks[fromStack][toStack], fromStack, toStack, cim, pos);
+		SubLogic sl = new SubLogic(goodMove, g, logic_stacks[fromStack][toStack], fromStack, toStack, cim, pos);
 		ArrayList al = sl.getElements();
-		Iterator i = stacks[fromStack][toStack].ors.iterator();
+		Iterator i = logic_stacks[fromStack][toStack].ors.iterator();
 		while (i.hasNext()) {
 			if (sl.equals((SubLogic)i.next())) {
 				// System.err.println("logic is same, escaping");
@@ -258,7 +258,7 @@ class Logic {
 		}
 		// System.err.println("adding new rule");
 		// if not found, add
-		stacks[fromStack][toStack].ors.add(sl);
+		logic_stacks[fromStack][toStack].ors.add(sl);
 		GameSet s = new GameSet();
 		s.addAll(al);
 		i = sets.iterator();
@@ -341,7 +341,7 @@ class Logic {
 			
 			for (int fs = 0; fs < Stack.totstack; fs++) {
 				for (int ts = 0; ts < Stack.totstack; ts++) {
-					Logic l = stacks[fs][ts];
+					Logic l = logic_stacks[fs][ts];
 					if (l != null) {
 						Iterator i = l.ors.iterator();
 						while (i.hasNext()) {
@@ -414,12 +414,12 @@ class SolitaireClient extends lircom.ClientOnServer {
 	public lircom.Message processLine(String line) throws Exception {
 		lircom.Message m = lircom.Message.parse(line);
 		if (m != null && m.nick.startsWith("Solitaire") && !m.nick.equals(getNick()) && !seenMessage(m, client_messages)) {
-			System.err.println("Processing "+m.message);
+			// System.err.println("Processing "+m.message);
 			Log.enabled = false;
-			System.err.println("Log.enabled is "+Log.enabled);
+			// System.err.println("Log.enabled is "+Log.enabled);
 			GameMiner.processLine(m.message);
 			Log.enabled = true;
-			System.err.println("Log enabled is "+Log.enabled);
+			// System.err.println("Log enabled is "+Log.enabled);
 			return m;
 		} else {
 			System.err.print("Ignoring message "+line);
@@ -436,12 +436,14 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 	JFrame jf = new JFrame("Write your own solitaire");
 	Random r = new Random();
 	Stack picked = null;
+	Stack waste = null;
+	Stack deck = null;
+	Stack shuffledDeck = null;
 	boolean randomrun = false;
 	boolean methodicalrun = false;
-	boolean stop = false;
-	private volatile boolean running = false;
+	boolean loop = false;
+	boolean exit = false;
 	boolean logic = false;
-	boolean dealer = false;
 	SolitaireClient cos = null;
 
 	static public void main(String args[]) throws Exception {
@@ -463,14 +465,14 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 		}
 	}
 	public Game(String mode, String host, int port, String nickname) throws Exception {
+		if (nickname == null) {
+			nickname = javax.swing.JOptionPane.showInputDialog(this.jf, "Enter player name:");
+		}
 		startGame(mode, host, port, nickname);
 	}
 	public void startGame(String mode, String server, int port, String nick) throws Exception {
 		GameMiner.game = this;
 		GameMiner.jf = jf;
-		if (nick == null) {
-			nick = javax.swing.JOptionPane.showInputDialog(this.jf, "Enter player name:");
-		}
 		try {
 			System.err.println("Connecting to "+server+":"+port);
 			java.net.Socket s = new java.net.Socket(server, port);
@@ -485,23 +487,14 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 			System.err.println("Couldn't connect to "+server+":"+port);
 		}
 		if (mode.equals("display")) {
-			dealer = false;
 			jf.setTitle(nick+", watch Solitaire being played on"+server+":"+port);
 		} else if (mode.equals("random")) {
-			randomrun = true;
-			dealer = true;
 			jf.setTitle(nick+" play randomly on "+server+":"+port);
 		} else if (mode.equals("methodical")) {
-			methodicalrun = true;
-			dealer = true;
 			jf.setTitle(nick+", play methodically on "+server+":"+port);
 		} else if (mode.equals("dealer")) {
-			dealer = true;
 			jf.setTitle(nick+"you are the solitaire dealer on "+server+":"+port);
-		} else {
-			dealer = false;
 		}
-		deal(dealer);
 
 		jf.setSize(800,600);
 		JMenuBar jmb = new JMenuBar();
@@ -519,21 +512,37 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 			public void actionPerformed(ActionEvent ae) {
          			java.awt.EventQueue.invokeLater(() -> {            
 					System.err.println("Dealing");
-					Game.this.stop = false;
-					Game.this.dealer = true;
-					deal(Game.this.dealer);
+					Game.this.loop = true;
+					System.err.println("Loop = "+Game.this.loop);
+					deal(true);
 				});
 			}
 		});
 
-		JMenuItem startRandom = new JMenuItem("Start Computer Player");
+		JMenuItem startRandom = new JMenuItem("Start Random Computer Player");
 		file.add(startRandom);
 		startRandom.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
          			java.awt.EventQueue.invokeLater(() -> {            
-					System.err.println("Starting Computer Player");
-					Game.this.stop = false;
+					System.err.println("Starting Random Computer Player");
+					Game.this.loop = true;
+					System.err.println("Loop = "+Game.this.loop);
 					Game.this.randomrun = true;
+					System.err.println("Rand = "+Game.this.randomrun);
+				});
+			}
+		});
+
+		JMenuItem startMethodical = new JMenuItem("Start Methodical Computer Player");
+		file.add(startMethodical);
+		startMethodical.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+         			java.awt.EventQueue.invokeLater(() -> {            
+					System.err.println("Starting Methodical Computer Player");
+					Game.this.loop = true;
+					System.err.println("Loop = "+Game.this.loop);
+					Game.this.methodicalrun = true;
+					System.err.println("Meth = "+Game.this.methodicalrun);
 				});
 			}
 		});
@@ -543,7 +552,10 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 		stopItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				System.err.println("Stopping Computer Player");
-				stop = true;
+				Game.this.loop = false;
+				Game.this.methodicalrun = false;
+				Game.this.randomrun = false;
+				System.err.println("Loop = "+Game.this.loop);
 			}
 		});
 
@@ -552,8 +564,11 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 		quitItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				System.err.println("Quitting");
-				running = false;
-                		System.exit(0);
+				Game.this.loop = false;
+				System.err.println("Loop = "+Game.this.loop);
+				Game.this.exit = true;
+				System.err.println("Exit = "+Game.this.exit);
+				System.exit(0);
 			}
 		});
 
@@ -561,33 +576,27 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 		jf.setVisible(true);
 		jf.getContentPane().setLayout(null);
 		jf.addMouseListener(this);
-		if (dealer) {
-			Stack waste = new Stack(0, 130, 0, StackLayout.Y, jf, this);
-			for (int st = 0; st < 7; st++) { // working stacks
-				Stack nw = new Stack(st*80+150, 130, 20, StackLayout.Y, jf, this);
-			}
-			for (int st = 0; st < 4; st++) { // final stacks
-				Stack nw = new Stack(st*80+270, 0, 0, StackLayout.Y, jf, this);
-			}
-			moveToStacks(1, 9);
-			topCardFaceUp(9);
-		}
-		picked = new Stack(14, 0, 400, 20, StackLayout.Y, jf, this);
 
 		jf.getContentPane().invalidate();
 		jf.getContentPane().validate();
 		jf.getContentPane().repaint();
 		java.awt.EventQueue.invokeLater(() -> {            
+			Game.this.createStacks();
+			Game.this.deal(false);
+			Game.this.loop = false;
 			Game.this.start();
 		});
 	}
         public void windowClosing(WindowEvent we) {
-		stop = true;
 		if (logic) {
 			System.err.println("Writing out Logic");
 			Logic.print();
 		}
-                System.exit(0);
+		Game.this.loop = false;
+		System.err.println("Loop = "+Game.this.loop);
+		Game.this.exit = true;
+		System.err.println("Exit = "+Game.this.exit);
+		System.exit(0);
         }
         public void windowActivated(WindowEvent we) {
         }
@@ -621,8 +630,12 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 	void moveCards(int numCards, int fromDeck, int toDeck) {
 		if (numCards > 0) {
 			CardItem cim = getStack(fromDeck).elementAt(0);
-			moveCard(fromDeck, toDeck, cim, 0, 10);
-			moveCards(numCards-1, fromDeck, toDeck);
+			if (cim == null) {
+				System.err.println("Empty fromDeck "+fromDeck);
+			} else {
+				moveCard(fromDeck, toDeck, cim, 0, 10);
+				moveCards(numCards-1, fromDeck, toDeck);
+			}
 		}
 	}
 	void moveCard(int fromStack, int toStack, CardItem cim, int pos, int pc) {
@@ -636,6 +649,7 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 		Iterator smi = stacks.iterator();
 		while (smi.hasNext()) {
 			Stack sm = (Stack)smi.next();
+			// System.err.println("comparing param i "+i+" to sm.stack_no "+sm.stack_no);
 			if (sm != null && sm.stack_no == i) {
 				// System.err.println("Found stack");
 				return sm;
@@ -643,6 +657,18 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 		}
 		System.err.println("Didn't find stack, oops "+i);
 		return null;
+	}
+	public void createStacks() {
+		Game.this.waste = new Stack(0, 130, 0, StackLayout.Y, jf, this);
+		Game.this.deck = new Stack(80, 0, 0, StackLayout.X, jf, this);
+		Game.this.shuffledDeck = new Stack(0, 0, 0, StackLayout.X, jf, this);
+		for (int st = 0; st < 7; st++) { // working stacks
+			Stack nw = new Stack(st*80+150, 130, 20, StackLayout.Y, jf, this);
+		}
+		for (int st = 0; st < 4; st++) { // final stacks
+			Stack nw = new Stack(st*80+270, 0, 0, StackLayout.Y, jf, this);
+		}
+		Game.this.picked = new Stack(14, 0, 400, 20, StackLayout.Y, jf, this);
 	}
 	public Stack deal(boolean dealer) {
 		// System.err.println("initializing");
@@ -657,26 +683,25 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 		}
 		if (dealer) {
 		    try {
-		        Stack deck = new Stack(80, 0, 0, StackLayout.X, jf, this);
-		        Stack shuffledDeck = new Stack(0, 0, 0, StackLayout.X, jf, this);
 		        int pos = 0;
 		        // create deck
 		        for (int v = CardItem.Ace; v <= CardItem.King; v++) {
 			    for (int s = CardItem.Hearts; s <= CardItem.Clubs; s++) {
 			        CardItem d = Stack.cards[v-1][s];
-			        deck.insertElementAt(d, pos);
+			        Game.this.deck.insertElementAt(d, pos);
 			        pos++;
 			    }
 		        }
 			// System.err.println("Done initializing, shuffling");
-			    // shuffle the cards
 			while (deck.size() > 0) {
-				int crd = r.nextInt(deck.size());
-				CardItem d = (CardItem)deck.elementAt(crd);
-				moveCard(deck.stack_no, shuffledDeck.stack_no, d, 0, 11);
+				int crd = r.nextInt(Game.this.deck.size());
+				CardItem d = (CardItem)Game.this.deck.elementAt(crd);
+				moveCard(Game.this.deck.stack_no, Game.this.shuffledDeck.stack_no, d, 0, 11);
 			}
+			moveToStacks(Game.this.shuffledDeck.stack_no, 9);  // was 1
+			topCardFaceUp(9);
 			// System.err.println("done shuffling");
-			return shuffledDeck;
+			return Game.this.shuffledDeck;
 		
 		    } catch (Exception e) {
 		        e.printStackTrace();
@@ -705,14 +730,14 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 				// flip entire stack over
 				CardItem ci = (CardItem)c;
 				Stack flippy = getStack(ci.getStack());
-				while (picked != flippy && flippy.size() > 0) {
+				while (Game.this.picked != flippy && flippy.size() > 0) {
 					CardItem s = (CardItem)flippy.elementAt(0);
-					moveCard(flippy.stack_no, picked.stack_no, s, 0, 12);
+					moveCard(flippy.stack_no, Game.this.picked.stack_no, s, 0, 12);
 				        s.setFaceUp(!s.getFaceUp());
 				}
-				while (picked != null && picked != flippy && picked.size() > 0) {
-					CardItem s = (CardItem)picked.elementAt(picked.size()-1);
-					moveCard(picked.stack_no, flippy.stack_no, s, 0, 13);
+				while (Game.this.picked != null && Game.this.picked != flippy && Game.this.picked.size() > 0) {
+					CardItem s = (CardItem)Game.this.picked.elementAt(Game.this.picked.size()-1);
+					moveCard(Game.this.picked.stack_no, flippy.stack_no, s, 0, 13);
 				}
 				jf.getContentPane().invalidate();
 				jf.getContentPane().validate();
@@ -723,12 +748,12 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 			}
 	        } else if (c instanceof CardItem) {
 			CardItem ci = (CardItem)c;
-			if (picked != null && picked.size() > 0) {
+			if (Game.this.picked != null && Game.this.picked.size() > 0) {
 				// play the cards
-				if (getStack(ci.getStack()) != null && picked != getStack(ci.getStack())) {
-					while (picked.size() > 0) {
-						CardItem cipick = (CardItem)picked.elementAt(picked.size()-1);
-						moveCard(picked.stack_no, ci.getStack(), cipick, 0, 14);
+				if (getStack(ci.getStack()) != null && Game.this.picked != getStack(ci.getStack())) {
+					while (Game.this.picked.size() > 0) {
+						CardItem cipick = (CardItem)Game.this.picked.elementAt(Game.this.picked.size()-1);
+						moveCard(Game.this.picked.stack_no, ci.getStack(), cipick, 0, 14);
 					}
 				}
 			} else {
@@ -738,30 +763,30 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 /*
 				while (i < s.size()) {
 					CardItem cipick = (CardItem)s.elementAt(i);
-					moveCard(s.stack_no, picked.stack_no, cipick, 0, 15);
+					moveCard(s.stack_no, Game.this.picked.stack_no, cipick, 0, 15);
 				}
 */
 				while (i >= 0) {
 					CardItem cipick = (CardItem)s.elementAt(i);
-					moveCard(s.stack_no, picked.stack_no, cipick, 0, 16);
+					moveCard(s.stack_no, Game.this.picked.stack_no, cipick, 0, 16);
 					i--;
 				}
 			}
 	        } else if (c instanceof StackBottom) {
 			Stack bottom = (Stack)((StackBottom)c).stack;
-			if (picked != null && bottom != picked && picked.size() > 0) {
+			if (Game.this.picked != null && bottom != Game.this.picked && Game.this.picked.size() > 0) {
 				// play the cards
-				while (picked.size() > 0) {
-					CardItem cipick = (CardItem)picked.elementAt(picked.size()-1);
-					moveCard(picked.stack_no, bottom.stack_no, cipick, 0, 17);
+				while (Game.this.picked.size() > 0) {
+					CardItem cipick = (CardItem)Game.this.picked.elementAt(Game.this.picked.size()-1);
+					moveCard(Game.this.picked.stack_no, bottom.stack_no, cipick, 0, 17);
 				}
 			}
 		} else {
 			// create a whole new stack with the cards
 			Stack nw = new Stack(me.getX(), me.getY(), 20, StackLayout.Y, jf, this);
-			while (picked != null && nw != picked && picked.size() > 0) {
-				CardItem cipick = (CardItem)picked.elementAt(picked.size()-1);
-				moveCard(picked.stack_no, nw.stack_no, cipick, 0, 18);
+			while (Game.this.picked != null && nw != Game.this.picked && Game.this.picked.size() > 0) {
+				CardItem cipick = (CardItem)Game.this.picked.elementAt(Game.this.picked.size()-1);
+				moveCard(Game.this.picked.stack_no, nw.stack_no, cipick, 0, 18);
 			}
 			jf.getContentPane().add(nw.gui);
 		}
@@ -790,7 +815,7 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 		At anytime, while the game isn't finished you can:
 		*/
 		// while (	!Stack.allFaceUp() )
-		while (	!stop && (getStack(10).size() < 13 ||
+		while (	Game.this.loop && (getStack(10).size() < 13 ||
 			getStack(11).size() < 13 ||
 			getStack(12).size() < 13 ||
 			getStack(13).size() < 13) ) {
@@ -901,28 +926,39 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 		}
 	}
 	public void run() {
-		running = true;
-		while (running) {
-			if (randomrun) {
-				randomrun();
-				running = false;
-			} else if (methodicalrun) {
-				methodicalrun();
-				running = false;
+		while (!exit) {
+			boolean running = true;
+			while (Game.this.loop) {
+				while (running /*&& (Game.this.methodicalrun || Game.this.randomrun) */) {
+					if (Game.this.randomrun) {
+						Game.this.randomrun();
+						running = false;
+					} else if (Game.this.methodicalrun) {
+						Game.this.methodicalrun();
+						running = false;
+					}
+					try {
+						Thread.sleep(1000);
+					} catch (Exception e) {
+						System.err.println("Close window to exit");
+					}
+				}
 			}
-			try {
-				Thread.sleep(1000);
-			} catch (Exception e) {
-				System.err.println("Close window to exit");
-			}
+			Game.this.loop = true;  // check for running again
+			System.err.println("Loop = "+Game.this.loop);
+			// Game.this.randomrun = false;
+			System.err.println("Rand = "+Game.this.randomrun);
+			// Game.this.methodicalrun = false;
+			System.err.println("Meth = "+Game.this.methodicalrun);
 		}
+		System.exit(0);
 	}
 	public void randomrun() {
 		/*
 		At anytime, while the game isn't finished you can:
 		*/
 		// while (	!Stack.allFaceUp() )
-		while (	!stop && (getStack(10).size() < 13 ||
+		while (	Game.this.loop && (getStack(10).size() < 13 ||
 			getStack(11).size() < 13 ||
 			getStack(12).size() < 13 ||
 			getStack(13).size() < 13) )
@@ -971,11 +1007,15 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 				stack if the final stack is empty.
 				*/
 				int fromStack = r.nextInt(Stack.totstack-1)+1; // do not include initial
-				CardItem cim = getStack(fromStack).getTopCard();
-				for (int toStack = 10; toStack <= 13; toStack++) {
-					if (checkMoveAce(fromStack, toStack, cim)) {
-						moveNeighborCards(cim.getPosition(), fromStack, toStack, true, 3);
-						break;
+				if (getStack(fromStack) != null) {
+					CardItem cim = getStack(fromStack).getTopCard();
+					if (cim != null) {
+						for (int toStack = 10; toStack <= 13; toStack++) {
+							if (checkMoveAce(fromStack, toStack, cim)) {
+								moveNeighborCards(cim.getPosition(), fromStack, toStack, true, 3);
+								break;
+							}
+						}
 					}
 				}
 			} else if (f < 0.65) { // ZD .60
@@ -986,12 +1026,16 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 				same.  was HIGH PRIORITY
 				*/
 				int fromStack = r.nextInt(Stack.totstack-1)+1; // do not include initial
-				CardItem cim = getStack(fromStack).getTopCard();
-				for (int toStack = 10; toStack <= 13; toStack++) {
-					if (checkMoveToFinal(fromStack, toStack, cim)) {
-						moveNeighborCards(cim.getPosition(), fromStack, toStack, true, 4);
-						break;
+				if (getStack(fromStack) != null) {
+					CardItem cim = getStack(fromStack).getTopCard();
+					for (int toStack = 10; toStack <= 13; toStack++) {
+						if (checkMoveToFinal(fromStack, toStack, cim)) {
+							moveNeighborCards(cim.getPosition(), fromStack, toStack, true, 4);
+							break;
+						}
 					}
+				} else {
+					System.err.println("Bad Stack, "+fromStack);
 				}
 			} else if (f < 0.70) { // ZE .65
 				/*
@@ -1275,17 +1319,21 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 	void moveNeighborCards(int pos, int fromStack, int toStack, boolean faceUp, int pc) {
 		if (pos >= 0) {
 			CardItem cim = getStack(fromStack).elementAt(pos);
-			moveCard(fromStack, toStack, cim, 0, pc);
-			cim.setFaceUp(faceUp);
-			moveNeighborCards(pos-1, fromStack, toStack, faceUp, pc);
+			if (cim != null) {
+				moveCard(fromStack, toStack, cim, 0, pc);
+				cim.setFaceUp(faceUp);
+				moveNeighborCards(pos-1, fromStack, toStack, faceUp, pc);
+			}
 		}
 	}
 	void flipOver(int fromStack, int toStack, boolean faceUp, int pc) {
 		if (!getStack(fromStack).isEmpty()) {
 			CardItem cim = getStack(fromStack).elementAt(0);
-			moveCard(fromStack, toStack, cim, 0, pc);
-			cim.setFaceUp(faceUp);
-			flipOver(fromStack, toStack, faceUp, pc);
+			if (cim != null) {
+				moveCard(fromStack, toStack, cim, 0, pc);
+				cim.setFaceUp(faceUp);
+				flipOver(fromStack, toStack, faceUp, pc);
+			}
 		}
 	}
 }

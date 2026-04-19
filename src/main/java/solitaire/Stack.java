@@ -180,19 +180,23 @@ public class Stack implements ActionListener, ChangeListener {
 			}
 		}
 		if (gui != null) {
-			if (icim != null) {
-				gui.remove(icim);
+			synchronized (gui) {
+				if (icim != null) {
+					gui.remove(icim);
+				}
+				gui.setSize(gui.getLayout().preferredLayoutSize(gui));
 			}
-			gui.setSize(gui.getLayout().preferredLayoutSize(gui));
 		}
-		Log.write("PICK|"+stack_no+"|"+i+"|"+icim.toString());
+		if (icim != null) {
+			Log.write("PICK|"+stack_no+"|"+i+"|"+icim.toString());
 /*
-		if (icim.getStack() == 2) {
-			System.err.println("REMOVING stack "+icim.getStack()+" suit "+CardItem.convertSuit(icim.getSuit())+" rank "+CardItem.convertRank(icim.getRank())+" position "+icim.getPosition()+" faceUp "+icim.getFaceUp());
-		}
+			if (icim.getStack() == 2) {
+				System.err.println("REMOVING stack "+icim.getStack()+" suit "+CardItem.convertSuit(icim.getSuit())+" rank "+CardItem.convertRank(icim.getRank())+" position "+icim.getPosition()+" faceUp "+icim.getFaceUp());
+			}
 */
-		icim.setStack(-1);
-		icim.setPosition(-1);
+			icim.setStack(-1);
+			icim.setPosition(-1);
+		}
 		jf.invalidate();
 		jf.validate();
 		gui.invalidate();

@@ -56,7 +56,9 @@ public class GameMiner {
 			Stack sm = Game.getStack(istack);
 			if (sm != null && sm.stack_no == istack) {
 				CardItem cim = (CardItem)sm.elementAt(Integer.parseInt(position));
-				cim.setFaceUp(false);
+				if (cim != null) {
+					cim.setFaceUp(false);
+				}
 			}
 		} else if (command.equals("VISIBLE")) {
 			String position = st.nextToken();
@@ -75,13 +77,8 @@ public class GameMiner {
 			String off = st.nextToken();
 			String direction = st.nextToken();
 			// System.err.println("Creating stack "+stack);
-			new Stack(
-				Integer.parseInt(stack),
-				Integer.parseInt(x),
-				Integer.parseInt(y),
-				Integer.parseInt(off),
-				direction.charAt(0),
-				jf, game);
+			new Stack(Integer.parseInt(stack),Integer.parseInt(x),Integer.parseInt(y),
+					Integer.parseInt(off), direction.charAt(0), jf, game);
 			// System.err.println("Done creating stack "+stack);
 		}
 	}
