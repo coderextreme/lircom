@@ -38,7 +38,7 @@ def translate(req: TranslationRequest):
         generated_tokens = model.generate(
             **encoded,
             forced_bos_token_id=target_lang_id,
-            max_new_tokens=200
+            max_new_tokens=100000
         )
 
         # 5. Decode back to text
