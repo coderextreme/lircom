@@ -507,6 +507,13 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 		dumpLogic.addActionListener(this);
 
 		JMenuItem dealRandom = new JMenuItem("Deal");
+		JMenuItem startRandom = new JMenuItem("Start Random Computer Player");
+		JMenuItem startMethodical = new JMenuItem("Start Methodical Computer Player");
+		JMenuItem stopItem = new JMenuItem("Stop Computer Player");
+		startRandom.setEnabled(false);
+		startMethodical.setEnabled(false);
+		stopItem.setEnabled(false);
+
 		file.add(dealRandom);
 		dealRandom.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
@@ -515,15 +522,21 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 					Game.this.loop = true;
 					System.err.println("Loop = "+Game.this.loop);
 					deal(true);
+					startRandom.setEnabled(true);
+					startMethodical.setEnabled(true);
+					stopItem.setEnabled(true);
 				});
 			}
 		});
 
-		JMenuItem startRandom = new JMenuItem("Start Random Computer Player");
 		file.add(startRandom);
 		startRandom.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
          			java.awt.EventQueue.invokeLater(() -> {            
+					dealRandom.setEnabled(false);
+					startMethodical.setEnabled(false);
+					startRandom.setEnabled(false);
+					stopItem.setEnabled(true);
 					System.err.println("Starting Random Computer Player");
 					Game.this.loop = true;
 					System.err.println("Loop = "+Game.this.loop);
@@ -533,11 +546,14 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 			}
 		});
 
-		JMenuItem startMethodical = new JMenuItem("Start Methodical Computer Player");
 		file.add(startMethodical);
 		startMethodical.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
          			java.awt.EventQueue.invokeLater(() -> {            
+					dealRandom.setEnabled(false);
+					startRandom.setEnabled(false);
+					startMethodical.setEnabled(false);
+					stopItem.setEnabled(true);
 					System.err.println("Starting Methodical Computer Player");
 					Game.this.loop = true;
 					System.err.println("Loop = "+Game.this.loop);
@@ -547,11 +563,13 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 			}
 		});
 
-		JMenuItem stopItem = new JMenuItem("Stop Computer Player");
 		file.add(stopItem);
 		stopItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				System.err.println("Stopping Computer Player");
+				dealRandom.setEnabled(true);
+				startRandom.setEnabled(true);
+				startMethodical.setEnabled(true);
 				Game.this.loop = false;
 				Game.this.methodicalrun = false;
 				Game.this.randomrun = false;
