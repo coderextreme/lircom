@@ -1,0 +1,10 @@
+{
+  "name": "lircom",
+  "private": true,
+  "description": "Lircom server express for cheerp",
+  "version": "0.0.1",
+  "main": "app.js",
+  "dependencies": {
+    "express": "5.2.1"
+  }
+}
