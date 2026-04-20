@@ -2,6 +2,6 @@
 
 . env.sh
 
-${JAVA_OPTS} lircom.Peer 8180 8181 &
+${JAVA_OPTS} lircom.Peer ${PORT_NUM} &
 echo $!
 sleep 1
