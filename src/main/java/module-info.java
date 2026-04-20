@@ -1,7 +1,7 @@
 module lircom {
         requires gluegen.rt;
 	requires jogl.all;
-	requires java.desktop;
+	requires transitive java.desktop;
 	requires java.base;
 	requires java.logging;
 	requires junit;

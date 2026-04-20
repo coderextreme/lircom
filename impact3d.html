@@ -14,7 +14,7 @@
 		cheerpjCreateDisplay(1000, 1000);
 		const exitCode = await cheerpjRunMain(
 		  "impact.Impact3D",
-		  "/app/target/Impact.jar:/app/target/lircom-3.jar",
+		  "/app/target/Impact.jar:/app/target/lircom-3.jar:/app/target/lircom-3-jar-with-dependencies.jar"
 		);
 		console.log(`Program exited with code ${exitCode}`);
 		})();

@@ -244,7 +244,7 @@ public class Stack implements ActionListener, ChangeListener {
 		insertElementAt(obj, 0);
 		return true;
 	}
-	public CardItem elementAt(int i) {
+	public CardItem get(int i) {
 		for (int isuit = CardItem.Hearts; isuit <= CardItem.Clubs; isuit++) {
 			for (int irank = CardItem.Ace; irank <= CardItem.King; irank++) {
 				CardItem cim = cards[irank-1][isuit];
@@ -256,10 +256,10 @@ public class Stack implements ActionListener, ChangeListener {
 		return null;
 	}
 	public CardItem getTopCard() {
-		return elementAt(0);
+		return get(0);
 	}
 	public CardItem getSecondCard() {
-		return elementAt(1);
+		return get(1);
 	}
 	public int indexOf(CardItem cim) {
 		return cim.getPosition();

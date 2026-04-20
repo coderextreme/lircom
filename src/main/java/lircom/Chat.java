@@ -370,10 +370,10 @@ public class Chat extends ClientOnServer implements WindowListener, ActionListen
 	JEditorPane ta = null;
 	JTextField tf = null;
 	JList<String> jp = null;
-	Vector<String> history = new Vector<String>();
+	ArrayList<String> history = new ArrayList<String>();
 	int current = 0;
 	Trade t = null;
-	Vector<String> contacts = new Vector<String>();
+	ArrayList<String> contacts = new ArrayList<String>();
 	StringBuffer html = new StringBuffer("<html><head><title>Chat</title></head><body><h1><font color='white'>Start Chatting</font></h1><div align='left'></div></body></html>");
 	String color = "white";
 	Smiley smilies = new Smiley();
@@ -645,7 +645,7 @@ SwingUtilities.invokeLater(new Runnable() {
 		    current = history.size();
                     tf.setText("");
 		} else if (history.size() > 0) {
-                    tf.setText(history.elementAt(current).toString());
+                    tf.setText(history.get(current).toString());
 		}
 	}
 	public void previous() {
@@ -653,7 +653,7 @@ SwingUtilities.invokeLater(new Runnable() {
                         current--;
                 }
                 if (history.size() > 0) {
-			tf.setText(history.elementAt(current).toString());
+			tf.setText(history.get(current).toString());
 		}
 
         }

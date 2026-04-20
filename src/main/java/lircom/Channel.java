@@ -35,7 +35,7 @@ public class Channel extends Chat {
 		super(is, os);
 		setNick("Channel");
 	}
-	Vector<Action> actions = new Vector<Action>();
+	ArrayList<Action> actions = new ArrayList<Action>();
 	class Action {
 		Pattern pattern;
 		int action;

@@ -12,18 +12,18 @@ public class EventMiner {
 		for (int a = 0; a < TUPLESIZE; a++) {
 			args[a] = new HashMap<String,String>();
 		}
-		Vector<Vector<String>> lines = new Vector<Vector<String>>();
+		ArrayList<ArrayList<String>> lines = new ArrayList<ArrayList<String>>();
 		while((line = br.readLine()) != null) {
 			StringTokenizer st = new StringTokenizer(line, "|");
 			int a = 0;
-			Vector<String> v = new Vector<String>();
+			ArrayList<String> v = new ArrayList<String>();
 			while (st.hasMoreTokens()) {
 				String token = st.nextToken();
 				args[a].put(token, token);
 				a++;
-				v.addElement(token);
+				v.add(token);
 			}
-			lines.addElement(v);
+			lines.add(v);
 		}
 		for (int a = 0; a < TUPLESIZE; a++) {
 			for (Iterator i = args[a].keySet().iterator(); i.hasNext();) {
@@ -42,10 +42,10 @@ public class EventMiner {
 			cxr[a] = new HashMap<String, HashMap<Integer, HashMap<String,String>>>();
 		}
 		for (int i = 0; i < lines.size(); i++) {
-			Vector<String> v = (Vector<String>)lines.elementAt(i);
+			ArrayList<String> v = (ArrayList<String>)lines.get(i);
 			String ss[] = new String[v.size()];
 			for (int j = 0; j < v.size(); j++) {
-				ss[j] = v.elementAt(j).toString();
+				ss[j] = v.get(j).toString();
 			}
 			for (int j = 0; j < v.size(); j++) {
 				// System.out.print(ss[j]);

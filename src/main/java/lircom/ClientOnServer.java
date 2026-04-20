@@ -143,8 +143,8 @@ public class ClientOnServer extends Thread implements Errors {
 				}
 			}
 		} catch (SocketException e) {
-			log("SocketException while reading");
-			log(e);
+			log("SocketException while reading. Closed");
+			// log(e);
 		} catch (IOException e) {
 			log("IOException while reading");
 			log(e);
@@ -294,6 +294,7 @@ public class ClientOnServer extends Thread implements Errors {
 			    }
                         } catch (Exception e) {
                             ce.add(ci);
+			    log(e);
                         }
                 }
                 if (ce.doThrow()) {

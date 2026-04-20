@@ -14,7 +14,7 @@
 //    private Window w = null;
 //    private static GenericImageHandler ihandler = null;
 //    private boolean running = false;
-//    private static java.util.List<Window> managedWindows = new Vector<Window>();
+//    private static java.util.List<Window> managedWindows = new ArrayList<Window>();
 //    static {
 //	try {
 //		ihandler = new CachedImageHandlerPNGEncoder("/Users/johncarlson/Applications/apache-tomcat-6.0.14/webapps/web/", ".");

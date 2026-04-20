@@ -20,6 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.NullPointerException;
 
 public class Cell extends JComponent implements MouseMotionListener, MouseListener, KeyListener, Runnable {
+	private static final long serialVersionUID = 1L;
 	public static String [] personalityClasses = new String[] {
 		"impactVL.AndP", "impactVL.BitAdderP", "impactVL.BufferP", "impactVL.CopyP",
 		"impactVL.DivisionP", "impactVL.DontKnowP", "impactVL.EmptyP",

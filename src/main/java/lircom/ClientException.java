@@ -11,13 +11,13 @@ package lircom;
  * @author carlsonj
  */
 public class ClientException extends Exception {
-    java.util.Vector clients;
+    java.util.ArrayList clients;
     /** Creates a new instance of ClientException */
     public ClientException() {
     }
     public void add(Long ci) {
         if (clients == null) {
-             clients = new java.util.Vector();
+             clients = new java.util.ArrayList();
         }
         clients.add(ci);
     }

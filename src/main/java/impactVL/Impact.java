@@ -18,9 +18,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 class Module implements Cloneable {  // aka Node
-	Vector endPoints; // links around outside of module
-	Vector links; // links between submodules
-	Vector modules; // submodules
+	ArrayList endPoints; // links around outside of module
+	ArrayList links; // links between submodules
+	ArrayList modules; // submodules
 	String name; // name of machine or module (filename?)
 	int width; // width in personalities
 	int height; // height in personalities
@@ -30,9 +30,9 @@ class Module implements Cloneable {  // aka Node
 		this.name = name;
 		this.width = width;
 		this.height = height;
-		endPoints = new Vector();
-		links = new Vector();
-		modules = new Vector();
+		endPoints = new ArrayList();
+		links = new ArrayList();
+		modules = new ArrayList();
 		id = idsequence++;
 	}
 	public Module() {
@@ -42,13 +42,13 @@ class Module implements Cloneable {  // aka Node
 		return new Module(name);
 	}
 	public void addModule(Module m) {
-		modules.addElement(m);
+		modules.add(m);
 	}
 	public void addLink(Link l) {
-		links.addElement(l);
+		links.add(l);
 	}
 	public void addLinkEndpoint(LinkEndpoint ep) {
-		endPoints.addElement(ep);
+		endPoints.add(ep);
 	}
 }
 
@@ -581,14 +581,14 @@ class Selecter extends Command {
 }
 
 class VisualMachine extends JPanel implements MouseMotionListener {
-	Vector links = new Vector(); // links between submodules
+	ArrayList links = new ArrayList(); // links between submodules
 	VisualModule mainModule;
 	HashSet modules = new HashSet(); // links between submodules
 	int mx; // mouse location
 	int my;
 	JFrame frame;
 	Selecter selecter;
-	static Vector machines = new Vector();
+	static ArrayList machines = new ArrayList();
 	public VisualMachine(VisualModule mod, Placer p, Selecter s) {
 		mainModule = mod;
 		mainModule.setMachine(this);
@@ -739,7 +739,7 @@ class VisualMachine extends JPanel implements MouseMotionListener {
 		}
 	}
 	public void addLink(VisualLink l) {
-		links.addElement(l);
+		links.add(l);
 		VisualModule from = l.from.module;
 		if (from != null) {
 			l.from.setLocation(from.getX()+from.getWidth(), (from.getY()+from.getHeight())/2);

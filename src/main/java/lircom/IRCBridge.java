@@ -13,7 +13,7 @@ import java.util.Enumeration;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.StringTokenizer;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -49,7 +49,7 @@ class IRCSendChat extends Thread implements SendChatInterface {
 	String ircNick1 = "Unknown";
 	boolean sent = false;
 	ReceiveChatInterface chat;
-	Vector people;
+	ArrayList people;
 	public IRCSendChat(InputStream is, OutputStream sos, String ircRoom1, String ircNick1, ReceiveChatInterface chat) {
 		this.is = is;
 		this.sos = sos;

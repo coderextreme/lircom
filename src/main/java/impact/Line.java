@@ -69,7 +69,7 @@ public  class Line extends GraphObject {
 		     GraphObject obj = (GraphObject)objs.get(i);
 		     sb.append("|");
 	             sb.append(obj.name);
-		     System.err.println("There's a graph object with name "+obj.name);
+		     // System.err.println("There's a graph object with name "+obj.name);
 	        }
 		p.send(sb.toString());
 		receive(sb.toString());

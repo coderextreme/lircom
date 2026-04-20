@@ -8,9 +8,9 @@ import com.jogamp.opengl.util.*;
 import com.jogamp.common.nio.Buffers;
 
 public class ObjectUtility<T extends GraphObject> {
-	List<GraphObject> shown = new Vector<GraphObject>();
-	List<GraphObject> selected = new Vector<GraphObject>();
-	List<GraphObject> clipboard = new Vector<GraphObject>();
+	List<GraphObject> shown = new ArrayList<GraphObject>();
+	List<GraphObject> selected = new ArrayList<GraphObject>();
+	List<GraphObject> clipboard = new ArrayList<GraphObject>();
 	void paste() {
 		synchronized (shown) {
 			Iterator<GraphObject> i = clipboard.iterator();

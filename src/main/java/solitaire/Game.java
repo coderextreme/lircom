@@ -647,7 +647,7 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 	}
 	void moveCards(int numCards, int fromDeck, int toDeck) {
 		if (numCards > 0) {
-			CardItem cim = getStack(fromDeck).elementAt(0);
+			CardItem cim = getStack(fromDeck).get(0);
 			if (cim == null) {
 				System.err.println("Empty fromDeck "+fromDeck);
 			} else {
@@ -713,7 +713,7 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 			// System.err.println("Done initializing, shuffling");
 			while (deck.size() > 0) {
 				int crd = r.nextInt(Game.this.deck.size());
-				CardItem d = (CardItem)Game.this.deck.elementAt(crd);
+				CardItem d = (CardItem)Game.this.deck.get(crd);
 				moveCard(Game.this.deck.stack_no, Game.this.shuffledDeck.stack_no, d, 0, 11);
 			}
 			moveToStacks(Game.this.shuffledDeck.stack_no, 9);  // was 1
@@ -749,12 +749,12 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 				CardItem ci = (CardItem)c;
 				Stack flippy = getStack(ci.getStack());
 				while (Game.this.picked != flippy && flippy.size() > 0) {
-					CardItem s = (CardItem)flippy.elementAt(0);
+					CardItem s = (CardItem)flippy.get(0);
 					moveCard(flippy.stack_no, Game.this.picked.stack_no, s, 0, 12);
 				        s.setFaceUp(!s.getFaceUp());
 				}
 				while (Game.this.picked != null && Game.this.picked != flippy && Game.this.picked.size() > 0) {
-					CardItem s = (CardItem)Game.this.picked.elementAt(Game.this.picked.size()-1);
+					CardItem s = (CardItem)Game.this.picked.get(Game.this.picked.size()-1);
 					moveCard(Game.this.picked.stack_no, flippy.stack_no, s, 0, 13);
 				}
 				jf.getContentPane().invalidate();
@@ -770,7 +770,7 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 				// play the cards
 				if (getStack(ci.getStack()) != null && Game.this.picked != getStack(ci.getStack())) {
 					while (Game.this.picked.size() > 0) {
-						CardItem cipick = (CardItem)Game.this.picked.elementAt(Game.this.picked.size()-1);
+						CardItem cipick = (CardItem)Game.this.picked.get(Game.this.picked.size()-1);
 						moveCard(Game.this.picked.stack_no, ci.getStack(), cipick, 0, 14);
 					}
 				}
@@ -780,12 +780,12 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 				int i = ci.getPosition();
 /*
 				while (i < s.size()) {
-					CardItem cipick = (CardItem)s.elementAt(i);
+					CardItem cipick = (CardItem)s.get(i);
 					moveCard(s.stack_no, Game.this.picked.stack_no, cipick, 0, 15);
 				}
 */
 				while (i >= 0) {
-					CardItem cipick = (CardItem)s.elementAt(i);
+					CardItem cipick = (CardItem)s.get(i);
 					moveCard(s.stack_no, Game.this.picked.stack_no, cipick, 0, 16);
 					i--;
 				}
@@ -795,7 +795,7 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 			if (Game.this.picked != null && bottom != Game.this.picked && Game.this.picked.size() > 0) {
 				// play the cards
 				while (Game.this.picked.size() > 0) {
-					CardItem cipick = (CardItem)Game.this.picked.elementAt(Game.this.picked.size()-1);
+					CardItem cipick = (CardItem)Game.this.picked.get(Game.this.picked.size()-1);
 					moveCard(Game.this.picked.stack_no, bottom.stack_no, cipick, 0, 17);
 				}
 			}
@@ -803,7 +803,7 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 			// create a whole new stack with the cards
 			Stack nw = new Stack(me.getX(), me.getY(), 20, StackLayout.Y, jf, this);
 			while (Game.this.picked != null && nw != Game.this.picked && Game.this.picked.size() > 0) {
-				CardItem cipick = (CardItem)Game.this.picked.elementAt(Game.this.picked.size()-1);
+				CardItem cipick = (CardItem)Game.this.picked.get(Game.this.picked.size()-1);
 				moveCard(Game.this.picked.stack_no, nw.stack_no, cipick, 0, 18);
 			}
 			jf.getContentPane().add(nw.gui);
@@ -1336,7 +1336,7 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 	}
 	void moveNeighborCards(int pos, int fromStack, int toStack, boolean faceUp, int pc) {
 		if (pos >= 0) {
-			CardItem cim = getStack(fromStack).elementAt(pos);
+			CardItem cim = getStack(fromStack).get(pos);
 			if (cim != null) {
 				moveCard(fromStack, toStack, cim, 0, pc);
 				cim.setFaceUp(faceUp);
@@ -1346,7 +1346,7 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 	}
 	void flipOver(int fromStack, int toStack, boolean faceUp, int pc) {
 		if (!getStack(fromStack).isEmpty()) {
-			CardItem cim = getStack(fromStack).elementAt(0);
+			CardItem cim = getStack(fromStack).get(0);
 			if (cim != null) {
 				moveCard(fromStack, toStack, cim, 0, pc);
 				cim.setFaceUp(faceUp);

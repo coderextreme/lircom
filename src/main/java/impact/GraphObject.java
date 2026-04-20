@@ -1,14 +1,14 @@
 package impact;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 
 import com.jogamp.opengl.GL2;
 
 public abstract class GraphObject {
-	List<GraphObject> graphObjects = new Vector<GraphObject>();
+	List<GraphObject> graphObjects = new ArrayList<GraphObject>();
 	static Map<String, Integer> nameToNumber = new HashMap<String, Integer>();
 	protected String name;
 	abstract void draw(GL2 gl);

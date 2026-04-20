@@ -15,7 +15,7 @@
 		cheerpjCreateDisplay(1000, 1000);
 		const exitCode = await cheerpjRunMain(
 		  "impactVL.Cell",
-		  "/app/lircom2/target/Impact.jar:/app/lircom2/target/lircom-3.jar",
+		  "/app/target/Impact.jar:/app/target/lircom-3.jar:/app/target/lircom-3-jar-with-dependencies.jar"
 		);
 		console.log(`Program exited with code ${exitCode}`);
 		})();

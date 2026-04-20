@@ -39,7 +39,7 @@ class NickThread extends Thread {
 	}
 }
 
-public class Trade extends Vector<Object> {
+public class Trade extends ArrayList<Object> {
 	String url = "";
 	// String ipaddress = "69.107.89.126";
 	String ipaddress = "127.0.0.1";

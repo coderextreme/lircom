@@ -55,7 +55,7 @@ public class GameMiner {
 			int istack = Integer.parseInt(stack);
 			Stack sm = Game.getStack(istack);
 			if (sm != null && sm.stack_no == istack) {
-				CardItem cim = (CardItem)sm.elementAt(Integer.parseInt(position));
+				CardItem cim = (CardItem)sm.get(Integer.parseInt(position));
 				if (cim != null) {
 					cim.setFaceUp(false);
 				}
@@ -68,7 +68,7 @@ public class GameMiner {
 			int istack = Integer.parseInt(stack);
 			Stack sm = Game.getStack(istack);
 			if (sm != null && sm.stack_no == istack) {
-				CardItem cim = (CardItem)sm.elementAt(Integer.parseInt(position));
+				CardItem cim = (CardItem)sm.get(Integer.parseInt(position));
 				cim.setFaceUp(true);
 			}
 		} else if (command.equals("NEWSTACK")) {
