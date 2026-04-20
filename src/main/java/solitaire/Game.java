@@ -664,9 +664,9 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 		getStack(toStack).insertElementAt(cim, pos);
 	}
 	static public Stack getStack(int i) {
-		Iterator smi = stacks.iterator();
+		Iterator<Stack> smi = stacks.iterator();
 		while (smi.hasNext()) {
-			Stack sm = (Stack)smi.next();
+			Stack sm = smi.next();
 			// System.err.println("comparing param i "+i+" to sm.stack_no "+sm.stack_no);
 			if (sm != null && sm.stack_no == i) {
 				// System.err.println("Found stack");

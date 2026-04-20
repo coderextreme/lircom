@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 . env.sh
 
 keytool -genkeypair -keyalg DSA -keysize 1024 -keystore ${KEYSTORE} -alias myself -storepass foobar 

@@ -289,7 +289,7 @@ public class ClientOnServer extends Thread implements Errors {
                         ClientOnServer c = (ClientOnServer)clients.get(ci);
                         try {
                             //log("Official send:");
-			    if (c != this) {
+			    if (c != this && c != null) {
 				    send(m, c);
 			    }
                         } catch (Exception e) {
