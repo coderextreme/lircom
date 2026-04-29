@@ -1,3 +1,4 @@
+#!/bin/zsh
 source env.sh
 
 # TODO brokwn missing class

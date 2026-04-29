@@ -7,7 +7,7 @@
     -->
     <property name="impact.jar"     value="impact.jar"/>
     <property name="cell.jar"     value="cell.jar"/>
-    <property name="M2"     value="/home/yottzumm/.m2/repository"/>
+    <property name="M2"     value="/Users/marycarlson/.m2/repository"/>
     <property name="javac.verbose"              value="false"/>
     <property name="java.classes.dir"        value="net"/>
     <!--

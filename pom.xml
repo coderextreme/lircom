@@ -72,7 +72,7 @@
     <configuration>
         <mainClass>impact.Impact3D</mainClass>
         <commandlineArgs>
-		-javaagent:C:/Users/jcarl/lircom/patch-agent/target/patch-agent-1.0.jar
+		-javaagent:/Users/marycarlson/lircom/patch-agent/target/patch-agent-1.0.jar
         </commandlineArgs>
     </configuration>
 </plugin>
