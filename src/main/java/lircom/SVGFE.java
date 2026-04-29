@@ -17,7 +17,7 @@
 //    private static java.util.List<Window> managedWindows = new ArrayList<Window>();
 //    static {
 //	try {
-//		ihandler = new CachedImageHandlerPNGEncoder("/Users/johncarlson/Applications/apache-tomcat-6.0.14/webapps/web/", ".");
+//		ihandler = new CachedImageHandlerPNGEncoder("/Users/jcarl/Applications/apache-tomcat-6.0.14/webapps/web/", ".");
 //	} catch (Exception e) {
 //		e.printStackTrace();
 //	}
@@ -61,7 +61,7 @@
 //		// UTF-8 encoding.
 //		boolean useCSS = false; // we want to use CSS style attributes
 //		try {
-//			Writer out = new FileWriter("/Users/johncarlson/Applications/apache-tomcat-6.0.14/webapps/web/"+Integer.toString(w.hashCode())+"_"+i+".svg");
+//			Writer out = new FileWriter("/Users/jcarl/Applications/apache-tomcat-6.0.14/webapps/web/"+Integer.toString(w.hashCode())+"_"+i+".svg");
 //			svgGenerator.stream(out, useCSS);
 //			out.close();
 //			Thread.sleep(500);
