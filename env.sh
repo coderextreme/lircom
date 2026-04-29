@@ -21,7 +21,13 @@ export AGENT_JAR="${USER_HOME}/lircom/patch-agent/target/patch-agent-1.0.jar"
 export LIB_PATH=${DWN}/jogamp-all-platforms/lib/windows-amd64
 # export LIB_PATH=${DIR}/natives/macosx-universal
 
-export JAVA_OPTS=(
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    echo "Running on macOS"
+    export APPLE_JOGL_OPTS=(
+	"-Dapple.awt.UIElement=false"
+	"-XstartOnFirstThread"
+    )
+    export JAVA_OPTS=(
 	"-javaagent:${AGENT_JAR}"
 	"-Djava.library.path=${LIB_PATH}"
 	"--add-exports"
@@ -32,22 +38,41 @@ export JAVA_OPTS=(
 	"java.desktop/sun.java2d=ALL-UNNAMED"
 	"--enable-final-field-mutation=ALL-UNNAMED"
 	"--enable-native-access=ALL-UNNAMED"
-)
-
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    echo "Running on macOS"
-    export APPLE_JOGL_OPTS=(
-	"-Dapple.awt.UIElement=false"
-	"-XstartOnFirstThread"
     )
+
 elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
     echo "Running on Linux"
     export APPLE_JOGL_OPTS=(
     )
+    export JAVA_OPTS=(
+	"-javaagent:${AGENT_JAR}"
+	"-Djava.library.path=${LIB_PATH}"
+	"--add-exports"
+	"java.base/java.lang=ALL-UNNAMED"
+	"--add-exports"
+	"java.desktop/sun.awt=ALL-UNNAMED"
+	"--add-exports"
+	"java.desktop/sun.java2d=ALL-UNNAMED"
+	"--enable-native-access=ALL-UNNAMED"
+    )
+
 elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
     echo "Running on Windows"
     export APPLE_JOGL_OPTS=(
     )
+    export JAVA_OPTS=(
+	"-javaagent:${AGENT_JAR}"
+	"-Djava.library.path=${LIB_PATH}"
+	"--add-exports"
+	"java.base/java.lang=ALL-UNNAMED"
+	"--add-exports"
+	"java.desktop/sun.awt=ALL-UNNAMED"
+	"--add-exports"
+	"java.desktop/sun.java2d=ALL-UNNAMED"
+	"--enable-final-field-mutation=ALL-UNNAMED"
+	"--enable-native-access=ALL-UNNAMED"
+    )
+    
 fi
 
 export PORTS="8180"

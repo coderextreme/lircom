@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Archiver-Version: Plexus Archiver
 Created-By: Apache Maven 3.6.3
-Built-By: coderextreme
+Built-By: jcarl
 Build-Jdk: 18-ea
 Main-Class: impact.Impact3D

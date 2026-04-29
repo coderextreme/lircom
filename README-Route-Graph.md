@@ -9,9 +9,9 @@ ant impact
 ant Cell
 ant Cell4x4
 
-java -cp impact.jar net.coderextreme.impact.Impact
-java -cp impact.jar net.coderextreme.impact.Cell
-java -cp impact.jar net.coderextreme.impact.Cell Cell4x4
+java -cp impact.jar impact.Impact
+java -cp impact.jar impact.Cell
+java -cp impact.jar impact.Cell Cell4x4
 
 java -jar impact.jar
 
