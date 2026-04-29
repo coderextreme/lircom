@@ -35,7 +35,7 @@ public  class Line extends GraphObject {
 	   List<GraphObject> objs = getGraphObjects();
 	   int size = objs.size(); 
 	   for (int i = 0; i < size; i++) {
-		GraphObject obj = (GraphObject)objs.get(i);
+		GraphObject obj = objs.get(i);
 		if (obj instanceof Point) {
 			Point node = (Point)obj;
 			double x = node.paths.x+node.trans.x;
@@ -66,7 +66,7 @@ public  class Line extends GraphObject {
 	   	List<GraphObject> objs = getGraphObjects();
 	        int size = objs.size(); 
 	        for (int i = 0; i < size; i++) {
-		     GraphObject obj = (GraphObject)objs.get(i);
+		     GraphObject obj = objs.get(i);
 		     sb.append("|");
 	             sb.append(obj.name);
 		     // System.err.println("There's a graph object with name "+obj.name);
@@ -86,7 +86,7 @@ public  class Line extends GraphObject {
 	   	List<GraphObject> objs = getGraphObjects();
 	        int size = objs.size(); 
 	        for (int i = 0; i < size; i++) {
-		     GraphObject obj = (GraphObject)objs.get(i);
+		     GraphObject obj = objs.get(i);
 		     sb.append("|");
 	             sb.append(obj.name);
 	        }

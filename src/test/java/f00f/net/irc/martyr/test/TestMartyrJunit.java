@@ -5,7 +5,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.logging.Logger;
 
 import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 /**
  * JUnit test case for general framework functions.

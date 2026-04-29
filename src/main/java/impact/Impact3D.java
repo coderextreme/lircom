@@ -54,7 +54,8 @@ public class Impact3D implements GLEventListener, MouseListener, MouseMotionList
 	}
   }
   public Impact3D(String host, int port) {
-    proxy = new Proxy(host, port);
+    proxy = new Proxy();
+    proxy.startChat(host, port);
     Frame frame = new Frame("Impact 3D");
     MenuBar menubar = new MenuBar();
     Menu file = new Menu("File");
@@ -269,14 +270,14 @@ public class Impact3D implements GLEventListener, MouseListener, MouseMotionList
 
   public Polygon newPolygon() {
 	cmd = UPDATE;
-	Polygon arc = new Polygon(new Integer(Impact3D.name++).toString(), objects.selected, true);
+	Polygon arc = new Polygon(((Integer)Impact3D.name++).toString(), objects.selected, true);
 	objects.add(arc);
 	objects.selected.clear();
 	return arc;
   }
   public Line newLineSegment() {
 	cmd = UPDATE;
-	Line segment = new Line(new Integer(Impact3D.name++).toString(), objects.selected, true);
+	Line segment = new Line(((Integer)Impact3D.name++).toString(), objects.selected, true);
 	objects.add(segment);
 	objects.selected.clear();
 	return segment;
@@ -284,7 +285,7 @@ public class Impact3D implements GLEventListener, MouseListener, MouseMotionList
   public Point newPoint() {
     Point point;
     cmd = UPDATE;
-    objects.add(point = new Point(new Integer(Impact3D.name++).toString(), true));
+    objects.add(point = new Point(((Integer)Impact3D.name++).toString(), true));
     return point;
   }
   public void resetView() {

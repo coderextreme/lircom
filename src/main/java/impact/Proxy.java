@@ -9,10 +9,12 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.IOException;
 
-class Proxy implements LineHandler {
+public class Proxy implements LineHandler {
+	private static final long serialVersionUID = 1L;
 	static Proxy proxy = null;
 	ImpactClient chat = null;
-	class Joint {
+	public class Joint {
+		private static final long serialVersionUID = 1L;
 		String jointId;
 		String jointName;
 		HashSet<Joint> children = new HashSet<Joint>();
@@ -20,23 +22,30 @@ class Proxy implements LineHandler {
 		Double x;
 		Double y;
 		Double z;
+		public Joint() {}
 	}
 	Joint root = null;
-	class Joints extends HashMap<String, Joint> {
+	public class Joints extends HashMap<String, Joint> {
 		// map from to joint to from joint
+		private static final long serialVersionUID = 1L;
+		public Joints() {}
 	}
 	Joints joints = new Joints();
-	class Bone {
+	public class Bone {
 		String from;
 		String to;
+		private static final long serialVersionUID = 1L;
+		public Bone() {}
 	}
-	class Bones extends HashSet<Bone> {
+	public class Bones extends HashSet<Bone> {
 		// map from to joint to from joint
+		private static final long serialVersionUID = 1L;
+		public Bones() {}
 	}
 	Bones bones = new Bones();
 	boolean initialized = false;
 	boolean bvhJointsInitialized = false;
-	public Proxy(String host, int port) {
+        public void startChat(String host, int port) {
 		try {
 			chat = new ImpactClient(this, new Socket(host, port), Long.toString(System.currentTimeMillis()));
 			chat.start();
@@ -46,6 +55,8 @@ class Proxy implements LineHandler {
 			System.err.println("Problems instantiating communications");
 		}
 		proxy = this;
+	}
+	public Proxy() {
 	}
 	synchronized static public Proxy getProxy() {
 		return proxy;

@@ -3,11 +3,11 @@ package impact;
 import java.util.HashMap;
 
 public class ImpactClient extends lircom.ClientOnServer {
-	public HashMap client_messages = new HashMap();
+	public HashMap<String,lircom.Message> client_messages = new HashMap<String,lircom.Message>();
 	private Proxy proxy = null;
 	public ImpactClient(Proxy proxy, java.net.Socket s, String nick) throws Exception {
 		super(s);
-		setNick("Impact"+nick);
+		super.setNick("Impact"+nick);
 		lircom.Message.thisApplication = "Impact";
 		this.proxy = proxy;
 	}

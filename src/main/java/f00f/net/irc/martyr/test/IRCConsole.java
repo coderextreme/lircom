@@ -20,7 +20,7 @@ import f00f.net.irc.martyr.commands.RawCommand;
  
 public class IRCConsole extends Frame
 {
-	public static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 1L;
 	private transient IRCConnection connection;
 	private TextArea outputArea;
 	private TextField inputArea;
@@ -100,6 +100,7 @@ public class IRCConsole extends Frame
 /** TailTextArea 'tails' any text that is added with the 'append' method.
     That is, it will add the text then make sure it is visible. */
 class TailTextArea extends TextArea {
+    private static final long serialVersionUID = 1L;
     public TailTextArea( String str, int a, int b ) {
         super( str, a, b, SCROLLBARS_BOTH );
     }

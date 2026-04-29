@@ -29,6 +29,7 @@ public class smooth
   private GLUT glut;
   private GLCapabilities caps;
   private GLCanvas canvas;
+  private static final long serialVersionUID = 1L;
 
   public smooth()
   {

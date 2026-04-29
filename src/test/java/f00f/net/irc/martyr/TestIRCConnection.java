@@ -1,8 +1,7 @@
 package f00f.net.irc.martyr;
 
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import f00f.net.irc.martyr.test.AbstractMartyrTest;
 

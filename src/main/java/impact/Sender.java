@@ -22,7 +22,7 @@ public class Sender extends Thread {
 	}
 	public synchronized void send(String line) throws Exception {
 		if (line.length() > 0) {
-			URL u = new URL(url+"&text="+URLEncoder.encode(line, "UTF-8"));
+			URL u = URI.create(url+"&text="+URLEncoder.encode(line, "UTF-8")).toURL();
 			System.err.println(u.toString());
 			receive(u);
 		}
@@ -32,7 +32,7 @@ public class Sender extends Thread {
 		if (receiver != null) {
 			receiver.stopReceiving();
 		}
-		InputStream is = new URL(url+"&remove=true").openStream();
+		InputStream is = URI.create(url+"&remove=true").toURL().openStream();
 		is.close();
 	}
 	public void receive (URL u) throws Exception {
@@ -50,7 +50,7 @@ public class Sender extends Thread {
 	public void run() {
 		try {
 			while (sending) {
-				URL u = new URL(url);
+				URL u = URI.create(url).toURL();
 				receive(u);
 			}
 		} catch (Exception e) {

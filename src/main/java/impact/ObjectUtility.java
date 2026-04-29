@@ -109,7 +109,7 @@ public class ObjectUtility<T extends GraphObject> {
 			Iterator<GraphObject> i = shown.iterator();
 			while (i.hasNext()) {
 				GraphObject obj = i.next();
-				((GraphObject)obj).draw(gl);
+				(obj).draw(gl);
 			}
 		}
 	}
@@ -118,7 +118,7 @@ public class ObjectUtility<T extends GraphObject> {
 			Iterator<GraphObject> i = shown.iterator();
 			while (i.hasNext()) {
 				GraphObject obj = i.next();
-				((GraphObject)obj).untranslate();
+				(obj).untranslate();
 			}
 		}
 	}
@@ -127,7 +127,7 @@ public class ObjectUtility<T extends GraphObject> {
 		while (i.hasNext()) {
 			System.err.println("Shifting selection "+x+" "+y+" "+z);
 			GraphObject obj = i.next();
-			((GraphObject)obj).translateSelection(x, y, z);
+			(obj).translateSelection(x, y, z);
 		}
 	}
 	void save() {
@@ -135,7 +135,7 @@ public class ObjectUtility<T extends GraphObject> {
 			Iterator<GraphObject> i = shown.iterator();
 			while (i.hasNext()) {
 				GraphObject obj = i.next();
-				((GraphObject)obj).save();
+				(obj).save();
 			}
 		}
 	}
