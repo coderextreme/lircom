@@ -1,8 +1,8 @@
-#!/bin/bash -x
+#!/bin/zsh
 
-. env.sh
+source env.sh
 
-${JAVA_OPTS} lircom.Peer ${PORT_NUM} &
+${JAVA} "${JAVA_OPTS[@]}" lircom.Peer ${PORT_NUM} &
 sleep 1
-${JAVA_OPTS} -jar target/lircom-3-jar-with-dependencies.jar lircom.Chat Michael &
-${JAVA_OPTS} -jar target/lircom-3-jar-with-dependencies.jar lircom.Chat John &
+${JAVA} "${JAVA_OPTS[@]}" -jar target/lircom-3-jar-with-dependencies.jar lircom.Chat Michael &
+${JAVA} "${JAVA_OPTS[@]}" -jar target/lircom-3-jar-with-dependencies.jar lircom.Chat John &

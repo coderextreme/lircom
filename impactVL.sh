@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/zsh
 
-. env.sh
+source env.sh
 
 export CLASSPATH="${CLASSPATH}:src/main/resources"
 

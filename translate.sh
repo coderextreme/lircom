@@ -1,3 +1,4 @@
+#!/bin/zsh
 source .venv/Scripts/activate
 python translation_server.py &
-bash lirshort.sh
+source lirshort.sh

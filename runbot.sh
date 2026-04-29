@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
-. env.sh
-${JAVA_OPTS} lircom.IRCClient config/afternet.config config/symbion.config
+source env.sh
+${JAVA} "${JAVA_OPTS[@]}" lircom.IRCClient config/afternet.config config/symbion.config

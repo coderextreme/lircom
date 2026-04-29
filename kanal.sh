@@ -1,5 +1,5 @@
-#!/bin/bash
+#!/bin/zsh
 
-. env.sh
+source env.sh
 
-${JAVA_OPTS} lircom.MainWindow lircom.Kanal &
+${JAVA} "${JAVA_OPTS[@]}" lircom.MainWindow lircom.Kanal &

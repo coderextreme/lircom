@@ -1,8 +1,14 @@
-<project>
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.coderextreme</groupId>
     <artifactId>patch-agent</artifactId>
     <version>1.0</version>
+<properties>
+    <maven.compiler.release>26</maven.compiler.release>
+    <maven.compiler.source>26</maven.compiler.source>
+    <maven.compiler.target>26</maven.compiler.target>
+</properties>
 
     <dependencies>
         <dependency>
@@ -29,6 +35,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+	    	<version>3.5.0</version>
                 <configuration>
                     <archive>
                         <manifestEntries>
@@ -38,6 +45,22 @@
                     </archive>
                 </configuration>
             </plugin>
-        </plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.13.0</version>
+        <configuration>
+          <!-- or whatever version you use -->
+          <source>26</source>
+          <target>26</target>
+	  <release>26</release>
+          <encoding>UTF-8</encoding>
+	  <compilerArgs>
+      		<arg>-Xlint:-requires-automatic</arg>
+      		<arg>-Xlint:all</arg>
+    	  </compilerArgs>
+        </configuration>
+        </plugin>
+      </plugins>
     </build>
 </project>
