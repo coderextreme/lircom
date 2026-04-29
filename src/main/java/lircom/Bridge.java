@@ -163,9 +163,9 @@ public class Bridge extends Thread {
 				PossibleConnection.pcons.clear();
 				Thread.sleep(30000);
 				sps.flush();
-				Iterator i = PossibleConnection.iterator();
+				Iterator<Object> i = PossibleConnection.iterator();
 				while (i.hasNext()) {
-					PossibleConnection pcon = (PossibleConnection)i.next();
+					PossibleConnection pcon = PossibleConnection.pcons.get(i.next());
 					System.err.println("****NICK "+pcon.nick);
 					System.err.println("****HOST "+pcon.host);
 					System.err.println("****PORT "+pcon.port);

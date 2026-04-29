@@ -47,9 +47,9 @@ public class Channel extends Chat {
 	}
 	public void fireActions(Message receivedMessage) throws Exception {
 		// more than one action can fire at the same time
-		Iterator i = actions.iterator();
+		Iterator<Action> i = actions.iterator();
 		while (i.hasNext()) {
-			Action a = (Action)i.next();
+			Action a = i.next();
 			actionPerformed(a, receivedMessage);
 		}
 	}
@@ -60,7 +60,7 @@ public class Channel extends Chat {
 		System.err.println("Sender is "+sender);
 		String nick = receivedMessage.nick;
 		String msg = receivedMessage.message;
-		HashMap testrec = receivedMessage.rec;
+		HashMap<String,String> testrec = receivedMessage.rec;
 		if (matcher.matches()) {
 			System.err.println(receivedMessage.message+" Matches "+a.pattern);
 			switch (a.action) {
@@ -79,7 +79,7 @@ public class Channel extends Chat {
 				Message m = new Message(sender, getNick(), helpmsg, "en");
 				try {
 					// send back to sender
-					HashMap rec = prepareToSend(m);
+					HashMap<Long,ClientOnServer> rec = prepareToSend(m);
 					send(m, rec);
 				} catch (Message msge) {
 					messageException(msge);
@@ -90,16 +90,16 @@ public class Channel extends Chat {
 			case WHO_ACTION:
 				{
 				StringBuffer subs = new StringBuffer();
-				Iterator i = subscribernicks.keySet().iterator();
+				Iterator<String> i = subscribernicks.keySet().iterator();
 				while (i.hasNext()) {
-					String sub = i.next().toString();
+					String sub = i.next();
 					subs.append(" ");
 					subs.append(subscribernicks.get(sub));
 				}
 				Message m = new Message(sender, getNick(), subs.toString(), "__");
 				try {
 					// send back to sender
-					HashMap rec = prepareToSend(m);
+					HashMap<Long,ClientOnServer> rec = prepareToSend(m);
 					send(m, rec);
 				} catch (Message msge) {
 					messageException(msge);
@@ -130,9 +130,9 @@ public class Channel extends Chat {
 	}
 	public void send(HashMap<String,String> subscribers, Message m, String sender) throws Exception {
 /*
-		Iterator i = subscribers.keySet().iterator();
+		Iterator<String> i = subscribers.keySet().iterator();
 		while (i.hasNext()) {
-                    String sub = i.next().toString();
+                    String sub = i.next();
                     if (!sub.equals(sender) && !sub.equals(getAddressPortClient()) && !sender.equals(getAddressPortClient())) {
                         m.to = sub;
 */
@@ -140,7 +140,7 @@ public class Channel extends Chat {
 			subs.remove(sender);
 			m = new Message(subs, m.nick, m.message, m.language);
 			try {
-			    HashMap rec = prepareToSend(m);
+			    HashMap<Long,ClientOnServer> rec = prepareToSend(m);
                             if (rec == null || rec.size() == 0) {
                                 throw new Exception("No such recipient");
                             }

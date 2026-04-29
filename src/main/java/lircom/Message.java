@@ -24,6 +24,7 @@ import java.io.ByteArrayOutputStream;
  * @author carlsonj
  */
 public class Message extends Throwable {
+    private static final long serialVersionUID = 1L;
     String from = "";
     public java.util.HashMap<String,String> rec = new java.util.HashMap<String,String>();
     long timestamp = 0; // don't want to make public, but have to so that flooding can be done

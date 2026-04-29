@@ -448,7 +448,7 @@ public class Chat extends ClientOnServer implements WindowListener, ActionListen
 			jp.repaint();
 			// if the client is also a server
 			try {
-				HashMap rec = prepareToSend(m);
+				HashMap<Long,ClientOnServer> rec = prepareToSend(m);
 				send(m, rec);
 			} catch (Message msge) {
 				messageException(msge);
@@ -491,7 +491,7 @@ public class Chat extends ClientOnServer implements WindowListener, ActionListen
 		}
 	        Message m = new Message(rec, from, line, getLanguage());
 		try {
-			HashMap clientrec = prepareToSend(m);
+			HashMap<Long,ClientOnServer> clientrec = prepareToSend(m);
                         send(m, clientrec);
 		} catch (Message msge) {
 			messageException(msge);
@@ -699,7 +699,7 @@ SwingUtilities.invokeLater(new Runnable() {
 	public void windowClosing(WindowEvent we) {
                 Message m = new Message("*", getNick(), "has exited", "en");
                 try {
-		    HashMap rec = prepareToSend(m);
+		    HashMap<Long,ClientOnServer> rec = prepareToSend(m);
                     send(m, rec);
                 } catch (Message msge) {
 		    messageException(msge);

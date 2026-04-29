@@ -185,7 +185,7 @@ public class ClientOnServer extends Thread implements Errors {
 		if (!seenMessage(m, server_messages)) {
 			// log("not seen message "+m.message);
 			try {
-				HashMap rec = prepareToSend(m);
+				HashMap<Long,ClientOnServer> rec = prepareToSend(m);
 				send(m, rec);
 			} catch (Message msge) {
 				messageException(msge);
@@ -196,15 +196,15 @@ public class ClientOnServer extends Thread implements Errors {
 		}
 	}
         
-	public HashMap prepareToSend(Message m) throws Exception, Message {
+	public HashMap<Long,ClientOnServer>  prepareToSend(Message m) throws Exception, Message {
 		// add from this client
 		String from = m.from;
 		prependFrom(m);
 		HashMap<Long,ClientOnServer> rec = new HashMap<Long,ClientOnServer>(); // hashtable of client #s
-		Iterator i = m.rec.keySet().iterator();
+		Iterator<String> i = m.rec.keySet().iterator();
 		HashMap<String,String> newrec = new HashMap<String,String>();
 		while (i.hasNext()) { // go through existing list
-			String to = (String)i.next();
+			String to = i.next();
 			if (to.equals("*")) {
 				// log("Adding ALL Clients");
 				newrec.put("*", "*"); // send to who is left
@@ -238,10 +238,10 @@ public class ClientOnServer extends Thread implements Errors {
 			    	recstr = recstr.substring(colon+1);
 			    }
 			    if (recstr.trim().equals("")) {
-			    	return new HashMap();
+			    	return new HashMap<Long,ClientOnServer>();
 			    }
 			    log("recstr is "+recstr);
-			    ClientOnServer r = (ClientOnServer)clients.get(Long.valueOf(recstr));
+			    ClientOnServer r = clients.get(Long.valueOf(recstr));
 			    if (r != null) {
 			    	log("Recipient is "+recstr);
 			    	rec.put(r.clientno, r);
@@ -280,13 +280,13 @@ public class ClientOnServer extends Thread implements Errors {
                     throw e;
                 }
 	}
-        public void send(Message m, HashMap recipient) throws Exception {
+        public void send(Message m, HashMap<Long, ClientOnServer> recipient) throws Exception {
             if (recipient != null && recipient.size() > 0) {
-                Iterator i = recipient.keySet().iterator();
+                Iterator<Long> i = recipient.keySet().iterator();
                 ClientException ce = new ClientException();
                 while (i.hasNext()) {
-                        Long ci = (Long)i.next();
-                        ClientOnServer c = (ClientOnServer)clients.get(ci);
+                        Long ci = i.next();
+                        ClientOnServer c = clients.get(ci);
                         try {
                             //log("Official send:");
 			    if (c != this && c != null) {
@@ -348,24 +348,35 @@ public class ClientOnServer extends Thread implements Errors {
             c.send(m.generate());
         }
         public String getLocation() throws Exception {
-		Enumeration nis = NetworkInterface.getNetworkInterfaces();
-		while (nis.hasMoreElements()) {
-			NetworkInterface ni = (NetworkInterface)nis.nextElement();
-			if (!ni.getName().equals("lo")) {
-				Enumeration ias = ni.getInetAddresses();
-				while (ias.hasMoreElements()) {
-					InetAddress ia = (InetAddress)ias.nextElement();
+               Enumeration nis = NetworkInterface.getNetworkInterfaces();
+               while (nis.hasMoreElements()) {
+                       NetworkInterface ni = (NetworkInterface)nis.nextElement();
+                       if (!ni.getName().equals("lo")) {
+                               Enumeration ias = ni.getInetAddresses();
+                               while (ias.hasMoreElements()) {
+                                       InetAddress ia = (InetAddress)ias.nextElement();
                                         // TODO remove getNick()
-					// return ia+":"+getNick()+":"+clientno;
-					return ia+":"+clientno;
-				}
-			}
-		}
-		return null;
+                                       // return ia+":"+getNick()+":"+clientno;
+                                       return ia+":"+clientno;
+                               }
+                       }
+               }
+               return null;
+/*
+		return NetworkInterface.networkInterfaces()
+			.filter(ni -> !ni.getName().equals("lo"))
+			.findAny()
+			.get()
+			.inetAddresses()
+			.findAny()
+			.get()
+			.toString()
+			+":"+clientno; // return ia+":"+getNick()+":"+clientno;
+*/
 	}
 	public void messageException(Message m) {
 		try {
-			HashMap rec = prepareToSend(m);
+			HashMap<Long,ClientOnServer> rec = prepareToSend(m);
 			send(m, rec);
 		} catch (Message msge) {
 			log(msge.generate());

@@ -36,7 +36,7 @@ public class PossibleConnection {
            System.err.println("Adding "+con.host+" "+con.port+" "+con.nick);
            pcons.put(con.host+"|"+con.port+"|"+con.nick, con);
         }
-        static java.util.Iterator iterator() {
+        static java.util.Iterator<Object> iterator() {
                 return pcons.keySet().iterator();
         }
         static PossibleConnection get(Object str) {
