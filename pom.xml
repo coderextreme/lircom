@@ -21,7 +21,6 @@
       <id>reportmill.com</id>
       <url>https://reportmill.com/maven</url>
     </repository>
-	    https://jogamp.org/deployment/maven/
 	-->
     <repository>
       <id>jogamp.org</id>
@@ -73,7 +72,7 @@
     <configuration>
         <mainClass>impact.Impact3D</mainClass>
         <commandlineArgs>
-		-javaagent:/home/yottzumm/lircom/patch-agent/target/patch-agent-1.0.jar
+		-javaagent:C:/Users/jcarl/lircom/patch-agent/target/patch-agent-1.0.jar
         </commandlineArgs>
     </configuration>
 </plugin>
@@ -243,6 +242,7 @@ vulnerability -->
 	    </exclusions>
 </dependency>
 <!-- From: https://jogamp.org/wiki/index.php/Maven -->
+<!--
   <dependency>
     <groupId>org.jogamp.gluegen</groupId>
     <artifactId>gluegen-rt</artifactId>
@@ -262,6 +262,7 @@ vulnerability -->
 		</exclusion>
 	    </exclusions>
   </dependency>
+	-->
   <dependency>
     <groupId>org.jogamp.gluegen</groupId>
     <artifactId>gluegen-rt-main</artifactId>
