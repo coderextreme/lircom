@@ -8,7 +8,7 @@
     <!--
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
 	    -->
-    <junit-jupiter.version>5.4.2</junit-jupiter.version>
+    <junit-jupiter.version>5.11.4</junit-jupiter.version>
     <maven.compiler.release>26</maven.compiler.release>
     <maven.compiler.source>26</maven.compiler.source>
     <maven.compiler.target>26</maven.compiler.target>
@@ -40,7 +40,10 @@
           <target>26</target>
 	  <release>26</release>
           <encoding>UTF-8</encoding>
-	  <compilerArgument>-Xlint:all</compilerArgument>
+	  <compilerArgs>
+      		<arg>-Xlint:-requires-automatic</arg>
+      		<arg>-Xlint:all</arg>
+    	  </compilerArgs>
         </configuration>
       </plugin>
       <plugin>
@@ -55,6 +58,7 @@
       <plugin>
 	    <groupId>org.apache.maven.plugins</groupId>
 	    <artifactId>maven-jar-plugin</artifactId>
+	    <version>3.5.0</version>
 	    <configuration>
                 <manifest>
                     <mainClass>impact.Impact3D</mainClass>
@@ -65,6 +69,7 @@
 <plugin>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>exec-maven-plugin</artifactId>
+    <version>3.6.3</version>
     <configuration>
         <mainClass>impact.Impact3D</mainClass>
         <commandlineArgs>
@@ -278,9 +283,10 @@ vulnerability -->
   </dependency>
 
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>[4.13.1,)</version>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.11.4</version>
+      <scope>test</scope>
 	    <exclusions>
 		<exclusion>
 		    <groupId>xerces</groupId>

@@ -1,6 +1,7 @@
 package impactVL;
 public class Division {
 	private static int NUMDECIMALDIGITS = 16;
+	public Division() {}
 	static public void main(String args[]) throws Exception {
 
 		double n = Double.parseDouble(args[0]);

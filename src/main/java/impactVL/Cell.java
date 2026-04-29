@@ -297,6 +297,7 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 		}
 			
 		class ClosingFrame extends JFrame implements WindowListener {
+			private static final long serialVersionUID = 1L;
 			public ClosingFrame() {
 				addWindowListener(this);
 			}

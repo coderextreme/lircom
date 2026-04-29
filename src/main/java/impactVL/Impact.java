@@ -18,9 +18,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 class Module implements Cloneable {  // aka Node
-	ArrayList endPoints; // links around outside of module
-	ArrayList links; // links between submodules
-	ArrayList modules; // submodules
+	ArrayList<LinkEndpoint> endPoints; // links around outside of module
+	ArrayList<Link> links; // links between submodules
+	ArrayList<Module> modules; // submodules
 	String name; // name of machine or module (filename?)
 	int width; // width in personalities
 	int height; // height in personalities
@@ -30,9 +30,9 @@ class Module implements Cloneable {  // aka Node
 		this.name = name;
 		this.width = width;
 		this.height = height;
-		endPoints = new ArrayList();
-		links = new ArrayList();
-		modules = new ArrayList();
+		endPoints = new ArrayList<LinkEndpoint>();
+		links = new ArrayList<Link>();
+		modules = new ArrayList<Module>();
 		id = idsequence++;
 	}
 	public Module() {
@@ -81,10 +81,10 @@ interface Rectangular {
 	int getWidth();
 	int getHeight();
 	Rectangle getBounds();
-	HashSet leftLines();
-	HashSet rightLines();
-	HashSet topLines();
-	HashSet bottomLines();
+	HashSet<Integer> leftLines();
+	HashSet<Integer> rightLines();
+	HashSet<Integer> topLines();
+	HashSet<Integer> bottomLines();
 }
 
 class AcquireLabel {
@@ -139,10 +139,10 @@ class VisualEndpoint extends JLabel implements Rectangular {
 	VisualModule module;
 	VisualLink link;
 	String label;
-	HashSet rightLines = new HashSet();
-	HashSet leftLines = new HashSet();
-	HashSet topLines = new HashSet();
-	HashSet bottomLines = new HashSet();
+	HashSet<Integer> rightLines = new HashSet<Integer>();
+	HashSet<Integer> leftLines = new HashSet<Integer>();
+	HashSet<Integer> topLines = new HashSet<Integer>();
+	HashSet<Integer> bottomLines = new HashSet<Integer>();
 	public VisualEndpoint(VisualModule m, String prompt, String def) throws Exception {
 		setOpaque(true);
 		module = m;
@@ -160,16 +160,16 @@ class VisualEndpoint extends JLabel implements Rectangular {
 	public void setLink(VisualLink l) {
 		link = l;
 	}
-	public HashSet leftLines() {
+	public HashSet<Integer> leftLines() {
 		return leftLines;
 	}
-	public HashSet rightLines() {
+	public HashSet<Integer> rightLines() {
 		return rightLines;
 	}
-	public HashSet topLines() {
+	public HashSet<Integer> topLines() {
 		return topLines;
 	}
-	public HashSet bottomLines() {
+	public HashSet<Integer> bottomLines() {
 		return bottomLines;
 	}
 	public VisualMachine getParent() {
@@ -187,10 +187,10 @@ class VisualModule extends JLabel implements Rectangular {
 	Cell cell;
 	VisualMachine machine; // vm module is in 
 	VisualMachine parent; // opened up vm of module
-	HashSet rightLines = new HashSet();
-	HashSet leftLines = new HashSet();
-	HashSet topLines = new HashSet();
-	HashSet bottomLines = new HashSet();
+	HashSet<Integer> rightLines = new HashSet<Integer>();
+	HashSet<Integer> leftLines = new HashSet<Integer>();
+	HashSet<Integer> topLines = new HashSet<Integer>();
+	HashSet<Integer> bottomLines = new HashSet<Integer>();
 	int YSCALE = 2;
 	public void loadIcon(String text) {
 		setText(text);
@@ -300,21 +300,22 @@ class VisualModule extends JLabel implements Rectangular {
 	public VisualMachine getParent() {
 		return parent;
 	}
-	public HashSet leftLines() {
+	public HashSet<Integer> leftLines() {
 		return leftLines;
 	}
-	public HashSet rightLines() {
+	public HashSet<Integer> rightLines() {
 		return rightLines;
 	}
-	public HashSet topLines() {
+	public HashSet<Integer> topLines() {
 		return topLines;
 	}
-	public HashSet bottomLines() {
+	public HashSet<Integer> bottomLines() {
 		return bottomLines;
 	}
 }
 
-class Placer implements MouseListener, MouseMotionListener {
+class Placer implements MouseListener, MouseMotionListener, Serializable {
+	private static final long serialVersionUID = 1L;
 	Command cmd;
 	public void setCommand(Command c) {
 		cmd = c;
@@ -344,7 +345,8 @@ class Placer implements MouseListener, MouseMotionListener {
 	}
 }
 
-class Command implements MouseListener, MouseMotionListener {
+class Command implements MouseListener, MouseMotionListener, Serializable {
+	private static final long serialVersionUID = 1L;
 	public void mouseClicked(MouseEvent e) {}
 	public void mouseEntered(MouseEvent e) {}
 	public void mouseExited(MouseEvent e) {}
@@ -354,7 +356,8 @@ class Command implements MouseListener, MouseMotionListener {
 	public void mouseMoved(MouseEvent e) {}
 }
 
-class CreateModule extends Command {
+class CreateModule extends Command implements Serializable {
+	private static final long serialVersionUID = 1L;
 	Selecter s;
 	Placer p;
 	ButtonGroup bg;
@@ -405,7 +408,8 @@ class CreateModule extends Command {
 	}
 }
 
-class Cut extends Command {
+class Cut extends Command implements Serializable {
+	private static final long serialVersionUID = 1L;
 	Selecter s;
 	public Cut(Selecter s) {
 		this.s = s;
@@ -426,7 +430,7 @@ class Cut extends Command {
 }
 	
 // Not Used
-class CutLink extends Command {
+class CutLink extends Command implements Serializable {
 	public void mousePressed(MouseEvent e) {
 		Component c = e.getComponent();
 		if (c instanceof VisualEndpoint) {
@@ -437,7 +441,8 @@ class CutLink extends Command {
 	}
 }
 
-class Copy extends Command {
+class Copy extends Command implements Serializable {
+	private static final long serialVersionUID = 1L;
 	Selecter s;
 	Placer p;
 	public Copy(Selecter s, Placer p) {
@@ -455,7 +460,8 @@ class Copy extends Command {
 	}
 }
 
-class Paste extends Command {
+class Paste extends Command implements Serializable {
+	private static final long serialVersionUID = 1L;
 	Selecter s;
 	Placer p;
 	CreateModule cm;
@@ -477,7 +483,8 @@ class Paste extends Command {
 	}
 }
 
-class ExpandModule extends Command {
+class ExpandModule extends Command implements Serializable {
+	private static final long serialVersionUID = 1L;
 	Selecter s;
 	Placer p;
 	public ExpandModule(Selecter s, Placer p) {
@@ -500,7 +507,7 @@ class ExpandModule extends Command {
 	} 
 }
 
-class CreateLink {
+class CreateLink implements Serializable {
 	static boolean linking = false;
 	Placer p;
 	public CreateLink(Placer p) {
@@ -519,7 +526,8 @@ class CreateLink {
 	}
 }
 
-class Selecter extends Command {
+class Selecter extends Command implements Serializable {
+	private static final long serialVersionUID = 1L;
 	static VisualModule old;
 	static VisualModule current;
 	static VisualModule clipboard;
@@ -552,7 +560,7 @@ class Selecter extends Command {
 			int x = old.getX();
 			int y = old.getY();
 			old.setLocation(x+e.getX()-dx, y+e.getY()-dy);
-			VisualMachine vm = (VisualMachine)old.getParent();
+			VisualMachine vm = old.getParent();
 			vm.invalidate();
 			vm.validate();
 			vm.repaint();
@@ -581,14 +589,15 @@ class Selecter extends Command {
 }
 
 class VisualMachine extends JPanel implements MouseMotionListener {
-	ArrayList links = new ArrayList(); // links between submodules
+	private static final long serialVersionUID = 1L;
+	ArrayList<VisualLink> links = new ArrayList<VisualLink>(); // links between submodules
 	VisualModule mainModule;
-	HashSet modules = new HashSet(); // links between submodules
+	HashSet<VisualModule> modules = new HashSet<VisualModule>(); // links between submodules
 	int mx; // mouse location
 	int my;
 	JFrame frame;
 	Selecter selecter;
-	static ArrayList machines = new ArrayList();
+	static ArrayList<VisualMachine> machines = new ArrayList<VisualMachine>();
 	public VisualMachine(VisualModule mod, Placer p, Selecter s) {
 		mainModule = mod;
 		mainModule.setMachine(this);
@@ -673,9 +682,9 @@ class VisualMachine extends JPanel implements MouseMotionListener {
 	}
 	static public void saveMachines(PrintStream ps) {
 		Cell.saveMachine(ps);
-		Iterator m = machines.iterator();
+		Iterator<VisualMachine> m = machines.iterator();
 		while (m.hasNext()) {
-			VisualMachine vm = (VisualMachine)m.next();
+			VisualMachine vm = m.next();
 			vm.generateLinks(ps);
 		}
 	}
@@ -729,10 +738,10 @@ class VisualMachine extends JPanel implements MouseMotionListener {
 		boolean NOTEOF = true;
 		NOTEOF = Cell.openMachine(br);
 		if (!NOTEOF) {
-			Iterator m = machines.iterator();
+			Iterator<VisualMachine> m = machines.iterator();
 			long nvm = 0;
 			while (m.hasNext() && NOTEOF) {
-				VisualMachine vm = (VisualMachine)m.next();
+				VisualMachine vm = m.next();
 				System.err.println("VM "+nvm++);
 				NOTEOF = vm.openLinks(br, impact);
 			}
@@ -760,9 +769,9 @@ class VisualMachine extends JPanel implements MouseMotionListener {
 	public void remove(VisualModule mod) {
 		super.remove(mod);
 		modules.remove(mod);
-		Iterator i = links.iterator();
+		Iterator<VisualLink> i = links.iterator();
 		while (i.hasNext()) {
-			VisualLink l = (VisualLink)i.next();
+			VisualLink l = i.next();
 			VisualEndpoint frompt = l.from;
 			VisualEndpoint topt = l.to;
 			if (frompt.module == mod || topt.module == mod) {
@@ -780,9 +789,9 @@ class VisualMachine extends JPanel implements MouseMotionListener {
 		repaint();
 	}
 	public void remove(VisualEndpoint vep) {
-		Iterator i = links.iterator();
+		Iterator<VisualLink>  i = links.iterator();
 		while (i.hasNext()) {
-			VisualLink l = (VisualLink)i.next();
+			VisualLink l = i.next();
 			VisualEndpoint frompt = l.from;
 			VisualEndpoint topt = l.to;
 			if (frompt == vep || topt == vep) {
@@ -806,17 +815,17 @@ class VisualMachine extends JPanel implements MouseMotionListener {
 		setLinks();
 		paintLinks(g);
 	}
-	public boolean contains(HashSet lines, Integer i) {
-		Iterator it = lines.iterator();
+	public boolean contains(HashSet<Integer> lines, Integer i) {
+		Iterator<Integer> it = lines.iterator();
 		while (it.hasNext()) {
-			Integer in = (Integer)it.next();
+			Integer in = it.next();
 			if (in.equals(i)) {
 				return true;
 			}
 		}
 		return false;
 	}
-	public int avoid(HashSet lines, int initial) {
+	public int avoid(HashSet<Integer> lines, int initial) {
 		int offset = 10; // offset between lines
 		int y = initial;
 		Integer i = y;
@@ -839,14 +848,14 @@ class VisualMachine extends JPanel implements MouseMotionListener {
 	}
 
 	public void setLinkLabels(VisualModule from, VisualEndpoint frompt, VisualModule to, VisualEndpoint topt) {
-		HashSet fromleftLines = null;
-		HashSet fromrightLines = null;
-		HashSet fromtopLines = null;
-		HashSet frombottomLines = null;
-		HashSet toleftLines = null;
-		HashSet torightLines = null;
-		HashSet totopLines = null;
-		HashSet tobottomLines = null;
+		HashSet<Integer> fromleftLines = null;
+		HashSet<Integer> fromrightLines = null;
+		HashSet<Integer> fromtopLines = null;
+		HashSet<Integer> frombottomLines = null;
+		HashSet<Integer> toleftLines = null;
+		HashSet<Integer> torightLines = null;
+		HashSet<Integer> totopLines = null;
+		HashSet<Integer> tobottomLines = null;
 		Rectangular f;
 		if (from != null) {
 			fromleftLines = from.leftLines;
@@ -867,32 +876,32 @@ class VisualMachine extends JPanel implements MouseMotionListener {
 		} else {
 			t = topt;
 		}
-		if ((int)f.getX() + (int)f.getWidth() < (int)t.getX()) {
-			int yl1 = avoid(fromrightLines, (int)f.getY()+(int)f.getHeight()/2);
-			int yl2 = avoid(toleftLines, (int)t.getY()+(int)t.getHeight()/2);
-			frompt.setLocation( (int)f.getX()+(int)f.getWidth(), yl1 - frompt.getHeight()/2);
-			topt.setLocation( (int)t.getX() - (int)topt.getWidth(), yl2 - topt.getHeight()/2);
-		} else if ((int)f.getX() > (int)t.getX() + (int)t.getWidth()) {
-			int yl1 = avoid(fromleftLines, (int)f.getY()+(int)f.getHeight()/2);
-			int yl2 = avoid(torightLines, ((int)t.getY()+(int)t.getHeight()/2));
-			frompt.setLocation( (int)f.getX() - frompt.getWidth(), yl1 - frompt.getHeight()/2);
-			topt.setLocation( (int)t.getX()+(int)t.getWidth(), yl2 - topt.getHeight()/2);
-		} else if ((int)f.getY() + (int)f.getHeight() < (int)t.getY()) {
-			int xl1 = avoid(frombottomLines, (int)f.getX()+(int)f.getWidth()/2);
-			int xl2 = avoid(totopLines, (int)t.getX()+(int)t.getWidth()/2);
-			frompt.setLocation( (int)xl1 - frompt.getWidth()/2, (int)f.getY()+(int)f.getHeight());
-			topt.setLocation( (int)xl2 - topt.getWidth()/2, (int)t.getY()-topt.getHeight());
-		} else if ((int)f.getY() > (int)t.getY() + (int)t.getHeight()) {
-			int xl1 = avoid(fromtopLines, (int)f.getX()+(int)f.getWidth()/2);
-			int xl2 = avoid(tobottomLines, (int)t.getX()+(int)t.getWidth()/2);
-			frompt.setLocation( (int)xl1 - frompt.getWidth()/2, (int)f.getY()-frompt.getHeight());
-			topt.setLocation( (int)xl2 - topt.getWidth()/2, (int)t.getY()+(int)t.getHeight());
+		if (f.getX() + f.getWidth() < t.getX()) {
+			int yl1 = avoid(fromrightLines, f.getY()+f.getHeight()/2);
+			int yl2 = avoid(toleftLines, t.getY()+t.getHeight()/2);
+			frompt.setLocation( f.getX()+f.getWidth(), yl1 - frompt.getHeight()/2);
+			topt.setLocation( t.getX() - topt.getWidth(), yl2 - topt.getHeight()/2);
+		} else if (f.getX() > t.getX() + t.getWidth()) {
+			int yl1 = avoid(fromleftLines, f.getY()+f.getHeight()/2);
+			int yl2 = avoid(torightLines, (t.getY()+t.getHeight()/2));
+			frompt.setLocation( f.getX() - frompt.getWidth(), yl1 - frompt.getHeight()/2);
+			topt.setLocation( t.getX()+t.getWidth(), yl2 - topt.getHeight()/2);
+		} else if (f.getY() + f.getHeight() < t.getY()) {
+			int xl1 = avoid(frombottomLines, f.getX()+f.getWidth()/2);
+			int xl2 = avoid(totopLines, t.getX()+t.getWidth()/2);
+			frompt.setLocation( xl1 - frompt.getWidth()/2, f.getY()+f.getHeight());
+			topt.setLocation( xl2 - topt.getWidth()/2, t.getY()-topt.getHeight());
+		} else if (f.getY() > t.getY() + t.getHeight()) {
+			int xl1 = avoid(fromtopLines, f.getX()+f.getWidth()/2);
+			int xl2 = avoid(tobottomLines, t.getX()+t.getWidth()/2);
+			frompt.setLocation( xl1 - frompt.getWidth()/2, f.getY()-frompt.getHeight());
+			topt.setLocation( xl2 - topt.getWidth()/2, t.getY()+t.getHeight());
 		}
 	}
 	public void setLabels() {
-		Iterator i = links.iterator();
+		Iterator<VisualLink> i = links.iterator();
 		while (i.hasNext()) {
-			VisualLink l = (VisualLink)i.next();
+			VisualLink l = i.next();
 			VisualEndpoint frompt = l.from;
 			VisualEndpoint topt = l.to;
 			VisualModule from = frompt.module;
@@ -901,16 +910,16 @@ class VisualMachine extends JPanel implements MouseMotionListener {
 		}
 	}
 	public void paintLink(Graphics g, Rectangle from, Rectangle to,
-			HashSet fromleftLines,
-			HashSet fromrightLines,
-			HashSet fromtopLines,
-			HashSet frombottomLines,
-			HashSet toleftLines,
-			HashSet torightLines,
-			HashSet totopLines,
-			HashSet tobottomLines,
-			HashSet hlines,
-			HashSet vlines, String fromLabel, String toLabel) {
+			HashSet<Integer> fromleftLines,
+			HashSet<Integer> fromrightLines,
+			HashSet<Integer> fromtopLines,
+			HashSet<Integer> frombottomLines,
+			HashSet<Integer> toleftLines,
+			HashSet<Integer> torightLines,
+			HashSet<Integer> totopLines,
+			HashSet<Integer> tobottomLines,
+			HashSet<Integer> hlines,
+			HashSet<Integer> vlines, String fromLabel, String toLabel) {
 		hlines.addAll(fromleftLines);
 		hlines.addAll(fromrightLines);
 		vlines.addAll(fromtopLines);
@@ -1012,8 +1021,8 @@ class VisualMachine extends JPanel implements MouseMotionListener {
 		}
 	}
 	public void paintLinks(Graphics g) {
-		HashSet vlines = new HashSet();
-		HashSet hlines = new HashSet();
+		HashSet<Integer> vlines = new HashSet<Integer>();
+		HashSet<Integer> hlines = new HashSet<Integer>();
 		FontMetrics fm = getFontMetrics(getFont());
 		Iterator<VisualLink> i = links.iterator();
 		while (i.hasNext()) {
@@ -1067,18 +1076,18 @@ class VisualMachine extends JPanel implements MouseMotionListener {
 		repaint();
 	}
 	public void setLinks() {
-		Iterator mi = modules.iterator();
+		Iterator<VisualModule> mi = modules.iterator();
 		while (mi.hasNext()) {
-			VisualModule mod = (VisualModule)mi.next();
-			mod.rightLines = new HashSet();
-			mod.leftLines = new HashSet();
-			mod.topLines = new HashSet();
-			mod.bottomLines = new HashSet();
+			VisualModule mod = mi.next();
+			mod.rightLines = new HashSet<Integer>();
+			mod.leftLines = new HashSet<Integer>();
+			mod.topLines = new HashSet<Integer>();
+			mod.bottomLines = new HashSet<Integer>();
 		}
 	}
 	static public void link(VisualModule frommod, VisualModule tomod, AcquireLabel fromal, AcquireLabel toal, Placer placer) {
-		VisualMachine fromvm = (VisualMachine)frommod.getParent();
-		VisualMachine tovm = (VisualMachine)tomod.getParent();
+		VisualMachine fromvm = frommod.getParent();
+		VisualMachine tovm = tomod.getParent();
 		if (fromvm == tovm) {
 			VisualEndpoint from;
 			VisualEndpoint to;
@@ -1120,6 +1129,7 @@ class VisualMachine extends JPanel implements MouseMotionListener {
 }
 
 public class Impact extends JFrame implements WindowListener {
+	private static final long serialVersionUID = 1L;
 	Placer p;
 	Selecter s;
 	CreateModule cm;
@@ -1129,6 +1139,7 @@ public class Impact extends JFrame implements WindowListener {
 	Paste paste;
 	public File currentFolder = new File(System.getProperty("user.dir"));
 	public static String pClass = "EmptyP";
+	public Impact() {}
 	public void init() {
 		getContentPane().setLayout(new BorderLayout());
 		p = new Placer();

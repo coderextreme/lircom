@@ -2,6 +2,7 @@ package impactVL;
 import java.awt.*;
 
 public class RightShiftP extends Personality {
+	public RightShiftP() {}
 	public void step(int x, int y) {
 		step(x, y-1, Common.BOTTOM, Common.LEFT);
 		step(x, y+1, Common.TOP, Common.RIGHT);

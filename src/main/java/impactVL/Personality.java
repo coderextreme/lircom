@@ -15,6 +15,7 @@ abstract public class Personality {
 	protected boolean bFull = false;
 	protected Cell observer = null;
 	public abstract void step(int x, int y);
+	public Personality() {}
 	public boolean step(int xn, int yn, int from, int to, boolean outNotFull) {
 		Personality neighbor = Common.personalities[xn][yn];
 		return step(neighbor, from, to, outNotFull);

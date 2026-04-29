@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class HtmlSelection implements Transferable {
 
-    private static ArrayList htmlFlavors = new ArrayList();
+    private static ArrayList<DataFlavor> htmlFlavors = new ArrayList<DataFlavor>();
     static {
         try {
             htmlFlavors.add(new DataFlavor("text/html;class=java.lang.String"));

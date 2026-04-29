@@ -2,6 +2,7 @@ package impactVL;
 import java.awt.*;
 
 public class DontKnowP extends Personality {
+	public DontKnowP() {}
 	public void step(int x, int y) {
 		step(x+1, y, Common.LEFT, Common.LEFT);
 		step(x-1, y, Common.RIGHT, Common.BOTTOM);

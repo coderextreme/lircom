@@ -21,4 +21,5 @@ public class Common {
 	public static final int SY = 3;
 	public static int starty = 0;
 	public static int startx = 0;
+	public Common() {}
 }

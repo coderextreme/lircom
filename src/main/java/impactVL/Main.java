@@ -4,6 +4,7 @@ import java.io.*;
 import javax.xml.stream.*;
 
 public class Main {
+    public Main() {}
     public static void main(String[] args) throws XMLStreamException {
 	    XMLInputFactory inFactory = XMLInputFactory.newInstance();
 	    try {

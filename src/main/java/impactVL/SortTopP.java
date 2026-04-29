@@ -2,6 +2,7 @@ package impactVL;
 import java.awt.*;
 
 class FlagTopP extends Personality {
+	public FlagTopP() {}
 	public Object clone() {
 		return new FlagTopP();
 	}
@@ -25,6 +26,7 @@ class FlagTopP extends Personality {
 }
 
 class FlagTopLessP extends Personality {
+	public FlagTopLessP() {}
 	public Object clone() {
 		return new FlagTopLessP();
 	}
@@ -52,6 +54,7 @@ class FlagTopLessP extends Personality {
 }
 
 class FlagTopGreaterP extends Personality {
+	public FlagTopGreaterP() {}
 	public Object clone() {
 		return new FlagTopGreaterP();
 	}
@@ -79,6 +82,7 @@ class FlagTopGreaterP extends Personality {
 }
 
 class SortTopLessP extends Personality {
+	public SortTopLessP() {}
 	public Object clone() {
 		return new SortTopLessP();
 	}
@@ -107,6 +111,7 @@ class SortTopLessP extends Personality {
 }
 
 class SortTopGreaterP extends Personality {
+	public SortTopGreaterP() {}
 	public Object clone() {
 		return new SortTopGreaterP();
 	}
@@ -135,6 +140,7 @@ class SortTopGreaterP extends Personality {
 }
 
 public class SortTopP extends Personality {
+	public SortTopP() {}
 	public Object clone() {
 		return new SortTopP();
 	}

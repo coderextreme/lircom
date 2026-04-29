@@ -2,6 +2,7 @@ package impactVL;
 import java.awt.*;
 
 public class PassP extends Personality {
+	public PassP() {}
 	public void step(int x, int y) {
 		step(x+1, y, Common.LEFT, Common.LEFT);
 		step(x-1, y, Common.RIGHT, Common.RIGHT);

@@ -5,6 +5,7 @@ import java.awt.*;
 public class BufferP extends Personality {
 	private StringBuffer in = new StringBuffer();
 	private StringBuffer out = new StringBuffer();
+	public BufferP() {}
 	public void keyPressed(KeyEvent e) {
 		char c = e.getKeyChar();
 		switch (e.getKeyCode()) {

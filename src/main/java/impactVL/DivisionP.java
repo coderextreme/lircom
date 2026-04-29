@@ -16,6 +16,7 @@ public class DivisionP extends Personality {
 	long b = 0;
 	int leftshifts = 0;
         boolean sentaone = false;
+	public DivisionP() {}
 	public void step (int x, int y) {
 		Personality rightNeighbor = Common.personalities[x+1][y];
 		Personality topNeighbor = Common.personalities[x][y-1];
