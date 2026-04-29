@@ -21,7 +21,7 @@
 		java.awt.Window w = lircom.SVGFE.getWindows().get(i);
 		int winnum = w.hashCode();
 		String fileName = winnum+"_"+frame+".svg";
-		java.io.File file = new java.io.File("/Users/johncarlson/Applications/apache-tomcat-6.0.14/webapps/web/"+fileName);
+		java.io.File file = new java.io.File("/Users/marycarlson/Applications/apache-tomcat-6.0.14/webapps/web/"+fileName);
 		while (!file.exists()); // wait for the file to show up
 		System.err.println("file exists");
 %>

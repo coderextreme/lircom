@@ -7,7 +7,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/jcarl/Downloads/jogamp-all-platforms/jar/gluegen-rt.jar"/>
-	<classpathentry kind="lib" path="C:/Users/jcarl/Downloads/jogamp-all-platforms/jar/jogl-all-natives-windows-amd64.jar" sourcepath="/Users/johncarlson/dev/jogl/src/"/>
+	<classpathentry kind="lib" path="C:/Users/jcarl/Downloads/jogamp-all-platforms/jar/jogl-all-natives-windows-amd64.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="C:/Users/jcarl/Downloads/jogamp-all-platforms/jar/jogl-all.jar"/>
 	<classpathentry kind="lib" path="C:/Users/jcarl/.m2/repository/org/htmlunit/neko-htmlunit/4.21.0/neko-htmlunit-4.21.0.jar"/>
