@@ -6,13 +6,12 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/coderextreme/Downloads/jogamp-all-platforms/jar/gluegen-rt.jar"/>
-	<classpathentry kind="lib" path="C:/Users/coderextreme/Downloads/jogamp-all-platforms/jar/jogl-all-natives-windows-amd64.jar" sourcepath="/Users/johncarlson/dev/jogl/src/"/>
+	<classpathentry kind="lib" path="C:/Users/jcarl/Downloads/jogamp-all-platforms/jar/gluegen-rt.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jcarl/Downloads/jogamp-all-platforms/jar/jogl-all-natives-windows-amd64.jar" sourcepath="/Users/johncarlson/dev/jogl/src/"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="C:/Users/coderextreme/Downloads/jogamp-all-platforms/jar/jogl-all.jar"/>
-	<classpathentry kind="lib" path="C:/Users/coderextreme/lircom/m2/nekohtml-1.9.22.jar"/>
-	<classpathentry kind="lib" path="C:/Users/coderextreme/lircom/m2/httpunit-1.7.3.jar"/>
-	<classpathentry kind="lib" path="C:/Users/coderextreme/lircom/m2/rhino-1.7R4.jar"/>
-	<classpathentry kind="lib" path="C:/Users/coderextreme/lircom/m2/js-1.7R2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jcarl/Downloads/jogamp-all-platforms/jar/jogl-all.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jcarl/.m2/repository/org/htmlunit/neko-htmlunit/4.21.0/neko-htmlunit-4.21.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jcarl/.m2/repository/org/httpunit/httpunit/1.7.3/httpunit-1.7.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jcarl/.m2/repository/org/mozilla/rhino/1.9.1/rhino-1.9.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
