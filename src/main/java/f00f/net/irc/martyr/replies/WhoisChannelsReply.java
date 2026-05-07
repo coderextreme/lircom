@@ -55,7 +55,7 @@ public class WhoisChannelsReply extends AbstractWhoisReply
 		return set;
 	}
 
-	protected void parseParams( ParameterIterator pi )
+	protected void parseParams( ParameterIterator<String> pi )
 	{
 		channels = pi.last(); // Channels
 

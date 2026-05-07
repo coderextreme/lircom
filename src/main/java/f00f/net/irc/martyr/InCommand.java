@@ -81,7 +81,7 @@ public interface InCommand extends Command
      *
      * @return Iterator of attribute keys
      */
-    Iterator getAttributeKeys();
+    Iterator<String> getAttributeKeys();
 
     /**
      * Returns the attribute, or null if the attribute does not exist,

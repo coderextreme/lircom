@@ -115,7 +115,7 @@ public class QuitCommand extends AbstractCommand
             log.log(Level.FINE, "QUIT: " + user + " quit: " + reason);
 
             // 1) Grab channels
-            Enumeration channelNames = state.getChannelNames();
+            Enumeration<String> channelNames = state.getChannelNames();
             while( channelNames.hasMoreElements() )
             {
                 String chanName = channelNames.nextElement().toString();

@@ -47,13 +47,13 @@ public class WhoisIdleReply extends AbstractWhoisReply
 		return loginTime;
 	}
 
-	protected void parseParams( ParameterIterator pi )
+	protected void parseParams( ParameterIterator<String> pi )
 	{
-		String idleTimeStr = (String)pi.next(); // Idle name
+		String idleTimeStr = pi.next(); // Idle name
 		idleTime = Integer.parseInt( idleTimeStr );
 		if( pi.hasNext() && ! pi.nextIsLast() )
 		{
-			String loginTimeStr = (String)pi.next(); // Idle description
+			String loginTimeStr = pi.next(); // Idle description
 			loginTime = new Date( Long.parseLong( loginTimeStr ) * 1000 );
 		}
 		log.log(Level.FINE, "WhoisIdleReply: idle: " + idleTime);

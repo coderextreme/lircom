@@ -13,6 +13,7 @@ import javax.swing.ListCellRenderer;
 
 
 public class CardItem extends JLabel implements ListCellRenderer, MouseListener, Cloneable {
+	private static final long serialVersionUID = 1L;
 	private int rank;
 	private int suit;
 	private boolean faceUp = false;
@@ -78,7 +79,7 @@ public class CardItem extends JLabel implements ListCellRenderer, MouseListener,
 		this.stack = stack;
 		this.position = position;
 		addMouseListener(this);
-		setIcon((String)map.get(rank+"|"+suit));
+		setIcon(map.get(rank+"|"+suit));
 	}
 	public void setIcon(String gifname) {
 		ii = new ImageIcon(getClass().getResource(gifname));

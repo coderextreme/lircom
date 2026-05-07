@@ -44,8 +44,8 @@ public class InviteCommand extends AbstractCommand {
 	 */
 	public InCommand parse(String prefix, String identifier, String params) 
 	{
-			ParameterIterator iter = new ParameterIterator(params);
-			return new InviteCommand( new FullNick( prefix ), (String)iter.next(), (String)iter.next() );
+			ParameterIterator<String> iter = new ParameterIterator<String>(params);
+			return new InviteCommand( new FullNick( prefix ), iter.next(), iter.next() );
 	}
 
 	/* (non-Javadoc)

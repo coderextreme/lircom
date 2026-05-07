@@ -77,7 +77,7 @@ public abstract class AutoDccSetup extends GenericCommandAutoService
         }
     }
 
-    private List tokenizeParams(String msg)
+    private List<String> tokenizeParams(String msg)
     {
         List<String> l = new ArrayList<String>(5);
         StringBuffer word = new StringBuffer();
@@ -145,13 +145,13 @@ public abstract class AutoDccSetup extends GenericCommandAutoService
 
         log.log(Level.FINE, "AutoDccSetup: "+ctcpMsg.getMessage());
         //StringTokenizer tokens = new StringTokenizer( ctcpMsg.getMessage() );
-        Iterator tokens = tokenizeParams(ctcpMsg.getMessage()).iterator();
+        Iterator<String> tokens = tokenizeParams(ctcpMsg.getMessage()).iterator();
 
-        String typeStr = (String)tokens.next();
-        String argument = (String)tokens.next();
-        String addressStr = (String)tokens.next();
-        String portStr = (String)tokens.next();
-        String fileSizeStr = ( tokens.hasNext() ? (String)tokens.next() : null );
+        String typeStr = tokens.next();
+        String argument = tokens.next();
+        String addressStr = tokens.next();
+        String portStr = tokens.next();
+        String fileSizeStr = ( tokens.hasNext() ? tokens.next() : null );
 
         // Bug: addressStr is often incorrect.
         // Therefore, use source of message.

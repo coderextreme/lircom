@@ -169,9 +169,9 @@ public class ClientState
 
     public boolean isOnChannel( String channel )
     {
-        for (Enumeration iter = getChannelNames(); iter.hasMoreElements();)
+        for (Enumeration<String> iter = getChannelNames(); iter.hasMoreElements();)
         {
-            if(channel.equalsIgnoreCase((String) iter.nextElement()))
+            if(channel.equalsIgnoreCase( iter.nextElement()))
             {
                 return true;
             }
@@ -179,12 +179,12 @@ public class ClientState
         return false;
     }
 
-    public Enumeration getChannelNames()
+    public Enumeration<String> getChannelNames()
     {
         return channels.keys();
     }
 
-    public Enumeration getChannels()
+    public Enumeration<Channel> getChannels()
     {
         return channels.elements();
     }

@@ -19,6 +19,7 @@ export CLASSPATH="${DIR}/target/Impact.jar:${DIR}/target/lircom-3-jar-with-depen
 export MEMORY=-Xmx256m
 export AGENT_JAR="${USER_HOME}/lircom/patch-agent/target/patch-agent-1.0.jar"
 export LIB_PATH=${DWN}/jogamp-all-platforms/lib/linux-amd64
+export _JAVA_AWT_WM_NONREPARENTING=1
 # export LIB_PATH=${DWN}/jogamp-all-platforms/lib/windows-amd64
 # export LIB_PATH=${DIR}/natives/macosx-universal
 
@@ -44,6 +45,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
     echo "Running on Linux"
     export APPLE_JOGL_OPTS=(
+	"-Dsun.java2d.d3d=false"
     )
     export JAVA_OPTS=(
 	"-javaagent:${AGENT_JAR}"

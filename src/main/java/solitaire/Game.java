@@ -240,18 +240,18 @@ class SubLogic {
 }
 class Logic {
 	static public Logic logic_stacks[][] = new Logic[15][15];
-	ArrayList ors = new ArrayList();
-	static ArrayList sets = new ArrayList();
-	static ArrayList intersections = new ArrayList();
+	ArrayList<SubLogic> ors = new ArrayList<SubLogic>();
+	static ArrayList<GameSet> sets = new ArrayList<GameSet>();
+	static ArrayList<GameSet> intersections = new ArrayList<GameSet>();
 	static public void construct(int goodMove, Game g, int fromStack, int toStack, CardItem cim, int pos) {
 		if (logic_stacks[fromStack][toStack] == null) {
 			logic_stacks[fromStack][toStack] = new Logic();
 		}
 		SubLogic sl = new SubLogic(goodMove, g, logic_stacks[fromStack][toStack], fromStack, toStack, cim, pos);
-		ArrayList al = sl.getElements();
-		Iterator i = logic_stacks[fromStack][toStack].ors.iterator();
+		ArrayList<Element> al = sl.getElements();
+		Iterator<SubLogic> i = logic_stacks[fromStack][toStack].ors.iterator();
 		while (i.hasNext()) {
-			if (sl.equals((SubLogic)i.next())) {
+			if (sl.equals(i.next())) {
 				// System.err.println("logic is same, escaping");
 				return; // get out of method
 			}
@@ -261,9 +261,9 @@ class Logic {
 		logic_stacks[fromStack][toStack].ors.add(sl);
 		GameSet s = new GameSet();
 		s.addAll(al);
-		i = sets.iterator();
-		while (i.hasNext()) {
-			GameSet o = (GameSet)i.next();
+		Iterator<GameSet> sti = sets.iterator();
+		while (sti.hasNext()) {
+			GameSet o = sti.next();
 
 			GameSet intersection = new GameSet();
 			intersection.addAll(o);
@@ -281,9 +281,9 @@ class Logic {
 
 */
 			boolean found = false;
-			Iterator j = intersections.iterator();
+			Iterator<GameSet> j = intersections.iterator();
 			while (j.hasNext()) {
-				GameSet intersection2 = (GameSet)j.next();
+				GameSet intersection2 = j.next();
 				if (intersection.equals(intersection2)) {
 					found = true;
 					intersection = intersection2;
@@ -306,10 +306,10 @@ class Logic {
 		try {
 			FileOutputStream fos = new FileOutputStream("intersections");
 			PrintStream ps = new PrintStream(fos);
-			Iterator i = intersections.iterator();
+			Iterator<GameSet> i = intersections.iterator();
 			while (i.hasNext()) {
 				ps.println("New rule");
-				GameSet s = (GameSet)i.next();
+				GameSet s = i.next();
 				s.print(ps);
 			}
 			ps.close();
@@ -343,9 +343,9 @@ class Logic {
 				for (int ts = 0; ts < Stack.totstack; ts++) {
 					Logic l = logic_stacks[fs][ts];
 					if (l != null) {
-						Iterator i = l.ors.iterator();
+						Iterator<SubLogic> i = l.ors.iterator();
 						while (i.hasNext()) {
-							SubLogic sl = (SubLogic)i.next();
+							SubLogic sl = i.next();
 							ps.print(fs+","+ts);
 							sl.print(ps);
 							ps.println();
@@ -364,7 +364,7 @@ class Logic {
 }
 
 class GameSet extends TreeSet {
-	ArrayList setPairs = new ArrayList(); // intersections
+	ArrayList<SetPair> setPairs = new ArrayList<SetPair>(); // intersections
 	public void addIntersection(GameSet intersection) { // for normal sets
 		SetPair sp = new SetPair();
 		sp.elementsNotInIntersection.addAll(this);
@@ -378,15 +378,15 @@ class GameSet extends TreeSet {
 		setPairs.add(sp);
 	}
 	public void print(PrintStream ps) {
-		Iterator i = iterator();
+		Iterator<Element> i = iterator();
 		ps.println("Applies to "+setPairs.size()+" rules, with "+size()+" in agreement");
 		while (i.hasNext()) {
-			Element e = (Element)i.next();
+			Element e = i.next();
 			e.print(ps);
 		}
-		Iterator spi = setPairs.iterator();
+		Iterator<SetPair> spi = setPairs.iterator();
 		while (spi.hasNext()) {
-			SetPair sp = (SetPair)spi.next();
+			SetPair sp = spi.next();
 			sp.print(ps);
 		}
 	}
@@ -395,9 +395,9 @@ class GameSet extends TreeSet {
 class SetPair {
 	GameSet elementsNotInIntersection = new GameSet();
 	public void print(PrintStream ps) {
-		Iterator i = elementsNotInIntersection.iterator();
+		Iterator<Element> i = elementsNotInIntersection.iterator();
 		while (i.hasNext()) {
-			Element e = (Element)i.next();
+			Element e = i.next();
 			ps.print("\t");
 			e.print(ps);
 		}
@@ -410,7 +410,7 @@ class SolitaireClient extends lircom.ClientOnServer {
 		setNick("Solitaire"+nick);
 		lircom.Message.thisApplication = "Cards";
 	}
-	public HashMap client_messages = new HashMap();
+	public HashMap<java.lang.String,lircom.Message> client_messages = new HashMap<java.lang.String,lircom.Message>();
 	public lircom.Message processLine(String line) throws Exception {
 		lircom.Message m = lircom.Message.parse(line);
 		if (m != null && m.nick.startsWith("Solitaire") && !m.nick.equals(getNick()) && !seenMessage(m, client_messages)) {
@@ -713,7 +713,7 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 			// System.err.println("Done initializing, shuffling");
 			while (deck.size() > 0) {
 				int crd = r.nextInt(Game.this.deck.size());
-				CardItem d = (CardItem)Game.this.deck.get(crd);
+				CardItem d = Game.this.deck.get(crd);
 				moveCard(Game.this.deck.stack_no, Game.this.shuffledDeck.stack_no, d, 0, 11);
 			}
 			moveToStacks(Game.this.shuffledDeck.stack_no, 9);  // was 1
@@ -749,12 +749,12 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 				CardItem ci = (CardItem)c;
 				Stack flippy = getStack(ci.getStack());
 				while (Game.this.picked != flippy && flippy.size() > 0) {
-					CardItem s = (CardItem)flippy.get(0);
+					CardItem s = flippy.get(0);
 					moveCard(flippy.stack_no, Game.this.picked.stack_no, s, 0, 12);
 				        s.setFaceUp(!s.getFaceUp());
 				}
 				while (Game.this.picked != null && Game.this.picked != flippy && Game.this.picked.size() > 0) {
-					CardItem s = (CardItem)Game.this.picked.get(Game.this.picked.size()-1);
+					CardItem s = Game.this.picked.get(Game.this.picked.size()-1);
 					moveCard(Game.this.picked.stack_no, flippy.stack_no, s, 0, 13);
 				}
 				jf.getContentPane().invalidate();
@@ -770,7 +770,7 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 				// play the cards
 				if (getStack(ci.getStack()) != null && Game.this.picked != getStack(ci.getStack())) {
 					while (Game.this.picked.size() > 0) {
-						CardItem cipick = (CardItem)Game.this.picked.get(Game.this.picked.size()-1);
+						CardItem cipick = Game.this.picked.get(Game.this.picked.size()-1);
 						moveCard(Game.this.picked.stack_no, ci.getStack(), cipick, 0, 14);
 					}
 				}
@@ -780,22 +780,22 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 				int i = ci.getPosition();
 /*
 				while (i < s.size()) {
-					CardItem cipick = (CardItem)s.get(i);
+					CardItem cipick = s.get(i);
 					moveCard(s.stack_no, Game.this.picked.stack_no, cipick, 0, 15);
 				}
 */
 				while (i >= 0) {
-					CardItem cipick = (CardItem)s.get(i);
+					CardItem cipick = s.get(i);
 					moveCard(s.stack_no, Game.this.picked.stack_no, cipick, 0, 16);
 					i--;
 				}
 			}
 	        } else if (c instanceof StackBottom) {
-			Stack bottom = (Stack)((StackBottom)c).stack;
+			Stack bottom = ((StackBottom)c).stack;
 			if (Game.this.picked != null && bottom != Game.this.picked && Game.this.picked.size() > 0) {
 				// play the cards
 				while (Game.this.picked.size() > 0) {
-					CardItem cipick = (CardItem)Game.this.picked.get(Game.this.picked.size()-1);
+					CardItem cipick = Game.this.picked.get(Game.this.picked.size()-1);
 					moveCard(Game.this.picked.stack_no, bottom.stack_no, cipick, 0, 17);
 				}
 			}
@@ -803,7 +803,7 @@ public class Game extends Thread implements MouseListener, MouseMotionListener, 
 			// create a whole new stack with the cards
 			Stack nw = new Stack(me.getX(), me.getY(), 20, StackLayout.Y, jf, this);
 			while (Game.this.picked != null && nw != Game.this.picked && Game.this.picked.size() > 0) {
-				CardItem cipick = (CardItem)Game.this.picked.get(Game.this.picked.size()-1);
+				CardItem cipick = Game.this.picked.get(Game.this.picked.size()-1);
 				moveCard(Game.this.picked.stack_no, nw.stack_no, cipick, 0, 18);
 			}
 			jf.getContentPane().add(nw.gui);

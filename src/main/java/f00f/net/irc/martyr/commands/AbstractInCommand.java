@@ -37,7 +37,7 @@ public abstract class AbstractInCommand implements InCommand
         return attributes.get( key );
     }
 
-    public Iterator getAttributeKeys()
+    public Iterator<String> getAttributeKeys()
     {
         return Collections.unmodifiableSet( attributes.keySet() ).iterator();
     }

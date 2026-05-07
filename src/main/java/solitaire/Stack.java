@@ -60,7 +60,7 @@ public class Stack implements ActionListener, ChangeListener {
 					irank,
 					false,
 					-1,
-					13*(int)isuit+(int)(irank-1));
+					13*isuit+(irank-1));
 			}
 		}
 		Log.write(Stack.cards);
@@ -325,7 +325,7 @@ public class Stack implements ActionListener, ChangeListener {
 		if (carditems.size() == 0) {
 			return null;
 		} else {
-			return (CardItem)carditems.get(r.nextInt(carditems.size()));
+			return carditems.get(r.nextInt(carditems.size()));
 		}
 	}
 	public void printStack() {

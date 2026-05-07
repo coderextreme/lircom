@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  * also knows about the ":" parameters, which is the large string at
  * the end of most commands, and treats it specially.
  */
-public class ParameterIterator implements Iterator
+public class ParameterIterator<T> implements Iterator
 {
     static Logger log = Logger.getLogger("ParameterIterator");
 
@@ -72,7 +72,7 @@ public class ParameterIterator implements Iterator
 	/**
 	 * @throws NoSuchElementException if there are no more params
 	 * */
-	public Object next()
+	public String next()
 	{
 		if( ! hasNext() )
 		{

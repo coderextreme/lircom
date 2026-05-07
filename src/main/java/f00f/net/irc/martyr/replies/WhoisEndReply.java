@@ -23,7 +23,7 @@ public class WhoisEndReply extends AbstractWhoisReply
 	}
 
 
-	protected void parseParams( ParameterIterator pi )
+	protected void parseParams( ParameterIterator<String> pi )
 	{
 		// nothing to do here
 	}

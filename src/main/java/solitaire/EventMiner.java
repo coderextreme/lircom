@@ -26,8 +26,8 @@ public class EventMiner {
 			lines.add(v);
 		}
 		for (int a = 0; a < TUPLESIZE; a++) {
-			for (Iterator i = args[a].keySet().iterator(); i.hasNext();) {
-				String s = args[a].get(i.next()).toString();
+			for (Iterator<String> i = args[a].keySet().iterator(); i.hasNext();) {
+				String s = args[a].get(i.next());
 				System.out.print(" ");
 				System.out.print(s);
 			}
@@ -42,20 +42,20 @@ public class EventMiner {
 			cxr[a] = new HashMap<String, HashMap<Integer, HashMap<String,String>>>();
 		}
 		for (int i = 0; i < lines.size(); i++) {
-			ArrayList<String> v = (ArrayList<String>)lines.get(i);
+			ArrayList<String> v = lines.get(i);
 			String ss[] = new String[v.size()];
 			for (int j = 0; j < v.size(); j++) {
 				ss[j] = v.get(j).toString();
 			}
 			for (int j = 0; j < v.size(); j++) {
 				// System.out.print(ss[j]);
-				HashMap<Integer, HashMap<String,String>> ht = (HashMap<Integer, HashMap<String,String>>)cxr[j].get(ss[j]);
+				HashMap<Integer, HashMap<String,String>> ht = cxr[j].get(ss[j]);
 				if (ht == null) {
 					ht = new HashMap<Integer, HashMap<String,String>>();
 				}
 				for (int k = 0; k < v.size(); k++) {
 					int l = k;
-					HashMap<String,String> ht2 = (HashMap<String,String>)ht.get(l);
+					HashMap<String,String> ht2 = ht.get(l);
 					if (ht2 == null) {
 						ht2 = new HashMap<String,String>();
 					}
@@ -70,8 +70,8 @@ public class EventMiner {
 			// System.out.println();
 		}
 		for (int a = 0; a < TUPLESIZE; a++) {
-			HashMap col = cxr[a];
-			Iterator i = col.keySet().iterator();
+			HashMap<String, HashMap<Integer, HashMap<String,String>>> col = cxr[a];
+			Iterator<String> i = col.keySet().iterator();
 			System.out.print("COL ");
 			System.out.print(a);
 			System.out.print(" ");
@@ -79,17 +79,17 @@ public class EventMiner {
 				Object s = i.next();
 				System.out.print(s);
 
-				HashMap ht = (HashMap)col.get(s);
-				Iterator j = ht.keySet().iterator();
+				HashMap<Integer, HashMap<String,String>>  ht = col.get(s);
+				Iterator<Integer> j = ht.keySet().iterator();
 				while (j.hasNext()) {
 					Object sel = j.next();
 					System.out.print("\n\t");
 					System.out.print(sel);
-					HashMap ht2 = (HashMap)ht.get(sel);
+					HashMap<String, String> ht2 = ht.get(sel);
 					if (ht2 == null) {
 						System.out.println(" null");
 					} else {
-						Iterator k = ht2.keySet().iterator();
+						Iterator<String> k = ht2.keySet().iterator();
 						while (k.hasNext()) {
 							Object sel2 = k.next();
 							System.out.print(" ");

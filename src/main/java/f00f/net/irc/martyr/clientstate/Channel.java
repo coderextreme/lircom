@@ -218,7 +218,7 @@ public class Channel
 		}
 	}
 	
-	public Iterator getModes()
+	public Iterator<Mode> getModes()
 	{
 		return modes.iterator();
 	}
@@ -228,7 +228,7 @@ public class Channel
      *
      * @return List of members in the channel
 	 */
-	public Enumeration getMembers()
+	public Enumeration<Member> getMembers()
 	{
 		return members.elements();
 	}
@@ -270,10 +270,10 @@ public class Channel
 	
 	protected Member findMember( Member member )
 	{
-		Enumeration membersE = getMembers();
+		Enumeration<Member> membersE = getMembers();
 		while( membersE.hasMoreElements() )
 		{
-			Member memberCompare = (Member)membersE.nextElement();
+			Member memberCompare = membersE.nextElement();
 	
 			if( memberCompare.equals( member ) )
 			{

@@ -80,10 +80,10 @@ public class NickCommand extends AbstractCommand
             // occurance.
             // Note: I do not believe this code has received a vigorous
             // test.
-            Enumeration channels = state.getChannels();
+            Enumeration<Channel> channels = state.getChannels();
             while( channels.hasMoreElements() )
             {
-                Channel channel = (Channel)channels.nextElement();
+                Channel channel = channels.nextElement();
                 Member member = channel.findMember( oldNick.getNick() );
                 if( member != null )
                     member.setNick( newNick );

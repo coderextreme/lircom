@@ -17,7 +17,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-class Module implements Cloneable {  // aka Node
+class Module implements Cloneable, Serializable {  // aka Node
+	private static final long serialVersionUID = 1L;
 	ArrayList<LinkEndpoint> endPoints; // links around outside of module
 	ArrayList<Link> links; // links between submodules
 	ArrayList<Module> modules; // submodules
@@ -114,14 +115,14 @@ class Select {
 
             JPanel panel = new JPanel();
             panel.add(new JLabel(prompt));
-            DefaultComboBoxModel model = new DefaultComboBoxModel();
+            DefaultComboBoxModel<String> model = new DefaultComboBoxModel<String>();
 	    Enumeration<AbstractButton> i = bg.getElements();
 	    while (i.hasMoreElements()) {
 		String option = i.nextElement().getText();
 		System.err.println("Adding option "+option);
                 model.addElement(option);
             }
-            JComboBox comboBox = new JComboBox(model);
+            JComboBox<String> comboBox = new JComboBox<String>(model);
 	    comboBox.setSelectedItem(clazzname);
             panel.add(comboBox);
 
@@ -136,8 +137,9 @@ class Select {
 }
 
 class VisualEndpoint extends JLabel implements Rectangular {
+	private static final long serialVersionUID = 1L;
 	VisualModule module;
-	VisualLink link;
+	transient VisualLink link;
 	String label;
 	HashSet<Integer> rightLines = new HashSet<Integer>();
 	HashSet<Integer> leftLines = new HashSet<Integer>();
@@ -178,12 +180,14 @@ class VisualEndpoint extends JLabel implements Rectangular {
 }
 
 class VisualLink {
+	private static final long serialVersionUID = 1L;
 	VisualEndpoint from;
 	VisualEndpoint to;
 }
 
 class VisualModule extends JLabel implements Rectangular {
-	Module module;
+	private static final long serialVersionUID = 1L;
+	transient Module module;
 	Cell cell;
 	VisualMachine machine; // vm module is in 
 	VisualMachine parent; // opened up vm of module
@@ -431,6 +435,7 @@ class Cut extends Command implements Serializable {
 	
 // Not Used
 class CutLink extends Command implements Serializable {
+	private static final long serialVersionUID = 1L;
 	public void mousePressed(MouseEvent e) {
 		Component c = e.getComponent();
 		if (c instanceof VisualEndpoint) {
@@ -508,6 +513,7 @@ class ExpandModule extends Command implements Serializable {
 }
 
 class CreateLink implements Serializable {
+	private static final long serialVersionUID = 1L;
 	static boolean linking = false;
 	Placer p;
 	public CreateLink(Placer p) {

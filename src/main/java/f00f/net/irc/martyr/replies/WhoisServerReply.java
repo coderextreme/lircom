@@ -46,10 +46,10 @@ public class WhoisServerReply extends AbstractWhoisReply
 		return serverDesc;
 	}
 
-	protected void parseParams( ParameterIterator pi )
+	protected void parseParams( ParameterIterator<String> pi )
 	{
-		serverName = (String)pi.next(); // Server name
-		serverDesc = (String)pi.next(); // Server description
+		serverName = pi.next(); // Server name
+		serverDesc = pi.next(); // Server description
 		log.log(Level.FINE, "WhoisServerReply: server name: " + serverName);
 		log.log(Level.FINE, "WhoisServerReply: server desc: " + serverDesc);
 	}

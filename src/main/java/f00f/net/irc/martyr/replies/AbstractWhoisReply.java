@@ -20,7 +20,7 @@ public abstract class AbstractWhoisReply extends GenericReply
 
 	public AbstractWhoisReply( String params )
 	{
-		ParameterIterator pi = getParams( params );
+		ParameterIterator<String> pi = getParams( params );
 		parseParams( pi );
 	}
 
@@ -32,7 +32,7 @@ public abstract class AbstractWhoisReply extends GenericReply
      *
      * @param pi Parameter iterator that will parse the parameters
 	 * */
-	protected abstract void parseParams( ParameterIterator pi );
+	protected abstract void parseParams( ParameterIterator<String> pi );
 
 	/**
 	 * @return the target of the whois
@@ -47,11 +47,11 @@ public abstract class AbstractWhoisReply extends GenericReply
 	 * @return a parameter iterator, with the whois target already
 	 * stripped off.
 	 * */
-	protected ParameterIterator getParams( String params )
+	protected ParameterIterator<String> getParams( String params )
 	{
-		ParameterIterator pi = new ParameterIterator(params);
+		ParameterIterator<String> pi = new ParameterIterator<String>(params);
 		pi.next(); // throw away our own nick
-		this.target = (String)pi.next();
+		this.target = pi.next();
 		log.log(Level.FINE, "AbstractWhoisReply: Whois target: " + target);
 
 		return pi;

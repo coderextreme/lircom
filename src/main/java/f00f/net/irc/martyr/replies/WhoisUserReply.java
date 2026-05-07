@@ -28,10 +28,10 @@ public class WhoisUserReply extends AbstractWhoisReply
 		return "311";
 	}
 
-	protected void parseParams( ParameterIterator pi )
+	protected void parseParams( ParameterIterator<String> pi )
 	{
 		pi.next(); // throw away the nick
-		host = (String)pi.next(); // hostmask
+		host = pi.next(); // hostmask
 		log.log(Level.FINE, "WhoisUserReply: host: " + host);
 		name = pi.last(); // the "Name"
 		log.log(Level.FINE, "WhoisUserReply: name: " + name);

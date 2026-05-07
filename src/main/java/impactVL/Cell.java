@@ -49,7 +49,7 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 	public static final String BIT_0 = "0";
 	public static final String BIT_1 = "1";
 	public static String ink = "";
-	Personality cellsPersonality = null;
+	transient Personality cellsPersonality = null;
 	public static String pClass = "impactVL.EmptyP";
 	int x = 0;
 	int y = 0;
@@ -706,7 +706,7 @@ public class Cell extends JComponent implements MouseMotionListener, MouseListen
 							currentPersonality = "Empty";
 						}
 						System.err.println("instantiating "+x+" "+maxY+" "+currentPersonality);
-						Class curperClass = Class.forName("impactVL."+currentPersonality+"P");
+						Class<?> curperClass = Class.forName("impactVL."+currentPersonality+"P");
 						p = (Personality)(curperClass.getDeclaredConstructor().newInstance());
 					}
 					currentRow.add(p);

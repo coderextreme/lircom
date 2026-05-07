@@ -48,8 +48,8 @@ public class WelcomeCommand extends AbstractInCommand
      */
     public InCommand parse( String prefix, String identifier, String params )
     {
-        ParameterIterator pi = new ParameterIterator( params );
-        String nick = pi.next().toString();
+        ParameterIterator<String> pi = new ParameterIterator<String>( params );
+        String nick = pi.next();
         String notice;
         if( pi.hasNext() )
         {

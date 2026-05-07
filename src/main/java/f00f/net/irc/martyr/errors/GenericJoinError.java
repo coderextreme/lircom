@@ -56,11 +56,11 @@ public abstract class GenericJoinError extends GenericError {
 
 	public InCommand parse( String prefix, String identifier, String params )
 	{
-		ParameterIterator pI = new ParameterIterator( params );
+		ParameterIterator<String> pI = new ParameterIterator<String>( params );
 	
 		pI.next(); // We know what our name is.
-		String channel = (String)pI.next();
-		String comment = (String)pI.next();
+		String channel = pI.next();
+		String comment = pI.next();
 		
 		return create( channel, comment );
 	}

@@ -2,6 +2,7 @@ package impactVL;
 import java.awt.*;
 
 abstract public class Personality {
+	private static final long serialVersionUID = 1L;
 	public static int M = Common.M;
 	public static int SX = Common.SX;
 	public static int SY = Common.SY;

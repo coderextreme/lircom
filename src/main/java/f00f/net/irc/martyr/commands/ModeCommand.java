@@ -35,9 +35,9 @@ public class ModeCommand implements InCommand, OutCommand
 	{
 	}
 	
-	public Iterator getAttributeKeys()
+	public Iterator<String> getAttributeKeys()
 	{
-		return new LinkedList().iterator();
+		return new LinkedList<String>().iterator();
 	}
 
 	public String getAttribute( String key )

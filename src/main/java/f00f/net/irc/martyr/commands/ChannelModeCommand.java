@@ -40,7 +40,7 @@ public class ChannelModeCommand extends ModeCommand
     private String channelName;
 	private FullNick sender;
 	
-	private List modes;
+	private List<Mode> modes;
 
 	private static HashMap<Character,Mode> modeTypes;
 
@@ -74,7 +74,7 @@ public class ChannelModeCommand extends ModeCommand
 		this.channelName = channelName;
 
 		// Empty list, no modes.
-		modes = new LinkedList();
+		modes = new LinkedList<Mode>();
 	}
 
 	public void makeModes()
@@ -117,14 +117,14 @@ public class ChannelModeCommand extends ModeCommand
 
 	public String renderParams()
 	{
-		Iterator modesI = modes.iterator();
+		Iterator<Mode> modesI = modes.iterator();
 
 		String modes = "";
 		String params = "";
 
 		while( modesI.hasNext() )
 		{
-			Mode mode = (Mode)modesI.next();
+			Mode mode = modesI.next();
 			
 			if( mode.getSign() != Mode.Sign.NOSIGN )
 			{
@@ -168,12 +168,12 @@ public class ChannelModeCommand extends ModeCommand
 	{
 		boolean changed = false;
 		
-		Iterator modesI = modes.iterator();
+		Iterator<Mode> modesI = modes.iterator();
 		Channel channel = state.getChannel( channelName );
 		
 		while( modesI.hasNext() )
 		{
-			Mode mode = (Mode)modesI.next();
+			Mode mode = modesI.next();
 			
 			channel.setMode( mode );
 			
