@@ -12,5 +12,5 @@ ${JAVA} "${JAVA_OPTS[@]}" -jar target/lircom-3-jar-with-dependencies.jar lircom.
 ${JAVA} "${JAVA_OPTS[@]}" -jar target/lircom-3-jar-with-dependencies.jar lircom.Chat John &
 ${JAVA} "${JAVA_OPTS[@]}" solitaire.Game dealer localhost:${PORT_NUM} &
 ${JAVA} "${JAVA_OPTS[@]}" solitaire.Game random localhost:${PORT_NUM} &
-${JAVA} "${JAVA_OPTS[@]}" "${APPLE_JOGL_OPTS[@]}" impact.Impact3D localhost:${PORT_NUM} &
-${JAVA} "${JAVA_OPTS[@]}" "${APPLE_JOGL_OPTS[@]}" impact.Impact3D localhost:${PORT_NUM} &
+${JAVA} "${JAVA_OPTS[@]}" "${PLATFORM_JOGL_OPTS[@]}" impact.Impact3D localhost:${PORT_NUM} &
+${JAVA} "${JAVA_OPTS[@]}" "${PLATFORM_JOGL_OPTS[@]}" impact.Impact3D localhost:${PORT_NUM} &

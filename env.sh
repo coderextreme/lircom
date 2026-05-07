@@ -25,7 +25,7 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
     echo "Running on macOS"
-    export APPLE_JOGL_OPTS=(
+    export PLATFORM_JOGL_OPTS=(
 	"-Dapple.awt.UIElement=false"
 	"-XstartOnFirstThread"
     )
@@ -44,7 +44,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 
 elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
     echo "Running on Linux"
-    export APPLE_JOGL_OPTS=(
+    export PLATFORM_JOGL_OPTS=(
 	"-Dsun.java2d.d3d=false"
     )
     export JAVA_OPTS=(
@@ -61,7 +61,7 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
 
 elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
     echo "Running on Windows"
-    export APPLE_JOGL_OPTS=(
+    export PLATFORM_JOGL_OPTS=(
     )
     export JAVA_OPTS=(
 	"-javaagent:${AGENT_JAR}"

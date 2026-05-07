@@ -7,7 +7,7 @@
     -->
     <property name="impact.jar"     value="impact.jar"/>
     <property name="cell.jar"     value="cell.jar"/>
-    <property name="M2"     value="C:/Users/jcarl/.m2/repository"/>
+    <property name="M2"     value="/home/yottzumm/.m2/repository"/>
     <property name="javac.verbose"              value="false"/>
     <property name="java.classes.dir"        value="net"/>
     <!--
@@ -86,19 +86,23 @@
     </target>
     <target name="impact" depends="default">
 	    <java classname="impactVL.Impact" classpath="${classpath}" fork="${fork}">
+		<jvmarg value="-Dsun.java2d.d3d=false"/>
 	</java>
     </target>
     <target name="impact.jar" depends="default">
 	    <java classname="impactVL.Impact" classpath="${classpath}" fork="${fork}">
+		<jvmarg value="-Dsun.java2d.d3d=false"/>
 	</java>
     </target>
     <target name="Cell" depends="default">
 	    <java classname="impactVL.Cell" classpath="${classpath}" fork="${fork}">
+		<jvmarg value="-Dsun.java2d.d3d=false"/>
 		<arg value="division"/>
 	</java>
     </target>
     <target name="Cell4x4" depends="default">
 	    <java classname="impactVL.Cell" classpath="${classpath}" fork="${fork}">
+		<jvmarg value="-Dsun.java2d.d3d=false"/>
 		<arg value="4x4"/>
 	</java>
     </target>

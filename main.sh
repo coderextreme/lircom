@@ -35,22 +35,22 @@ export JAVA_OPTS=(
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
     echo "Running on macOS"
-    export APPLE_JOGL_OPTS=(
+    export PLATFORM_JOGL_OPTS=(
 	"-Dapple.awt.UIElement=false"
 	"-XstartOnFirstThread"
     )
 elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
     echo "Running on Linux"
-    export APPLE_JOGL_OPTS=(
+    export PLATFORM_JOGL_OPTS=(
     )
 elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
     echo "Running on Windows"
-    export APPLE_JOGL_OPTS=(
+    export PLATFORM_JOGL_OPTS=(
     )
 fi
 
 set -x
  export CLASSPATH=./jar/gluegen-rt.jar:./jar/jogl-all.jar:.:./jar/gluegen-rt-natives-macosx-universal.jar:./jar/gluegen-rt-android-natives-macosx-universal.jar:./jar/jogl-all-natives-macosx-universal.jar:./natives/macosx-universal/libnativewindow_macosx.jnilib:${CLASSPATH}
 ${JAVAC} Main.java
-${JAVA} "${JAVA_OPTS[@]}" "${APPLE_JOGL_OPTS[@]}" Main
+${JAVA} "${JAVA_OPTS[@]}" "${PLATFORM_JOGL_OPTS[@]}" Main
 
