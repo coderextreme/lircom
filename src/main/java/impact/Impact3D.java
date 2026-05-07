@@ -165,7 +165,7 @@ public class Impact3D implements GLEventListener, MouseListener, MouseMotionList
     canvas.addKeyListener(new KeyAdapter() {
         public void keyPressed(KeyEvent e) {
 		GLAutoDrawable drawable = (GLAutoDrawable)e.getSource();
-		GL gl = (GL)drawable.getGL();
+		GL gl = drawable.getGL();
 		key = e.getKeyCode();
 		float x = 0f;
 		float y = 0f;

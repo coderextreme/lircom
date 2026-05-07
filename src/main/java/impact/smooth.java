@@ -25,9 +25,9 @@ public class smooth
   extends JFrame
     implements GLEventListener, KeyListener
 {
-  private GLU glu;
-  private GLUT glut;
-  private GLCapabilities caps;
+  private transient GLU glu;
+  private transient GLUT glut;
+  private transient GLCapabilities caps;
   private GLCanvas canvas;
   private static final long serialVersionUID = 1L;
 

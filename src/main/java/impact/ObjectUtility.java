@@ -11,6 +11,7 @@ public class ObjectUtility<T extends GraphObject> {
 	List<GraphObject> shown = new ArrayList<GraphObject>();
 	List<GraphObject> selected = new ArrayList<GraphObject>();
 	List<GraphObject> clipboard = new ArrayList<GraphObject>();
+        public ObjectUtility() {}
 	void paste() {
 		synchronized (shown) {
 			Iterator<GraphObject> i = clipboard.iterator();
