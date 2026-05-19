@@ -17,7 +17,7 @@ dependencies = [
 	"httpcore==1.0.9",
 	"httpx==0.28.1",
 	"huggingface_hub==1.11.0",
-	"idna==3.11",
+	"idna==3.15",
 	"Jinja2==3.1.6",
 	"markdown-it-py==4.0.0",
 	"MarkupSafe==3.0.3",
