@@ -1,5 +1,5 @@
 fastapi
 pydantic
 transformers
-torch
+torch==2.2.2
 uvicorn
